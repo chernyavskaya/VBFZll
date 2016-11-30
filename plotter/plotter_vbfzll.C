@@ -75,7 +75,7 @@ float getScaleFactor(TH2F *scaleMap, double pt, double eta, float sf_err, bool a
 	 int biny;
     if (abs==0) biny = scaleMap->GetYaxis()->FindBin(eta);
     else biny = scaleMap->GetYaxis()->FindBin(TMath::Abs(eta));
-    std::cout<<binx<<": ,"<<biny<<std::endl;
+  //  std::cout<<binx<<": ,"<<biny<<std::endl;
     if ( (binx != 0) && (binx != scaleMap->GetNbinsX()+1) && (biny != 0) && (biny != scaleMap->GetNbinsY()+1)) {
         sfactor = scaleMap->GetBinContent(binx, biny);
         sf_err = scaleMap->GetBinError(binx, biny);
@@ -388,6 +388,7 @@ Float_t LHE_weights_scale_wgt[10];
 	tree_initial->SetBranchAddress("LHE_weights_scale_wgt",LHE_weights_scale_wgt);
 	tree_initial->SetBranchAddress("lheHT",&lheHT);
 	tree_initial->SetBranchAddress("lheV_pt",&lheV_pt);
+	tree_initial->SetBranchAddress("BDT_VBF",&bdt);
 
 
 
@@ -419,6 +420,10 @@ Float_t LHE_weights_scale_wgt[10];
 	TH1F *hEtaQQ = new TH1F("hEtaQQ","",90,0.,9.);
 	hEtaQQ->GetXaxis()->SetTitle("|#Delta#eta_{qq}|");
 	
+	TH1F *hbdt = new TH1F("hbdt","",100,-1.,1.);
+	hbdt->GetXaxis()->SetTitle("BDT output");
+	TH1F *hbdt_atanh = new TH1F("hbdt_atanh","",500,0.,5.);
+	hbdt_atanh->GetXaxis()->SetTitle("AThanH((BDT+1)/2)");
 
 	TH1F *hPhiQQ = new TH1F("hPhiQQ","",32,0.,3.2);
 	hPhiQQ->GetXaxis()->SetTitle("|#Delta#phi_{qq}|");
@@ -581,8 +586,8 @@ Float_t LHE_weights_scale_wgt[10];
 
 
 
-   		const int numArray= 50; 
-   		TH1F* histArray[numArray] = { hMqq, hEtaQQ,hHTsoft,hSoft_n2,hSoft_n5,hSoft_n10,hnPVs, hJet1q_pt, hJet1q_eta, hJet1q_ptd, hJet1q_axis2, hJet1q_mult, hJet2q_pt, hJet2q_eta, hJet2q_ptd, hJet2q_axis2, hJet2q_mult, hmet,   hJet1q_leadTrackPt, hJet2q_leadTrackPt, hqq_pt,hV_mass, hqgl, hqgl2, hZll_mass, hZll_pt, hZll_phi, hZll_eta, hrho, hlepton1_pt, hlepton2_pt, hlepton1_eta, hlepton2_eta, hHT, hDeltaRelQQ, hRptHard, hEtaQQSum, hPhiZQ1, hZll_y, hZll_ystar, hZll_zstar, hMqq_log, hlheV_pt, hJet3_pt, hlheHT_log, hPhiQQ, hJets12_pt_log, hJets12_pt, hJet1q_pt_log, hJet2q_pt_log };
+   		const int numArray= 52; 
+   		TH1F* histArray[numArray] = { hMqq, hEtaQQ,hHTsoft,hSoft_n2,hSoft_n5,hSoft_n10,hnPVs, hJet1q_pt, hJet1q_eta, hJet1q_ptd, hJet1q_axis2, hJet1q_mult, hJet2q_pt, hJet2q_eta, hJet2q_ptd, hJet2q_axis2, hJet2q_mult, hmet,   hJet1q_leadTrackPt, hJet2q_leadTrackPt, hqq_pt,hV_mass, hqgl, hqgl2, hZll_mass, hZll_pt, hZll_phi, hZll_eta, hrho, hlepton1_pt, hlepton2_pt, hlepton1_eta, hlepton2_eta, hHT, hDeltaRelQQ, hRptHard, hEtaQQSum, hPhiZQ1, hZll_y, hZll_ystar, hZll_zstar, hMqq_log, hlheV_pt, hJet3_pt, hlheHT_log, hPhiQQ, hJets12_pt_log, hJets12_pt, hJet1q_pt_log, hJet2q_pt_log, hbdt, hbdt_atanh };
 			for (int i=0;i<numArray;i++){
 				histArray[i]->Sumw2();
 			}
@@ -620,6 +625,15 @@ Float_t LHE_weights_scale_wgt[10];
 
 	TF1* func_JetsPt = new TF1("func_JetsPt","pol5",4.3,10);
 	TF1* func_EtaQQ = new TF1("func_EtaQQ","pol7",0,10);
+	TF1* func_Mqq = new TF1("func_Mqq","pol6",0,10);
+	func_Mqq->FixParameter(0,5968.223851);
+	func_Mqq->FixParameter(1,-5554.340558);
+	func_Mqq->FixParameter(2,2146.273308);
+	func_Mqq->FixParameter(3,-440.733829);
+	func_Mqq->FixParameter(4,50.729466);
+	func_Mqq->FixParameter(5,-3.103351);
+	func_Mqq->FixParameter(6,0.0788278);
+
 	rochcor2016 *rmcor = new rochcor2016();
 
 
@@ -742,6 +756,7 @@ Float_t LHE_weights_scale_wgt[10];
 //		if  ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_EtaQQ->Eval(qqDeltaEta);		
 //
 //
+		Float_t Mqq_log = TMath::Log(Mqq);	
 		float jets_ptSum =TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt());
 		if (region.CompareTo("el")==0) {
 			func_JetsPt->FixParameter(0,-467.774);
@@ -756,12 +771,13 @@ Float_t LHE_weights_scale_wgt[10];
 			func_EtaQQ->FixParameter(2,-0.456008);
 			func_EtaQQ->FixParameter(3,0.352969);
 			func_EtaQQ->FixParameter(4,-0.125972);
-			func_EtaQQ->FixParameter(5,0.022963);
-			func_EtaQQ->FixParameter(6,-0.002084);
-			func_EtaQQ->FixParameter(7,0.000075);
+			func_EtaQQ->FixParameter(5,0.0229632);
+			func_EtaQQ->FixParameter(6,-0.00208432);
+			func_EtaQQ->FixParameter(7,0.0000746385);
 
-			if ((jets_ptSum>=4.3) && (jets_ptSum<=7.7113)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_JetsPt->Eval(TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt()));		
-			if (qqDeltaEta<=8.43) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_EtaQQ->Eval(qqDeltaEta);		
+	//		if ((jets_ptSum>=4.3) && (jets_ptSum<=7.7113)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_JetsPt->Eval(TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt()));		
+	//		if (qqDeltaEta<=8.43) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_EtaQQ->Eval(qqDeltaEta);	
+			if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_Mqq->Eval(Mqq_log);		
 		}
 		if (region.CompareTo("mu")==0) {
 			func_JetsPt->FixParameter(0,-328.522);
@@ -776,13 +792,14 @@ Float_t LHE_weights_scale_wgt[10];
 			func_EtaQQ->FixParameter(2,-0.336039);
 			func_EtaQQ->FixParameter(3,0.297989);
 			func_EtaQQ->FixParameter(4,-0.119395);
-			func_EtaQQ->FixParameter(5,0.024250);
-			func_EtaQQ->FixParameter(6,-0.002435);
-			func_EtaQQ->FixParameter(7,0.000096);
+			func_EtaQQ->FixParameter(5,0.0242497);
+			func_EtaQQ->FixParameter(6,-0.0024353);
+			func_EtaQQ->FixParameter(7,0.000095607);
 
-			if ((jets_ptSum>=4.3) && (jets_ptSum<=8.145)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_JetsPt->Eval(TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt()));		
+	//		if ((jets_ptSum>=4.3) && (jets_ptSum<=8.145)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_JetsPt->Eval(TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt()));		
 		}
-			if (qqDeltaEta<=8.21) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_EtaQQ->Eval(qqDeltaEta);		
+	//		if (qqDeltaEta<=8.21) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_EtaQQ->Eval(qqDeltaEta);		
+			if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_Mqq->Eval(Mqq_log);		
 
 
 		float qter1 = 1.0;
@@ -914,6 +931,9 @@ Float_t LHE_weights_scale_wgt[10];
 				hJets12_pt_log->Fill(TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt()),genweight);
 				hJet1q_pt_log->Fill(TMath::Log(jets_pv[0].Pt()),genweight);
 				hJet2q_pt_log->Fill(TMath::Log(jets_pv[1].Pt()),genweight);
+
+				hbdt->Fill(bdt,genweight);
+				hbdt_atanh->Fill(TMath::ATanH((bdt+1)/2),genweight);
 
 		
 		if (genweight>0) pos_weight_presel++;
