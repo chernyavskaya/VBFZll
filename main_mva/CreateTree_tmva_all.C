@@ -13,6 +13,10 @@
 #include <stdlib.h>
 #include <vector>
 #include "/afs/cern.ch/work/n/nchernya/VBFZll/plotter/EWcorr.C"
+#include "/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/rochcor2016.h"
+#include "/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/rochcor2016.cc"
+#include "/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/RoccoR.cc"
+#include "/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/RoccoR.h"
 
 
 const int njets = 300;
@@ -33,6 +37,27 @@ typedef struct {
 	Float_t Zll_pt;
 }TMVAstruct;
 
+float getScaleFactor(TH2F *scaleMap, double pt, double eta, float sf_err, bool abs) {
+//    std::cout<<"called getScaleFactor"<<std::endl;
+  //  std::cout<<pt<<":, "<<eta<<std::endl;
+    float sfactor = 1.0;
+    int binx = scaleMap->GetXaxis()->FindBin(pt);
+	 int biny;
+    if (abs==0) biny = scaleMap->GetYaxis()->FindBin(eta);
+    else biny = scaleMap->GetYaxis()->FindBin(TMath::Abs(eta));
+    if ( (binx != 0) && (binx != scaleMap->GetNbinsX()+1) && (biny != 0) && (biny != scaleMap->GetNbinsY()+1)) {
+        sfactor = scaleMap->GetBinContent(binx, biny);
+        sf_err = scaleMap->GetBinError(binx, biny);
+	//		cout<<sfactor<<endl;
+        if (sfactor == 0.0) {
+            // bin was not filled for w/e reason, assume we don't have value in this 2D bin from the json
+            sfactor = 1.0;
+            sf_err = 0.0;
+        }
+    }
+    //std::cout<<sfactor<<std::endl;
+    return sfactor;
+}
 
 using namespace std;
 
@@ -45,13 +70,34 @@ void CreateTree_tmva_all::Loop(TString file_tag, TString region)
    Long64_t nbytes = 0, nb = 0;
 	TMVAstruct TMVA;
 
+gROOT->ProcessLine(".L /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/RoccoR.cc++");
+gROOT->ProcessLine(".L /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/rochcor2016.cc++");
+
+	TF1* func_JetsPt = new TF1("func_JetsPt","pol5",4.3,10);
+
+	TF1* func_Mqq = new TF1("func_Mqq","pol6",0,10);
+	func_Mqq->FixParameter(0,5968.223851);
+	func_Mqq->FixParameter(1,-5554.340558);
+	func_Mqq->FixParameter(2,2146.273308);
+	func_Mqq->FixParameter(3,-440.733829);
+	func_Mqq->FixParameter(4,50.729466);
+	func_Mqq->FixParameter(5,-3.103351);
+	func_Mqq->FixParameter(6,0.0788278);
+
+	rochcor2016 *rmcor = new rochcor2016();
+	TFile* file_trig_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/skimmed/TriggerEffMap_electronTriggerEfficiencyHLT_Ele27_WPLoose_eta2p1_WP90_BCDEF.root");
+	TH2F* trig_el = (TH2F*)file_trig_el->Get("TriggerEffMap_electronTriggerEfficiencyHLT_Ele27_WPLoose_eta2p1_WP90_BCDEF");
+	TFile* file_trig_mu_bf = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/skimmed/TriggerEffMap_MuonTrigger_data_all_IsoMu22_OR_IsoTkMu22_pteta_Run2016B_beforeL2Fix.root");
+	TH2F* trig_mu_bf = (TH2F*)file_trig_mu_bf->Get("TriggerEffMap_MuonTrigger_data_all_IsoMu22_OR_IsoTkMu22_pteta_Run2016B_beforeL2Fix");
+	TFile* file_trig_mu_aft = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/skimmed/TriggerEffMap_MuonTrigger_data_all_IsoMu22_OR_IsoTkMu22_pteta_Run2016B_afterL2Fix.root");
+	TH2F* trig_mu_aft = (TH2F*)file_trig_mu_aft->Get("TriggerEffMap_MuonTrigger_data_all_IsoMu22_OR_IsoTkMu22_pteta_Run2016B_afterL2Fix");
 
 	int events_saved=0;
 
 	float weight;	
  
 
-	TFile file("main_tmva_tree_"+file_tag+"_v24"+region+".root","recreate");
+	TFile file("main_tmva_tree_"+file_tag+"_v24"+region+"_MqqLog.root","recreate");
 	TTree *tree0 = new TTree("TMVA","TMVA");
 
 	tree0->Branch("Mqq",&TMVA.Mqq,"Mqq/F");
@@ -117,7 +163,7 @@ void CreateTree_tmva_all::Loop(TString file_tag, TString region)
 		Qjet2 = jets_pv[1];
 		float jet3_pt = 0. ;
 		if (good_jets>=3) jet3_pt = jets_pv[2].Pt();
-		else jet3_pt = 10.;
+	//	else jet3_pt = 10.;
 		qq=Qjet1+Qjet2;
 		Float_t Mqq = qq.M();
 		Float_t qq_pt = qq.Pt();
@@ -145,28 +191,80 @@ void CreateTree_tmva_all::Loop(TString file_tag, TString region)
 
 		if (isData==1) { 
 			string file_tag_str = file_tag.Data();
-			if  (file_tag_str.find("SingleMuon")!=std::string::npos) if (!((HLT_BIT_HLT_IsoMu22_v==1) || (HLT_BIT_HLT_IsoTkMu22_v==1) )) continue; 
+			if  (file_tag_str.find("SingleMuon")!=std::string::npos) if (!((HLT_BIT_HLT_IsoMu27_v==1) || (HLT_BIT_HLT_IsoTkMu27_v==1) )) continue; 
 			if  (file_tag.CompareTo("SingleElectron")==0) if (!(HLT_BIT_HLT_Ele27_eta2p1_WPLoose_Gsf_v == 1)) continue;
 		} else if (isData!=1) {
 			if (region.CompareTo("mu")==0) {
-			//	cout<<vLeptons_SF_HLT_RunD4p2[0]<<"  "<<vLeptons_SF_HLT_RunD4p3[0]<<endl;
-				genWeight*=(0.032*vLeptons_SF_HLT_RunD4p2[0] + 0.96799*vLeptons_SF_HLT_RunD4p3[0]);
-			//	cout<<genWeight<<endl;
+				float SF_mu_bf_err1 = 0.;
+				float SF_mu_bf_err2 = 0.;
+				float SF_mu_aft_err1 = 0.;
+				float SF_mu_aft_err2 = 0.;
+				bool abs=1;
+				float eff1 =0.02772*getScaleFactor(trig_mu_bf, lepton1.Pt(), lepton1.Eta(), SF_mu_bf_err1,abs ) + 0.97227*getScaleFactor(trig_mu_aft, lepton1.Pt(), lepton1.Eta(), SF_mu_bf_err1,abs ) ;  	
+				float eff2 =0.02772*getScaleFactor(trig_mu_bf, lepton2.Pt(), lepton2.Eta(), SF_mu_bf_err2,abs ) + 0.97227*getScaleFactor(trig_mu_aft, lepton2.Pt(), lepton2.Eta(), SF_mu_bf_err2,abs  ) ;  
+				genWeight*= eff1*(1-eff2)*eff1 + eff2*(1-eff1)*eff2 + eff1*eff1*eff2*eff2; 	
 				genWeight*= vLeptons_SF_IdCutLoose[0]*vLeptons_SF_IdCutLoose[1] * vLeptons_SF_IsoLoose[0]* vLeptons_SF_IsoLoose[1]* vLeptons_SF_trk_eta[0]*vLeptons_SF_trk_eta[1];
 			}
+			if (region.CompareTo("el")==0) {
+				float SF_el_err1 = 0.;
+				float SF_el_err2 = 0.;
+				bool abs=0;
+				float eff1 = getScaleFactor(trig_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs );  	
+				float eff2 = getScaleFactor(trig_el, lepton2.Pt(), lepton2.Eta(), SF_el_err2,abs ); 
+				genWeight*= eff1*(1-eff2)*eff1 + eff2*(1-eff1)*eff2 + eff1*eff1*eff2*eff2; 	
+			}			
+		}
+		Float_t Mqq_log = TMath::Log(Mqq);	
+		float jets_ptSum =TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt());
+		if (region.CompareTo("el")==0) {
+			func_JetsPt->FixParameter(0,-467.774);
+			func_JetsPt->FixParameter(1,408.471);
+			func_JetsPt->FixParameter(2,-141.63);
+			func_JetsPt->FixParameter(3,24.4376);
+			func_JetsPt->FixParameter(4,-2.0985);
+			func_JetsPt->FixParameter(5,0.0717106);
+
+
+			if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if (file_tag.CompareTo("DYJetstoLL")==0) genWeight*=func_Mqq->Eval(Mqq_log);		
+//			if ((jets_ptSum>=4.3) && (jets_ptSum<=7.7113)) if (file_tag.CompareTo("DYJetstoLL")==0)  genWeight*=func_JetsPt->Eval(TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt()));		
+		}
+		if (region.CompareTo("mu")==0) {
+			func_JetsPt->FixParameter(0,-328.522);
+			func_JetsPt->FixParameter(1,280.199 );
+			func_JetsPt->FixParameter(2,-94.6805);
+			func_JetsPt->FixParameter(3,15.9021);
+			func_JetsPt->FixParameter(4,-1.32777);
+			func_JetsPt->FixParameter(5,0.0440635);
+
+	//		if ((jets_ptSum>=4.3) && (jets_ptSum<=8.145)) if (file_tag.CompareTo("DYJetstoLL")==0)   genWeight*=func_JetsPt->Eval(TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt()));		
+			if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if (file_tag.CompareTo("DYJetstoLL")==0)  genWeight*=func_Mqq->Eval(Mqq_log);		
 		}
 
+
+		float qter1 = 1.0;
+		float qter2 = 1.0;
+		float mu_correction1 = 1.0;
+		float mu_correction2 = 1.0;
+		if (isData!=1) 	if (region.CompareTo("mu")==0) {
+			rmcor->momcor_mc(lepton1, vLeptons_charge[0], vLeptons_trackerLayers[0], qter1);
+			rmcor->momcor_mc(lepton2, vLeptons_charge[idx_2ndLepton], vLeptons_trackerLayers[idx_2ndLepton], qter2);
+			}
+
+
 		if (good_jets<2) continue;
-		if (Qjet1.Pt() < 50) continue;
 		if (Qjet1.Pt() < 50) continue;
 		if (Qjet2.Pt() < 30) continue;
 		if (Mqq<200) continue;
 	
-		if (lepton1.Pt()<20) continue;	
+		if (lepton1.Pt()<30) continue;	
 		if (lepton2.Pt()<20) continue;	
 	 	if (region.CompareTo("el")==0) {
 			if (TMath::Abs(lepton1.Eta())>2.1) continue;	
 			if (TMath::Abs(lepton2.Eta())>2.1) continue;
+		}	
+	 	if (region.CompareTo("mu")==0) {
+			if (TMath::Abs(lepton1.Eta())>2.4) continue;	
+			if (TMath::Abs(lepton2.Eta())>2.4) continue;
 		}	
 		if (Zll_mass < 50 ) continue;
 		if (TMath::Abs(Zll_mass - 91.1876)>15) continue;
@@ -200,6 +298,7 @@ void CreateTree_tmva_all::Loop(TString file_tag, TString region)
 		tree0->Fill();	
 		events_saved++;		
 		if (region.CompareTo("mu")==0) if (events_saved>=140000) break;
+		if (region.CompareTo("el")==0) if (events_saved>=80000) break;
 
 	}  
 

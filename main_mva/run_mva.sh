@@ -14,6 +14,7 @@ current_sample=0
 while [ $current_sample -lt $max_samples_num ]
 do	
 	./run_all $path${input_dir[ $current_sample ]}$v24$ROOT ${input_dir[ $current_sample ]} mu 
+	./run_all $path${input_dir[ $current_sample ]}$v24$ROOT ${input_dir[ $current_sample ]} el 
 
 	current_sample=$(( $current_sample + 1 ))
 done
