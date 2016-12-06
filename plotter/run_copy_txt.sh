@@ -43,7 +43,7 @@ DYJetstoLL_HT600_Inf
 )
 
 prefix=''
-postfix=v24_ewk_mucorr_PtsumEtaQQ
+postfix=v24_ewk_mucorr_MqqLog_bdt
 v=v24
 ROOT=.root
 dataset_type=(mu el)

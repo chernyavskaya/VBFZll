@@ -584,10 +584,14 @@ Float_t LHE_weights_scale_wgt[10];
 	hlheV_pt->GetXaxis()->SetTitle("lheV_pt (GeV)");
 
 
+	TH1F *hJet3_pt_bdt = new TH1F("hJet3_pt_bdt","",21,-10,200);
+	hJet3_pt_bdt->GetXaxis()->SetTitle("p_{T} 3^{rd} jet, BDT>0.92 (GeV)");
+	TH1F *hAdJetHT_bdt = new TH1F("hAdJetHT_bdt","",51,-20,1000);
+	hAdJetHT_bdt->GetXaxis()->SetTitle("additional jets HT, BDT>0.92 (GeV)");
 
 
-   		const int numArray= 52; 
-   		TH1F* histArray[numArray] = { hMqq, hEtaQQ,hHTsoft,hSoft_n2,hSoft_n5,hSoft_n10,hnPVs, hJet1q_pt, hJet1q_eta, hJet1q_ptd, hJet1q_axis2, hJet1q_mult, hJet2q_pt, hJet2q_eta, hJet2q_ptd, hJet2q_axis2, hJet2q_mult, hmet,   hJet1q_leadTrackPt, hJet2q_leadTrackPt, hqq_pt,hV_mass, hqgl, hqgl2, hZll_mass, hZll_pt, hZll_phi, hZll_eta, hrho, hlepton1_pt, hlepton2_pt, hlepton1_eta, hlepton2_eta, hHT, hDeltaRelQQ, hRptHard, hEtaQQSum, hPhiZQ1, hZll_y, hZll_ystar, hZll_zstar, hMqq_log, hlheV_pt, hJet3_pt, hlheHT_log, hPhiQQ, hJets12_pt_log, hJets12_pt, hJet1q_pt_log, hJet2q_pt_log, hbdt, hbdt_atanh };
+   		const int numArray= 54; 
+   		TH1F* histArray[numArray] = { hMqq, hEtaQQ,hHTsoft,hSoft_n2,hSoft_n5,hSoft_n10,hnPVs, hJet1q_pt, hJet1q_eta, hJet1q_ptd, hJet1q_axis2, hJet1q_mult, hJet2q_pt, hJet2q_eta, hJet2q_ptd, hJet2q_axis2, hJet2q_mult, hmet,   hJet1q_leadTrackPt, hJet2q_leadTrackPt, hqq_pt,hV_mass, hqgl, hqgl2, hZll_mass, hZll_pt, hZll_phi, hZll_eta, hrho, hlepton1_pt, hlepton2_pt, hlepton1_eta, hlepton2_eta, hHT, hDeltaRelQQ, hRptHard, hEtaQQSum, hPhiZQ1, hZll_y, hZll_ystar, hZll_zstar, hMqq_log, hlheV_pt, hJet3_pt, hlheHT_log, hPhiQQ, hJets12_pt_log, hJets12_pt, hJet1q_pt_log, hJet2q_pt_log, hbdt, hbdt_atanh, hJet3_pt_bdt, hAdJetHT_bdt };
 			for (int i=0;i<numArray;i++){
 				histArray[i]->Sumw2();
 			}
@@ -934,6 +938,18 @@ Float_t LHE_weights_scale_wgt[10];
 
 				hbdt->Fill(bdt,genweight);
 				hbdt_atanh->Fill(TMath::ATanH((bdt+1)/2),genweight);
+
+				if (bdt>0.92) {
+					if (good_jets>=3) hJet3_pt_bdt->Fill(jets_pv[2].Pt(),genweight);
+					if (good_jets==2) hJet3_pt_bdt->Fill(-10.,genweight);
+					if (good_jets==2) hAdJetHT_bdt->Fill(-20.,genweight);
+					if (good_jets>=3) {
+						float AdJetHT = 0;
+						for (int i=2;i<good_jets;i++)
+							AdJetHT+=jets_pv[i].Pt();
+						hAdJetHT_bdt->Fill(AdJetHT,genweight);	
+					}
+				}
 
 		
 		if (genweight>0) pos_weight_presel++;

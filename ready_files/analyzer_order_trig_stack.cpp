@@ -79,7 +79,8 @@ gROOT->ProcessLine(".x /afs/cern.ch/work/n/nchernya/setTDRStyle.C");
 int set_type=atoi(argv[1]); // 0 - analysis, 1 - control region , top
  
 const int nfiles  = 7;
-TString leg_names[nfiles] = {"Data","VBF Z #rightarrow ll (#times 10)","WW + jets","ZZ + jets","WZ + jets", "t#bar{t}", "Z + jets"};
+//TString leg_names[nfiles] = {"Data","VBF Z #rightarrow ll (#times 10)","WW + jets","ZZ + jets","WZ + jets", "t#bar{t}", "Z + jets"};
+TString leg_names[nfiles] = {"Data","WW + jets","ZZ + jets","WZ + jets", "t#bar{t}", "Z + jets","VBF Z #rightarrow ll"};
 TString set_names[2] = {"Dimuon","Dielectron"}; 
 //if (set_type==0)leg_names[0] = "Data (DoubleB)";
 //if (set_type==1)leg_names[0] = "Data (SingleB)";
@@ -91,11 +92,11 @@ TString file_names_QCDdown[nfiles] = {"SingleMuon","EWK_LLJJ","WW","ZZ","WZ","TT
 TString file_names_JESup[nfiles] = {"SingleMuon","EWK_LLJJ","WW","ZZ","WZ","TT","DYJetstoLL_HT"};
 TString file_names_JESdown[nfiles] = {"SingleMuon","EWK_LLJJ","WW","ZZ","WZ","TT","DYJetstoLL_HT"};
 */
-TString file_names[nfiles] = {"SingleMuon","WW","ZZ","WZ","TT","DYJetstoLL_HT","EWK_LLJJ"};
-TString file_names_QCDup[nfiles] = {"SingleMuon","WW","ZZ","WZ","TT","DYJetstoLL_HT","EWK_LLJJ"};
-TString file_names_QCDdown[nfiles] = {"SingleMuon","WW","ZZ","WZ","TT","DYJetstoLL_HT","EWK_LLJJ"};
-TString file_names_JESup[nfiles] = {"SingleMuon","WW","ZZ","WZ","TT","DYJetstoLL_HT","EWK_LLJJ"};
-TString file_names_JESdown[nfiles] = {"SingleMuon","WW","ZZ","WZ","TT","DYJetstoLL_HT","EWK_LLJJ"};
+TString file_names[nfiles] = {"SingleMuon","WW","ZZ","WZ","TT","DYJetstoLL_amc","EWK_LLJJ"};
+TString file_names_QCDup[nfiles] = {"SingleMuon","WW","ZZ","WZ","TT","DYJetstoLL_amc","EWK_LLJJ"};
+TString file_names_QCDdown[nfiles] = {"SingleMuon","WW","ZZ","WZ","TT","DYJetstoLL_amc","EWK_LLJJ"};
+TString file_names_JESup[nfiles] = {"SingleMuon","WW","ZZ","WZ","TT","DYJetstoLL_amc","EWK_LLJJ"};
+TString file_names_JESdown[nfiles] = {"SingleMuon","WW","ZZ","WZ","TT","DYJetstoLL_amc","EWK_LLJJ"};
 int bg_begin;
 int qcd_begin=14;
  //bg_begin=2;
@@ -146,7 +147,7 @@ for (int i=0;i<nfiles;i++){
 	file_names_JESdown[i].Append(".root");
 }
 TString trigger[2] = {"", ""};
-TString dir_name= "plots_ht_tighttr_mucorr_MqqLog";
+TString dir_name= "plots_amc_tighttr_mucorr_MqqLog";
 dir_name.Append(set[set_type]+"/");
 //TString dir_name = "plots_amc/";
 Float_t lumi = 22000;
@@ -165,8 +166,8 @@ leg2->SetBorderSize(0);
 leg2->SetTextFont(42);
 leg2->SetTextSize(0.025);
 
-const int nhistos = 49; //40//52
-TString hist_names[nhistos]={"hMqq", "hEtaQQ","hHTsoft","hSoft_n2","hSoft_n5","hSoft_n10","hPVs", "hJet1q_pt", "hJet1q_eta", "hJet1q_ptd", "hJet1q_axis2", "hJet1q_mult", "hJet2q_pt", "hJet2q_eta", "hJet2q_ptd", "hJet2q_axis2", "hJet2q_mult", "hmet",   "hJet1q_leadTrackPt", "hJet2q_leadTrackPt", "hqq_pt","hV_mass", "hqgl", "hqgl2", "hZll_mass", "hZll_pt", "hZll_phi", "hZll_eta",  "hrho", "hlepton1_pt", "hlepton2_pt", "hlepton1_eta", "hlepton2_eta", "hDeltaRelQQ", "hRptHard", "hEtaQQSum", "hPhiZQ1", "hZll_y", "hZll_ystar", "hZll_zstar", "hMqq_log","hJet3_pt","hPhiQQ","hJets12_pt","hJets12_pt_log","hJet1q_pt_log","hJet2q_pt_log","hbdt","hbdt_atanh"};
+const int nhistos = 51; //40//52
+TString hist_names[nhistos]={"hMqq", "hEtaQQ","hHTsoft","hSoft_n2","hSoft_n5","hSoft_n10","hPVs", "hJet1q_pt", "hJet1q_eta", "hJet1q_ptd", "hJet1q_axis2", "hJet1q_mult", "hJet2q_pt", "hJet2q_eta", "hJet2q_ptd", "hJet2q_axis2", "hJet2q_mult", "hmet",   "hJet1q_leadTrackPt", "hJet2q_leadTrackPt", "hqq_pt","hV_mass", "hqgl", "hqgl2", "hZll_mass", "hZll_pt", "hZll_phi", "hZll_eta",  "hrho", "hlepton1_pt", "hlepton2_pt", "hlepton1_eta", "hlepton2_eta", "hDeltaRelQQ", "hRptHard", "hEtaQQSum", "hPhiZQ1", "hZll_y", "hZll_ystar", "hZll_zstar", "hMqq_log","hJet3_pt","hPhiQQ","hJets12_pt","hJets12_pt_log","hJet1q_pt_log","hJet2q_pt_log","hbdt","hbdt_atanh","hJet3_pt_bdt", "hAdJetHT_bdt"};
 std::array<int,100> LOGY_array = {};
 
 TString hist_names_sum[nhistos]={};
@@ -269,11 +270,53 @@ out_efficiency.open(dir_name+"efficiency.txt");
 //Float_t MC_datajesup[2] = {1.25,1.11};//////////ht PT sumEtaQQ
 //Float_t MC_datajeslow[2] = {1.35,1.31};/////////ht PT sumEtaQQ
 //
-Float_t MC_data[2] = {1.14, 1.19};//ht  without qcd
-Float_t MC_dataup[2] = {1.11,1.16};//////////ht up   wo wcd
-Float_t MC_datalow[2] = {1.07,1.12};//////////ht lo   wo qcd
-Float_t MC_datajesup[2] = {1.13,1.18};//////////ht lo   wo qcd
-Float_t MC_datajeslow[2] = {1.24,1.29};/////////ht lo wo qcd
+//Float_t MC_data[2] = {1.14, 1.19};//ht  without qcd
+//Float_t MC_dataup[2] = {1.11,1.16};//////////ht up   wo wcd
+//Float_t MC_datalow[2] = {1.07,1.12};//////////ht lo   wo qcd
+//Float_t MC_datajesup[2] = {1.13,1.18};//////////ht lo   wo qcd
+//Float_t MC_datajeslow[2] = {1.24,1.29};/////////ht lo wo qcd
+
+
+
+
+float ratio[5];
+int counter_ratio=0;
+TString file_names_mc[nfiles];
+do{
+float dataInt = 0;
+float MCint = 0;
+float DYint =0;
+file_names_mc[0] = file_names[0];
+for (int i=1;i<nfiles;i++) {
+	if (counter_ratio==0) file_names_mc[i] = file_names[i];
+	if (counter_ratio==1) file_names_mc[i] = file_names_QCDup[i];
+	if (counter_ratio==2) file_names_mc[i] = file_names_QCDdown[i];
+	if (counter_ratio==3) file_names_mc[i] = file_names_JESup[i];
+	if (counter_ratio==4) file_names_mc[i] = file_names_JESdown[i];
+}
+files=0;
+do{
+	TFile *file_initial_mc;		
+  	file_initial_mc = TFile::Open(file_names_mc[files]);
+//	cout<<file_names_mc[files]<<endl;
+	string file_name_tag = file_names_mc[files].Data();
+	TH1F *histos_mc[100];
+	int hist=0;
+	histos_mc[hist] = (TH1F*)file_initial_mc->Get(hist_names[hist])->Clone("mc");
+	if (files!=0 )histos_mc[hist]->Scale(lumi);  
+	if (files==0) dataInt = histos_mc[hist]->Integral(0,histos_mc[hist]->GetNbinsX()+1); 
+	if (files!=0) {
+		if (file_name_tag.find("DYJetstoLL")!=std::string::npos)  DYint= histos_mc[hist]->Integral(0,histos_mc[hist]->GetNbinsX()+1);
+		else MCint+=histos_mc[hist]->Integral(0,histos_mc[hist]->GetNbinsX()+1); 
+	}
+	files++;	
+} while (files<nfiles); 
+float tmp_ratio = (dataInt-MCint)/DYint;
+//cout<<tmp_ratio <<endl;
+ratio[counter_ratio] = tmp_ratio;
+counter_ratio++;
+} while (counter_ratio<5);
+
 
 
 files=0;
@@ -281,6 +324,7 @@ files=0;
 do{
 	TFile *file_initial;
   	file_initial = TFile::Open(file_names[files]);
+	string file_name_tag = file_names[files].Data();
 	//cout<<file_names[files]<<endl;
 	TH1F *histos[100];
 	for (int hist=0;hist<nhistos;++hist){
@@ -289,7 +333,7 @@ do{
 		histos[hist] = (TH1F*)file_initial->Get(hist_names[hist])->Clone("h");
 		if (files==0) data_histos[hist] = (TH1F*)file_initial->Get(hist_names[hist])->Clone("data");
 		if (files>0)histos[hist]->Scale(lumi); 
-		if (files>0)histos[hist]->Scale(MC_data[set_type]);  
+		if (file_name_tag.find("DYJetstoLL")!=std::string::npos)  histos[hist]->Scale(ratio[0]);  
 ////////////////////////////
 ////////////////////////////
 ////////////////////////////
@@ -303,12 +347,14 @@ do{
 		if (files>0) histos[hist]->Sumw2(kFALSE);
 //		if (hist==1) cout<<files<<"   "<<histos[1]->Integral() <<endl;
 
-		if (files==1) {
+	//	if (files==1) {
+		if (files==nfiles-1) {
 			signal_histos[hist] = (TH1F*)file_initial->Get(hist_names[hist])->Clone(hist_names_sum[hist]+"newhist");
 			signal_histos[hist]->Scale(lumi);
-			signal_histos[hist]->Scale(10);
+		//	signal_histos[hist]->Scale(10);
 			signal_histos[hist]->Sumw2(kFALSE);
-			signal_histos[hist]->SetLineColor(LINECOLOR[files]);
+		//	signal_histos[hist]->SetLineColor(LINECOLOR[files]);
+			signal_histos[hist]->SetLineColor(kRed+2);
 			signal_histos[hist]->SetLineStyle(LINESTYLE[files]);
 			signal_histos2[hist]=(TH1F*)signal_histos[hist]->Clone("signalHist2");
 		}
@@ -328,8 +374,11 @@ do{
 	 	if (files>=1) stacks[hist]->Add(histos[hist]);
 		if (hist==0) histos_for_legened[files] = (TH1F*)histos[0]->Clone("newd");
 		if (files==bg_begin)	discr_histos[hist] = (TH1F*)file_initial->Get(hist_names[hist])->Clone("discr");
-		if ((files>bg_begin)&&())	discr_histos[hist]->Add(histos[hist]); 
+		if ((files>bg_begin)&&(files<(nfiles-1))){
+			cout<<file_names[files]<<endl;
+			discr_histos[hist]->Add(histos[hist]); 
    	}
+		}
 		if (files>=bg_begin) totalBG+=histos[4]->Integral();
 		if (files>0) totalMC+=histos[4]->Integral();
 		if (files==0) {totalData+=histos[4]->Integral(); }
@@ -339,6 +388,7 @@ do{
 		if (files==nfiles-1) out_efficiency<<"Total BG"<<"\t \t \t  "<<std::setprecision(5)<<totalBG<<endl;
 		if (files==nfiles-1) out_efficiency<<"Total MC"<<"\t \t \t  "<<std::setprecision(5)<<totalMC<<endl;
 		if (files==nfiles-1) out_efficiency<<"Data/MC"<<"\t \t \t  "<<std::setprecision(3)<<totalData/totalMC<<endl;
+		if (files==nfiles-1) out_efficiency<<"DY MC scaled with "<<"\t \t \t  "<<std::setprecision(3)<<ratio[0]<<endl;
 files++;
 }while (files<nfiles);
 out_efficiency.close();
@@ -350,13 +400,14 @@ files=1;
 do{
 	TFile *file_initial_up;		
   	file_initial_up = TFile::Open(file_names_QCDup[files]);
+	string file_name_tag = file_names_QCDup[files].Data();
 	TH1F *histos_QCDup[100];
 	for (int hist=0;hist<nhistos;++hist){
 		if (hist_names[hist].CompareTo("hbdt")==0) ((TH1F*)file_initial_up->Get(hist_names[hist]))->Rebin(4);
 		if (hist_names[hist].CompareTo("hbdt_atanh")==0) ((TH1F*)file_initial_up->Get(hist_names[hist]))->Rebin(10);
 		histos_QCDup[hist] = (TH1F*)file_initial_up->Get(hist_names[hist])->Clone("hup");
 		histos_QCDup[hist]->Scale(lumi);  //top
-		histos_QCDup[hist]->Scale(MC_dataup[set_type]);  //top
+		if (file_name_tag.find("DYJetstoLL")!=std::string::npos)  histos_QCDup[hist]->Scale(ratio[1]);  
 		if (files==1) 	hBkgQCDUp[hist] = (TH1F*)histos_QCDup[hist]->Clone(sum_histos_names[hist]+"QCDup");
 		if (files>1)	hBkgQCDUp[hist]->Add(histos_QCDup[hist]);
 		hBkgQCDUp[hist]->SetLineColor(kRed);
@@ -364,13 +415,14 @@ do{
 	}
 	TFile *file_initial_down;
   	file_initial_down = TFile::Open(file_names_QCDdown[files]);
+	file_name_tag = file_names_QCDdown[files].Data();
 	TH1F *histos_QCDdown[100];
 	for (int hist=0;hist<nhistos;++hist){
 		if (hist_names[hist].CompareTo("hbdt")==0) ((TH1F*)file_initial_down->Get(hist_names[hist]))->Rebin(4);
 		if (hist_names[hist].CompareTo("hbdt_atanh")==0) ((TH1F*)file_initial_down->Get(hist_names[hist]))->Rebin(10);
 		histos_QCDdown[hist] = (TH1F*)file_initial_down->Get(hist_names[hist])->Clone("hdown");
 		histos_QCDdown[hist]->Scale(lumi);  //top
-		histos_QCDdown[hist]->Scale(MC_datalow[set_type]);  //top
+		if (file_name_tag.find("DYJetstoLL")!=std::string::npos)  histos_QCDdown[hist]->Scale(ratio[2]);  
 		if (files==1) 	hBkgQCDLo[hist] = (TH1F*)histos_QCDdown[hist]->Clone(sum_histos_names[hist]+"QCDdown");
 		if (files>1)	hBkgQCDLo[hist]->Add(histos_QCDdown[hist]);
 		hBkgQCDLo[hist]->SetLineColor(kBlue);
@@ -383,13 +435,14 @@ files=1;
 do{
 	TFile *file_initial_up;		
   	file_initial_up = TFile::Open(file_names_JESup[files]);
+	string file_name_tag = file_names_JESup[files].Data();
 	TH1F *histos_JESup[100];
 	for (int hist=0;hist<nhistos;++hist){
 		if (hist_names[hist].CompareTo("hbdt")==0) ((TH1F*)file_initial_up->Get(hist_names[hist]))->Rebin(4);
 		if (hist_names[hist].CompareTo("hbdt_atanh")==0) ((TH1F*)file_initial_up->Get(hist_names[hist]))->Rebin(10);
 		histos_JESup[hist] = (TH1F*)file_initial_up->Get(hist_names[hist])->Clone("hup");
 		histos_JESup[hist]->Scale(lumi);  //top
-		histos_JESup[hist]->Scale(MC_datajesup[set_type]);  //top
+		if (file_name_tag.find("DYJetstoLL")!=std::string::npos)  histos_JESup[hist]->Scale(ratio[3]);  
 		if (files==1) 	hBkgJESUp[hist] = (TH1F*)histos_JESup[hist]->Clone(sum_histos_names[hist]+"JESup");
 		if (files>1)	hBkgJESUp[hist]->Add(histos_JESup[hist]);
 		hBkgJESUp[hist]->SetLineColor(kRed);
@@ -397,13 +450,14 @@ do{
 	}
 	TFile *file_initial_down;
   	file_initial_down = TFile::Open(file_names_JESdown[files]);
+	file_name_tag = file_names_JESdown[files].Data();
 	TH1F *histos_JESdown[100];
 	for (int hist=0;hist<nhistos;++hist){
 		if (hist_names[hist].CompareTo("hbdt")==0) ((TH1F*)file_initial_down->Get(hist_names[hist]))->Rebin(4);
 		if (hist_names[hist].CompareTo("hbdt_atanh")==0) ((TH1F*)file_initial_down->Get(hist_names[hist]))->Rebin(10);
 		histos_JESdown[hist] = (TH1F*)file_initial_down->Get(hist_names[hist])->Clone("hdown");
 		histos_JESdown[hist]->Scale(lumi);  //top
-		histos_JESdown[hist]->Scale(MC_datajeslow[set_type]);  //top
+		if (file_name_tag.find("DYJetstoLL")!=std::string::npos)  histos_JESdown[hist]->Scale(ratio[4]);  
 		if (files==1) 	hBkgJESLo[hist] = (TH1F*)histos_JESdown[hist]->Clone(sum_histos_names[hist]+"JESdown");
 		if (files>1)	hBkgJESLo[hist]->Add(histos_JESdown[hist]);
 		hBkgJESLo[hist]->SetLineColor(kBlue);
@@ -443,14 +497,15 @@ for (int hist=0;hist<nhistos;hist++){
 
 Float_t TSF[2] = {1.,1.};
 Float_t kfactors[2] = {0.,0.};
-kfactors[set_type] = 1./(MC_data[set_type] * TSF[set_type]);
+//kfactors[set_type] = 1./(MC_data[set_type] * TSF[set_type]);
+kfactors[set_type] = 1./(ratio[0] * TSF[set_type]);
 //cout<<"kfactor = "<<kfactors[set_type]<<endl;
 //cout<<"Data/MC = "<< MC_data[set_type]<<endl;
 
 
 for (int i=0;i<nfiles;i++){
 	if (i==0) leg->AddEntry(histos_for_legened[order_legend[i]],leg_names[i],"P");
-	if (i==1)  leg->AddEntry(histos_for_legened[order_legend[i]],leg_names[i],"L");
+	//if (i==1)  leg->AddEntry(histos_for_legened[order_legend[i]],leg_names[i],"L");
 	if (i>=bg_begin) leg->AddEntry(histos_for_legened[order_legend[i]],leg_names[i],"F");
 }
 leg->AddEntry(hBkgUncUp[0],"MC stat. unc.","F");
@@ -558,6 +613,10 @@ for (int i=0;i<nhistos;i++){
 			xmin=4.5;
 			xmax=9;
 		}
+		if (hist_names[i].CompareTo("hAdJetHT_bdt")==0) {
+			xmin=-30;
+			xmax=450;
+		}
 		TH1F *frame = new TH1F("frame","",1,xmin,xmax);
 		TGaxis::SetExponentOffset(-0.07,0,"xy");
 		frame->Reset();
@@ -618,6 +677,10 @@ for (int i=0;i<nhistos;i++){
 		TH1F *frame2 = new TH1F("frame2","",1,xmin,xmax);
 		frame2->SetMinimum(-.5);
       frame2->SetMaximum(.5);
+		if ((hist_names[i].CompareTo("hAdJetHT_bdt")==0)||(hist_names[i].CompareTo("hJet3_pt_bdt")==0)) {
+			frame2->SetMinimum(-1.);
+    	 	frame2->SetMaximum(1.);
+		}
       frame2->SetStats(0);
       frame2->SetTitleFont(42,"x");
 		frame2->SetTitleFont(42,"y");
