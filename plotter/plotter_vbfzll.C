@@ -175,14 +175,18 @@ xsec["SingleElectronG"] =  1.;
 xsec["DYJetstoLL"] =  5765.4;
 xsec["DYJetstoLL_amc"] =  5765.4;
 xsec["DYJetstoLL_HT100"] =  5765.4;
+xsec["DYJetstoLL_HT100_200"] = 173.96106;
+xsec["DYJetstoLL_HT200_400"] = 48.27802 ;
+xsec["DYJetstoLL_HT400_600"] =6.68755 ;
+xsec["DYJetstoLL_HT600_Inf"] = 2.588804;
 //xsec["DYJetstoLL_HT100_200"] = 147.40 ; 
 //xsec["DYJetstoLL_HT200_400"] = 40.99 ; 
 //xsec["DYJetstoLL_HT400_600"] = 5.678 ; 
 //xsec["DYJetstoLL_HT600_Inf"] = 2.198; 
-xsec["DYJetstoLL_HT100_200"] = 173.96106; 
-xsec["DYJetstoLL_HT200_400"] = 48.27802 ; 
-xsec["DYJetstoLL_HT400_600"] =6.68755 ; 
-xsec["DYJetstoLL_HT600_Inf"] = 2.588804; 
+//xsec["DYJetstoLL_HT100_200"] = 181.302; 
+//xsec["DYJetstoLL_HT200_400"] =50.4177  ; 
+//xsec["DYJetstoLL_HT400_600"] =6.98394; 
+//xsec["DYJetstoLL_HT600_Inf"] =2.70354 ; 
 xsec["DYJetstoLL_Pt-100_amc"] = 5765.4; 
 xsec["DYJetstoLL_Pt-100To250_amc"] = 83.12; 
 xsec["DYJetstoLL_Pt-250To400_amc"] =3.047 ; 
@@ -193,6 +197,7 @@ xsec["WW"] =118.7;
 xsec["WZ"] = 47.13;
 xsec["ZZ"] =16.523;
 xsec["EWK_LLJJ"]=1.664;
+xsec["interference"]=1.664;
 
  int counter=0;
 
@@ -781,7 +786,8 @@ Float_t LHE_weights_scale_wgt[10];
 
 	//		if ((jets_ptSum>=4.3) && (jets_ptSum<=7.7113)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_JetsPt->Eval(TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt()));		
 	//		if (qqDeltaEta<=8.43) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_EtaQQ->Eval(qqDeltaEta);	
-			if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_Mqq->Eval(Mqq_log);		
+		
+	if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_Mqq->Eval(Mqq_log);		
 		}
 		if (region.CompareTo("mu")==0) {
 			func_JetsPt->FixParameter(0,-328.522);
@@ -803,7 +809,8 @@ Float_t LHE_weights_scale_wgt[10];
 	//		if ((jets_ptSum>=4.3) && (jets_ptSum<=8.145)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_JetsPt->Eval(TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt()));		
 		}
 	//		if (qqDeltaEta<=8.21) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_EtaQQ->Eval(qqDeltaEta);		
-			if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_Mqq->Eval(Mqq_log);		
+	
+		if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_Mqq->Eval(Mqq_log);		
 
 
 		float qter1 = 1.0;
@@ -936,8 +943,16 @@ Float_t LHE_weights_scale_wgt[10];
 				hJet1q_pt_log->Fill(TMath::Log(jets_pv[0].Pt()),genweight);
 				hJet2q_pt_log->Fill(TMath::Log(jets_pv[1].Pt()),genweight);
 
-				hbdt->Fill(bdt,genweight);
-				hbdt_atanh->Fill(TMath::ATanH((bdt+1)/2),genweight);
+				if  (file_tag.CompareTo("interference")!=0) {
+					hbdt->Fill(bdt,genweight);
+					hbdt_atanh->Fill(TMath::ATanH((bdt+1)/2),genweight);
+				}
+				else {
+					float interference_weight= 12.7733 + 1773.74/Mqq - 151127/(Mqq*Mqq) + 4.04978e+06/(Mqq*Mqq*Mqq) - 0.00044359*Mqq - 88.2666/TMath::Log(Mqq) - 1 ;
+					hbdt->Fill(bdt,genweight*interference_weight);
+					hbdt_atanh->Fill(TMath::ATanH((bdt+1)/2),genweight*interference_weight);
+				}
+		 
 
 				if (bdt>0.92) {
 					if (good_jets>=3) hJet3_pt_bdt->Fill(jets_pv[2].Pt(),genweight);

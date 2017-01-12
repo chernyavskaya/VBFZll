@@ -48,9 +48,12 @@ file_names=(
 #["SingleElectronF"]=SingleElectronF
 #["SingleElectronG"]=SingleElectronG
 ["EWK_LLJJ"]=EWK_LLJJ
+#["interference"]=EWK_LLJJ
 )
 prefix='main_mva_v24_'
-postfix='ewk_mucorr_MqqLog_bdt'
+#postfix='ewk_mucorr_MqqLog_bdt'
+#postfix='ewk_mucorr_nocorr_bdt_oldxsec'
+postfix='ewk_mucorr_MqqLog_bdt_oldxsec'
 v=v24
 ROOT=.root
 region=(mu el)
