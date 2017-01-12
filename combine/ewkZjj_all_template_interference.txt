@@ -1,0 +1,49 @@
+imax 1  number of channels
+jmax *  number of backgrounds
+kmax *  number of nuisance parameters (sources of systematical uncertainties)
+------------
+shapes * $channel  $DIRECTORY/$shapesfilename $bdtname_$CHANNEL_$PROCESS $bdtname_$CHANNEL_$PROCESS_$SYSTEMATIC
+------------
+bin $channel
+observation $data
+------------
+bin          	 		$channel		$channel		$channel		$channel		$channel	
+process        	 		EWKZ		DY		Top		VV		interference
+process       	  		0     		1		2		3		4
+rate				$EWKZ           $DY             $Top            $VV             $interference                      
+------------
+lumi_13TeV    	lnN    		1.062  	 	1.062		1.062		1.062		-		Lumi for 13TeV 22fb-1
+CMS_ewkzjj_$channel_eff		lnN		1.030		1.030		1.030		1.030		1.030		Efficiencies
+CMS_ewkzjj_SigAcc  	lnN             1.060		-		-		-		-		signal acceptance
+CMS_ewkzjj_DY_norm		lnN		-		1.2		-		-		-		DY normalization
+CMS_ewkzjj_Top_norm	lnN		-		-		1.07		-		-		Top normalization
+CMS_ewkzjj_VV_norm		lnN		-		-		-		1.1		-		VV normalization
+CMS_ewkzjj_puWeight		shape		1.000		1.000		1.000		1.000		-		Pile-up shape
+CMS_ewkzjj_LHE_weights_scale_EWKZ		shape		1.000		-		-		-		-		QCD scale shape
+CMS_ewkzjj_LHE_weights_scale_DY		shape		-		1.000		-	-		-		QCD scale shape
+CMS_ewkzjj_LHE_weights_scale_Top		shape		-		-		1.000		-		-		QCD scale shape
+CMS_ewkzjj_stats_DY_$channel_b1		shape		-		1.000		-		-		-		Statiscal uncertainties per DY bin
+CMS_ewkzjj_stats_DY_$channel_b2		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b3		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b4		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b5		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b6		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b7		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b8		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b9		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b10		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b11		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b12		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b13		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b14		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b15		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b16		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b17		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b18		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b19		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b20		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b21		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b23		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b24		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_$channel_b25		shape		-		1.000		-		-		-
+#CMS_ewkzjj_int_norm		lnN		-		-		-		-		1.5		interference normalization

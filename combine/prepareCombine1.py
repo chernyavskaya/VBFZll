@@ -12,7 +12,9 @@ mcGroups = {'DY_mdg': ["DYJetstoLL_HT100","DYJetstoLL_HT100_200","DYJetstoLL_HT2
 				'DY_amc': ["DYJetstoLL_amc"],
             'Top': ["TT"],
             'VV': ["WW","WZ","ZZ"],
-            'EWKZ': ["EWK_LLJJ"]}
+            'EWKZ': ["EWK_LLJJ"],
+				'interference': ["interference"]
+}
 
 def getTreeLocation():
   return "/afs/cern.ch/work/n/nchernya/VBFZll/combine/"
@@ -44,34 +46,35 @@ def merge(sourceFile, plot, histList, addError = 0., bin = 0):
 expected = {}
 expectedStr = {}
 JESnorm = {}
-combineFile = TFile("ewkZjj_13TeV.root","RECREATE")
 for type in ["mu","el"]: 
+ combineFile = TFile("ewkZjj_13TeV_" + type +".root","RECREATE")
  for process in ["SingleMuon","SingleElectron"] : #,"WW","WZ","ZZ","TT","EWK_LLJJ","DYJetstoLL_amc","DYJetstoLL_HT100","DYJetstoLL_HT100_200","DYJetstoLL_HT200_400","DYJetstoLL_HT400_600","DYJetstoLL_HT600_Inf"]:
   if process=="SingleMuon" and type!="mu" :
     continue
   if process=="SingleElectron" and type!="el" :
     continue
   print "prepare " + type + process
-  sourceFile13var = TFile(getTreeLocation() + "inputs/root/EWKzjj_v24_systematics.root")
+  sourceFile13var = TFile(getTreeLocation() + "inputs/root/EWKzjj_v24_systematics2.root")
   for basePlot in ["BDT","atanhBDT"]:
     sourceFile = sourceFile13var
     basePlot_ = basePlot
     data = getPlot(sourceFile, "", basePlot_ +"_"+ type +"_"+ process )
     combineFile.cd()
-    data.Write()
+    data_newname = data.Clone(basePlot_+"_"+type+"_"+"data_obs")
+    data_newname.Write()
  
   for basePlot in ["BDT","atanhBDT"]:
     sourceFile = sourceFile13var
     basePlot_ = basePlot
-    for systematic in [""]:
+    for systematic in ["","_CMS_ewkzjj_puWeightUp","_CMS_ewkzjj_puWeightDown","_CMS_ewkzjj_LHE_weights_scaleUp","_CMS_ewkzjj_LHE_weights_scaleDown"]:
       for name, mcs in mcGroups.iteritems():
-        print name
+        if name=="VV" and (systematic=="_CMS_ewkzjj_LHE_weights_scaleUp" or systematic=="_CMS_ewkzjj_LHE_weights_scaleDown") : continue
         for each in mcs:
           print each
           combineFile.cd()
           if not combineFile.FindKey(each) : directory=combineFile.mkdir(each)
           combineFile.cd(each)
-          hist = getPlot(sourceFile,"",basePlot_+"_"+type+"_"+each)
-          hist.Write(basePlot_+"_"+type+"_"+name)
+          hist = getPlot(sourceFile,"",basePlot_+"_"+type+"_"+each+systematic)
+          hist.Write(basePlot_+"_"+type+"_"+name+systematic)
 
 exit()
