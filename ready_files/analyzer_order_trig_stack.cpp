@@ -383,10 +383,10 @@ do{
 		if (files>0) totalMC+=histos[4]->Integral();
 		if (files==0) {totalData+=histos[4]->Integral(); }
 		if (files==0) out_efficiency<<"Sample  \t\t\t yield(per "<< lumi<<" pb^-1)"<<endl;
-		if (files==0) out_efficiency<<leg_names[order[files]]<<"\t \t \t"<< std::setprecision(5)<<histos[4]->Integral() <<endl;
-		else out_efficiency<<leg_names[order[files]]<<"\t\t\t  "<<std::setprecision(5)<<histos[4]->Integral()<<endl;
-		if (files==nfiles-1) out_efficiency<<"Total BG"<<"\t \t \t  "<<std::setprecision(5)<<totalBG<<endl;
-		if (files==nfiles-1) out_efficiency<<"Total MC"<<"\t \t \t  "<<std::setprecision(5)<<totalMC<<endl;
+		if (files==0) out_efficiency<<leg_names[order[files]]<<"\t \t \t"<< std::setprecision(8)<<histos[4]->Integral() <<endl;
+		else out_efficiency<<leg_names[order[files]]<<"\t\t\t  "<<std::setprecision(8)<<histos[4]->Integral()<<endl;
+		if (files==nfiles-1) out_efficiency<<"Total BG"<<"\t \t \t  "<<std::setprecision(8)<<totalBG<<endl;
+		if (files==nfiles-1) out_efficiency<<"Total MC"<<"\t \t \t  "<<std::setprecision(8)<<totalMC<<endl;
 		if (files==nfiles-1) out_efficiency<<"Data/MC"<<"\t \t \t  "<<std::setprecision(3)<<totalData/totalMC<<endl;
 		if (files==nfiles-1) out_efficiency<<"DY MC scaled with "<<"\t \t \t  "<<std::setprecision(3)<<ratio[0]<<endl;
 files++;
@@ -607,6 +607,9 @@ for (int i=0;i<nhistos;i++){
 		Double_t xmax = signal_histos[i]->GetBinCenter(signal_histos[i]->GetNbinsX())+signal_histos[i]->GetBinWidth(signal_histos[i]->GetNbinsX());
 		if (hist_names[i].CompareTo("hPVs")==0) {
 			xmax=30;
+			LOGY=false;
+		}
+		if ((hist_names[i].CompareTo("hAdJetHT_bdt")==0) || (hist_names[i].CompareTo("hJet3_pt_bdt")==0)) {
 			LOGY=false;
 		}
 		if (hist_names[i].CompareTo("hMqq_log")==0) {
