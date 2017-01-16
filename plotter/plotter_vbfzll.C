@@ -175,18 +175,18 @@ xsec["SingleElectronG"] =  1.;
 xsec["DYJetstoLL"] =  5765.4;
 xsec["DYJetstoLL_amc"] =  5765.4;
 xsec["DYJetstoLL_HT100"] =  5765.4;
-xsec["DYJetstoLL_HT100_200"] = 173.96106;
-xsec["DYJetstoLL_HT200_400"] = 48.27802 ;
-xsec["DYJetstoLL_HT400_600"] =6.68755 ;
-xsec["DYJetstoLL_HT600_Inf"] = 2.588804;
+//xsec["DYJetstoLL_HT100_200"] = 173.96106;
+//xsec["DYJetstoLL_HT200_400"] = 48.27802 ;
+//xsec["DYJetstoLL_HT400_600"] =6.68755 ;
+//xsec["DYJetstoLL_HT600_Inf"] = 2.588804;
 //xsec["DYJetstoLL_HT100_200"] = 147.40 ; 
 //xsec["DYJetstoLL_HT200_400"] = 40.99 ; 
 //xsec["DYJetstoLL_HT400_600"] = 5.678 ; 
 //xsec["DYJetstoLL_HT600_Inf"] = 2.198; 
-//xsec["DYJetstoLL_HT100_200"] = 181.302; 
-//xsec["DYJetstoLL_HT200_400"] =50.4177  ; 
-//xsec["DYJetstoLL_HT400_600"] =6.98394; 
-//xsec["DYJetstoLL_HT600_Inf"] =2.70354 ; 
+xsec["DYJetstoLL_HT100_200"] = 181.302; 
+xsec["DYJetstoLL_HT200_400"] =50.4177  ; 
+xsec["DYJetstoLL_HT400_600"] =6.98394; 
+xsec["DYJetstoLL_HT600_Inf"] =2.70354 ; 
 xsec["DYJetstoLL_Pt-100_amc"] = 5765.4; 
 xsec["DYJetstoLL_Pt-100To250_amc"] = 83.12; 
 xsec["DYJetstoLL_Pt-250To400_amc"] =3.047 ; 
@@ -198,6 +198,45 @@ xsec["WZ"] = 47.13;
 xsec["ZZ"] =16.523;
 xsec["EWK_LLJJ"]=1.664;
 xsec["interference"]=1.664;
+
+xsec["QCD_HT100to200"] = 27990000;
+xsec["QCD_HT200to300"] = 1712000 ;
+xsec["QCD_HT300to500"] = 347700;
+xsec["QCD_HT500to700"] = 32100 ;
+xsec["QCD_HT700to1000"] = 6831;
+xsec["QCD_HT1000to1500"] = 1207 ;
+xsec["QCD_HT1500to2000"] =  119.9;
+xsec["QCD_HT2000toInf"] = 25.24;
+
+xsec["ST_tW"] = 71.7 ;			//inclusive decays
+xsec["ST_s-channel"] = 3.36; //leptonic decays
+xsec["ST_t-channel_top_4f_inclusiveDecays"] = 136.02;
+xsec["ST_t-channel_antitop_4f_inclusiveDecays"] = 80.95;
+xsec["ST_t-channel_top_4f_leptonDecays"] = 44.33;  //leptonDecays  , multiplied with BR 0.325
+xsec["ST_t-channel_antitop_4f_leptonDecays"] = 26.38;//leptonDecays ,multiplied with BR 0.325
+
+xsec["WJetsToLNu_amc"]  = 61526.7; //not going to use these ones
+xsec["WJetsToLNu"]  = 61526.7;
+
+//k factors 1.21 are not included// 
+/*xsec["WJetsToLNu_HT100To200"] = 1345 ;
+xsec["WJetsToLNu_HT200To400"] = 359.7  ;
+xsec["WJetsToLNu_HT400To600"] = 48.91;
+xsec["WJetsToLNu_HT600To800"] =12.05;
+xsec["WJetsToLNu_HT800To1200"] = 5.501;
+xsec["WJetsToLNu_HT1200To2500"] = 1.329;
+xsec["WJetsToLNu_HT2500ToInf"] = 0.03216;
+*/
+xsec["WJetsToLNu_HT100"]  = 61526.7;
+xsec["WJetsToLNu_HT100To200"] = 1627.45 ;
+xsec["WJetsToLNu_HT200To400"] = 435.236  ;
+xsec["WJetsToLNu_HT400To600"] = 59.18109;
+xsec["WJetsToLNu_HT600To800"] =14.5805;
+xsec["WJetsToLNu_HT800To1200"] = 6.656210;
+xsec["WJetsToLNu_HT1200To2500"] = 1.608089;
+xsec["WJetsToLNu_HT2500ToInf"] = 0.0389135;
+
+
 
  int counter=0;
 
@@ -646,6 +685,7 @@ Float_t LHE_weights_scale_wgt[10];
 	rochcor2016 *rmcor = new rochcor2016();
 
 
+	cout<<nentries<<endl;
 	for (int entry=0; entry<nentries;++entry){
 //	for (int entry=0; entry<100;++entry){
         tree_initial->GetEntry(entry);
@@ -681,6 +721,7 @@ Float_t LHE_weights_scale_wgt[10];
  
 		if  ((file_tag.CompareTo("DYJetstoLL_HT100")==0)) if (lheHT>100) continue;  
 		if  ((file_tag.CompareTo("DYJetstoLL_Pt-100_amc")==0)) if (lheV_pt>100) continue;  
+		if  ((file_tag.CompareTo("WJetsToLNu_HT100")==0)) if (lheHT>100) continue;  
 
 		int pt_num1 = -1;
 		int pt_num2 = -1;
@@ -702,9 +743,12 @@ Float_t LHE_weights_scale_wgt[10];
 			jets_indices.push_back(i);
 			good_jets++;
 		}
+		if (good_jets<2) continue;
+		
 		Qjet1 = jets_pv[0];
 		Qjet2 = jets_pv[1];
-		float jet3_pt = jets_pv[2].Pt();
+		float jet3_pt = 0;
+		if (good_jets>=3) jet3_pt=jets_pv[2].Pt();
 		qq=Qjet1+Qjet2;
 		Float_t Mqq = qq.M();
 		Float_t qq_pt = qq.Pt();
@@ -723,6 +767,18 @@ Float_t LHE_weights_scale_wgt[10];
 			}
 		}
 		lepton2.SetPtEtaPhiM(vLeptons_pt[idx_2ndLepton], vLeptons_eta[idx_2ndLepton], vLeptons_phi[idx_2ndLepton], vLeptons_mass[idx_2ndLepton]);
+		float qter1 = 1.0;
+		float qter2 = 1.0;
+		float mu_correction1 = 1.0;
+		float mu_correction2 = 1.0;
+		if (data!=1) 	if (region.CompareTo("mu")==0) {
+			rmcor->momcor_mc(lepton1, vLeptons_charge[0], vLeptons_trackerLayers[0], qter1);
+			rmcor->momcor_mc(lepton2, vLeptons_charge[idx_2ndLepton], vLeptons_trackerLayers[idx_2ndLepton], qter2);
+			}
+		if (data==1) 	if (region.CompareTo("mu")==0){
+			rmcor->momcor_data(lepton1, vLeptons_charge[0],  0, qter1);
+			rmcor->momcor_data(lepton2, vLeptons_charge[idx_2ndLepton], 0, qter2);
+			}
 
 
 		if (data==1) { 
@@ -813,20 +869,8 @@ Float_t LHE_weights_scale_wgt[10];
 		if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_Mqq->Eval(Mqq_log);		
 
 
-		float qter1 = 1.0;
-		float qter2 = 1.0;
-		float mu_correction1 = 1.0;
-		float mu_correction2 = 1.0;
 
 
-		if (data!=1) 	if (region.CompareTo("mu")==0) {
-			rmcor->momcor_mc(lepton1, vLeptons_charge[0], vLeptons_trackerLayers[0], qter1);
-			rmcor->momcor_mc(lepton2, vLeptons_charge[idx_2ndLepton], vLeptons_trackerLayers[idx_2ndLepton], qter2);
-			}
-		if (data==1) 	if (region.CompareTo("mu")==0){
-			rmcor->momcor_data(lepton1, vLeptons_charge[0],  0, qter1);
-			rmcor->momcor_data(lepton2, vLeptons_charge[idx_2ndLepton], 0, qter2);
-			}
 
 
 	
@@ -868,7 +912,7 @@ Float_t LHE_weights_scale_wgt[10];
 		if (TMath::Abs(Zll_mass - 91.1876)>15) continue;
 		cut_flow[6]+=genweight;
 
-		cout<<genweight<<endl;
+//		cout<<genweight<<endl;
 
 		presel+=genweight;
 

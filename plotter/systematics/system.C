@@ -175,10 +175,10 @@ xsec["DYJetstoLL_HT100"] =  5765.4;
 //xsec["DYJetstoLL_HT200_400"] = 40.99 ; 
 //xsec["DYJetstoLL_HT400_600"] = 5.678 ; 
 //xsec["DYJetstoLL_HT600_Inf"] = 2.198; 
-xsec["DYJetstoLL_HT100_200"] = 173.96106; 
-xsec["DYJetstoLL_HT200_400"] = 48.27802 ; 
-xsec["DYJetstoLL_HT400_600"] =6.68755 ; 
-xsec["DYJetstoLL_HT600_Inf"] = 2.588804; 
+xsec["DYJetstoLL_HT100_200"] = 181.302; 
+xsec["DYJetstoLL_HT200_400"] =50.4177  ; 
+xsec["DYJetstoLL_HT400_600"] =6.98394; 
+xsec["DYJetstoLL_HT600_Inf"] =2.70354 ; 
 xsec["DYJetstoLL_Pt-100_amc"] = 5765.4; 
 xsec["DYJetstoLL_Pt-100To250_amc"] = 83.12; 
 xsec["DYJetstoLL_Pt-250To400_amc"] =3.047 ; 
@@ -189,6 +189,26 @@ xsec["WW"] =118.7;
 xsec["WZ"] = 47.13;
 xsec["ZZ"] =16.523;
 xsec["EWK_LLJJ"]=1.664;
+xsec["interference"]=1.664;
+
+xsec["WJetsToLNu_amc"]  = 61526.7; //not going to use these ones
+xsec["WJetsToLNu"]  = 61526.7;
+xsec["WJetsToLNu_HT100"]  = 61526.7;
+xsec["WJetsToLNu_HT100To200"] = 1627.45 ;
+xsec["WJetsToLNu_HT200To400"] = 435.236  ;
+xsec["WJetsToLNu_HT400To600"] = 59.18109;
+xsec["WJetsToLNu_HT600To800"] =14.5805;
+xsec["WJetsToLNu_HT800To1200"] = 6.656210;
+xsec["WJetsToLNu_HT1200To2500"] = 1.608089;
+xsec["WJetsToLNu_HT2500ToInf"] = 0.0389135;
+
+xsec["ST_tW"] = 71.7 ;			//inclusive decays
+xsec["ST_s-channel"] = 3.36; //leptonic decays
+xsec["ST_t-channel_top_4f_inclusiveDecays"] = 136.02;
+xsec["ST_t-channel_antitop_4f_inclusiveDecays"] = 80.95;
+xsec["ST_t-channel_top_4f_leptonDecays"] = 44.33;  //leptonDecays  , multiplied with BR 0.325
+xsec["ST_t-channel_antitop_4f_leptonDecays"] = 26.38;//leptonDecays ,multiplied with BR 0.325
+
 
  int counter=0;
 
@@ -283,7 +303,11 @@ float gen_neg_weight=0;
 	Float_t lheHT;	
 	Float_t lheV_pt;	
 
+	const int Nsyst = 8;
 	Float_t bdt;
+	int passSel;
+	int passSel_JESR[4];
+	Float_t bdt_JESR[4];
 	Float_t met_pt;
 	Float_t met_phi;
 
@@ -389,6 +413,16 @@ Float_t LHE_weights_scale_wgt[10];
 	tree_initial->SetBranchAddress("lheHT",&lheHT);
 	tree_initial->SetBranchAddress("lheV_pt",&lheV_pt);
 	tree_initial->SetBranchAddress("BDT_VBF",&bdt);
+	tree_initial->SetBranchAddress("BDT_VBF_JES_up",bdt_JESR[0]);
+	tree_initial->SetBranchAddress("BDT_VBF_JES_down",bdt_JESR[1]);
+	tree_initial->SetBranchAddress("BDT_VBF_JER_up",bdt_JESR[2]);
+	tree_initial->SetBranchAddress("BDT_VBF_JER_down",bdt_JESR[3]);
+
+	tree_initial->SetBranchAddress("PassSelection_JES_up",passSel_JESR[0]);
+	tree_initial->SetBranchAddress("PassSelection_JES_down",passSel_JESR[1]);
+	tree_initial->SetBranchAddress("PassSelection_JER_up",passSel_JESR[2]);
+	tree_initial->SetBranchAddress("PassSelection_JER_down",passSel_JESR[3]);
+	tree_initial->SetBranchAddress("PassSelection_nom",&passSel);
 
 
 
@@ -401,8 +435,7 @@ Float_t LHE_weights_scale_wgt[10];
 	float lumi = 22000;
 
 
-	const int Nsyst = 5;
-	TString uncertainty_name[Nsyst] = {"","puWeight","LHE_weights_scale","LHE_weights_scale_muF","LHE_weights_scale_muR"};
+	TString uncertainty_name[Nsyst] = {"","puWeight","LHE_weights_scale","LHE_weights_scale_muF","LHE_weights_scale_muR","JES","JER","MDG_NLO_corr"};
 	TH1F *hbdtUp[20];
 	TH1F *hbdt_atanhUp[20];
 	TH1F *hbdtDown[20];
@@ -412,19 +445,19 @@ Float_t LHE_weights_scale_wgt[10];
 		char histTitleDown[50];
 		if (i==0) {
 			sprintf(histTitleUp,"BDT_\%s_\%s",region.Data(),file_tag.Data());
-			hbdtUp[i] = new TH1F(histTitleUp,"",100,-1.,1.);
+			hbdtUp[i] = new TH1F(histTitleUp,"",500,-1.,1.);
 			sprintf(histTitleUp,"atanhBDT_\%s_\%s",region.Data(),file_tag.Data());
-			hbdt_atanhUp[i] = new TH1F(histTitleUp,"",300,0.,3.);
+			hbdt_atanhUp[i] = new TH1F(histTitleUp,"",900,0.,3.);
 		}
 		else {
 			sprintf(histTitleUp,"BDT_\%s_\%s_CMS_ewkzjj_\%sUp",region.Data(),file_tag.Data(),uncertainty_name[i].Data());
 			sprintf(histTitleDown,"BDT_\%s_\%s_CMS_ewkzjj_\%sDown",region.Data(),file_tag.Data(),uncertainty_name[i].Data());
-			hbdtUp[i] = new TH1F(histTitleUp,"",100,-1.,1.);
-			hbdtDown[i] = new TH1F(histTitleDown,"",100,-1.,1.);
+			hbdtUp[i] = new TH1F(histTitleUp,"",500,-1.,1.);
+			hbdtDown[i] = new TH1F(histTitleDown,"",500,-1.,1.);
 			sprintf(histTitleUp,"atanhBDT_\%s_\%s_CMS_ewkzjj_\%sUp",region.Data(),file_tag.Data(),uncertainty_name[i].Data());
 			sprintf(histTitleDown,"atanhBDT_\%s_\%s_CMS_ewkzjj_\%sDown",region.Data(),file_tag.Data(),uncertainty_name[i].Data());
-			hbdt_atanhUp[i] = new TH1F(histTitleUp,"",300,0.,3.);
-			hbdt_atanhDown[i] = new TH1F(histTitleDown,"",300,0.,3.);
+			hbdt_atanhUp[i] = new TH1F(histTitleUp,"",900,0.,3.);
+			hbdt_atanhDown[i] = new TH1F(histTitleDown,"",900,0.,3.);
 		}
 		}		
 
@@ -475,12 +508,14 @@ TFile file(output+"/"+file_tag+"_"+region+"_"+heppyVersion+"_"+postfix+".root","
 float scaleWeightsUp[20];
 float scaleWeightsDown[20];
 string file_tag_str = file_tag.Data();
-TString uncNotAppl[20] = {"","data","WW_WZ_ZZ","WW_WZ_ZZ","WW_WZ_ZZ"};
+TString uncNotAppl[20] = {"","data","WW_WZ_ZZ","WW_WZ_ZZ","WW_WZ_ZZ","","",""};
 for (int current_syst=0;current_syst<Nsyst;current_syst++){
 	if ((data==1)&&(current_syst!=0)) continue;
 	string uncNotAppl_str = uncNotAppl[current_syst].Data();
 	if (current_syst!=0) if (uncNotAppl_str.find(file_tag_str)!=std::string::npos) continue;
+	if  ( (uncertainty_name[current_syst].CompareTo("MDG_NLO_corr")==0) &&(  !((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)) ) )  continue;
 	bdt = 0;
+	passSel=0;
 	genweight = 0 ;
 	for (int entry=0; entry<nentries;++entry){
         tree_initial->GetEntry(entry);
@@ -499,6 +534,13 @@ for (int current_syst=0;current_syst<Nsyst;current_syst++){
 		scaleWeightsUp[4] = puweight/events_generated_muR_QCDUp*LHE_weights_scale_wgt[2];
 		scaleWeightsDown[4] = puweight/events_generated_muR_QCDDown*LHE_weights_scale_wgt[3];
 
+		scaleWeightsUp[5] = puweight/events_generated;
+		scaleWeightsDown[5] = puweight/events_generated;
+		scaleWeightsUp[6] = puweight/events_generated;
+		scaleWeightsDown[6] = puweight/events_generated;
+
+		scaleWeightsUp[7] = puweight/events_generated;
+		scaleWeightsDown[7] = puweight/events_generated;
 
 		if (JSON!=1) {
 			continue;
@@ -512,8 +554,7 @@ for (int current_syst=0;current_syst<Nsyst;current_syst++){
 
 		if (data==1) PU=1.;
 		else PU=puweight;
-		genweight0 = genweight/TMath::Abs(genweight);
-		genweight=genweight/TMath::Abs(genweight)/xsec[file_tag]*lumi;
+		genweight=genweight/TMath::Abs(genweight)*xsec[file_tag]*lumi;
 
 		
 		double GenVbosons_pt_first = GenVbosons_pt[0];
@@ -565,6 +606,14 @@ for (int current_syst=0;current_syst<Nsyst;current_syst++){
 			}
 		}
 		lepton2.SetPtEtaPhiM(vLeptons_pt[idx_2ndLepton], vLeptons_eta[idx_2ndLepton], vLeptons_phi[idx_2ndLepton], vLeptons_mass[idx_2ndLepton]);
+		if (data!=1) 	if (region.CompareTo("mu")==0) {
+			rmcor->momcor_mc(lepton1, vLeptons_charge[0], vLeptons_trackerLayers[0], qter1);
+			rmcor->momcor_mc(lepton2, vLeptons_charge[idx_2ndLepton], vLeptons_trackerLayers[idx_2ndLepton], qter2);
+			}
+		if (data==1) 	if (region.CompareTo("mu")==0){
+			rmcor->momcor_data(lepton1, vLeptons_charge[0],  0, qter1);
+			rmcor->momcor_data(lepton2, vLeptons_charge[idx_2ndLepton], 0, qter2);
+			}
 
 
 		if (data==1) { 
@@ -604,63 +653,22 @@ for (int current_syst=0;current_syst<Nsyst;current_syst++){
 //
 		Float_t Mqq_log = TMath::Log(Mqq);	
 		float jets_ptSum =TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt());
+		float alpha=0;
 		if (region.CompareTo("el")==0) {
 
-			if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_Mqq->Eval(Mqq_log);		
+			if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) {
+				genweight*=func_Mqq->Eval(Mqq_log);	
+				alpha=	func_Mqq->Eval(Mqq_log) - 1;
+			}
 		}
 		if (region.CompareTo("mu")==0) {
 
-			if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ) genweight*=func_Mqq->Eval(Mqq_log);		
-
+			if ((Mqq_log<8.176 )&&(Mqq_log>5.256)) if ((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag.CompareTo("DYJetstoLL_HT100")==0) ||(file_tag.CompareTo("DYJetstoLL_HT100_200")==0) ||(file_tag.CompareTo("DYJetstoLL_HT200_400")==0) || (file_tag.CompareTo("DYJetstoLL_HT400_600")==0) ||(file_tag.CompareTo("DYJetstoLL_HT600_Inf")==0)   ){
+				 genweight*=func_Mqq->Eval(Mqq_log);		
+			    alpha=	func_Mqq->Eval(Mqq_log) - 1;
+			}
 		}
 
-		float qter1 = 1.0;
-		float qter2 = 1.0;
-		float mu_correction1 = 1.0;
-		float mu_correction2 = 1.0;
-
-
-		if (data!=1) 	if (region.CompareTo("mu")==0) {
-			rmcor->momcor_mc(lepton1, vLeptons_charge[0], vLeptons_trackerLayers[0], qter1);
-			rmcor->momcor_mc(lepton2, vLeptons_charge[idx_2ndLepton], vLeptons_trackerLayers[idx_2ndLepton], qter2);
-			}
-		if (data==1) 	if (region.CompareTo("mu")==0){
-			rmcor->momcor_data(lepton1, vLeptons_charge[0],  0, qter1);
-			rmcor->momcor_data(lepton2, vLeptons_charge[idx_2ndLepton], 0, qter2);
-			}
-
-
-	
-		Zll = lepton1+lepton2;	
-		Float_t Zll_mass = Zll.M();
-		Float_t Zll_pt = Zll.Pt();
-		Float_t Zll_eta = Zll.Eta();
-		Float_t Zll_phi = Zll.Phi();
-
-
-		if (good_jets<2) continue;
-		if (Qjet1.Pt() < 50) continue;
-		if (Qjet2.Pt() < 30) continue;
-		if (Mqq<200) continue;
-	
-	 	if (region.CompareTo("mu")==0) {
-			if (lepton1.Pt()<30) continue;	
-			if (lepton2.Pt()<20) continue;
-		}	
-	 	if (region.CompareTo("el")==0) {
-			if (lepton1.Pt()<30) continue;	
-			if (lepton2.Pt()<20) continue;
-		}	
-	 	if (region.CompareTo("el")==0) {
-			if (TMath::Abs(lepton1.Eta())>2.1) continue;	
-			if (TMath::Abs(lepton2.Eta())>2.1) continue;
-		}	
-	 	if (region.CompareTo("mu")==0) {
-			if (TMath::Abs(lepton1.Eta())>2.4) continue;	
-			if (TMath::Abs(lepton2.Eta())>2.4) continue;
-		}	
-		if (Zll_mass < 50 ) continue;
-		if (TMath::Abs(Zll_mass - 91.1876)>15) continue;
 
 	
 	
@@ -669,18 +677,38 @@ for (int current_syst=0;current_syst<Nsyst;current_syst++){
 			if ((current_syst==0)&&(data==1)){
 				hbdtUp[current_syst]->Fill(bdt,1.);
 				hbdt_atanhUp[current_syst]->Fill(TMath::ATanH((bdt+1)/2),1.);
-			}else if (current_syst==0){
+			}else if ((current_syst==0) && (file_tag.CompareTo("interference")!=0)){
 				hbdtUp[current_syst]->Fill(bdt,genweight*scaleWeightsUp[current_syst]);
 				hbdt_atanhUp[current_syst]->Fill(TMath::ATanH((bdt+1)/2),genweight*scaleWeightsUp[current_syst]);
+			} else if ((current_syst==0) && (file_tag.CompareTo("interference")==0)){
+					float interference_weight= 12.7733 + 1773.74/Mqq - 151127/(Mqq*Mqq) + 4.04978e+06/(Mqq*Mqq*Mqq) - 0.00044359*Mqq - 88.2666/TMath::Log(Mqq) - 1 ;
+					hbdtUp[current_syst]->Fill(bdt,genweight*scaleWeightsUp[current_syst]*interference_weight);
+					hbdt_atanhUp[current_syst]->Fill(TMath::ATanH((bdt+1)/2),genweight*scaleWeightsUp[current_syst]*interference_weight);
 			}
-			if (current_syst!=0){
+			if ((current_syst!=0) && (uncertainty_name[current_syst].CompareTo("JER")!=0) &&  (uncertainty_name[current_syst].CompareTo("JES")!=0) && (uncertainty_name[current_syst].CompareTo("MDG_NLO_corr")!=0   )){
 				hbdtUp[current_syst]->Fill(bdt,genweight*scaleWeightsUp[current_syst]);
 				hbdt_atanhUp[current_syst]->Fill(TMath::ATanH((bdt+1)/2),genweight*scaleWeightsUp[current_syst]);
 				hbdtDown[current_syst]->Fill(bdt,genweight*scaleWeightsDown[current_syst]);
 				hbdt_atanhDown[current_syst]->Fill(TMath::ATanH((bdt+1)/2),genweight*scaleWeightsDown[current_syst]);
+			} else  if ((current_syst!=0) && (uncertainty_name[current_syst].CompareTo("JES")==0)  ){
+				if (passSel[0]==1) hbdtUp[current_syst]->Fill(bdt_JESR[0],genweight*scaleWeightsUp[current_syst]);
+				if (passSel[0]==1) hbdt_atanhUp[current_syst]->Fill(TMath::ATanH((bdt_JESR[0]+1)/2),genweight*scaleWeightsUp[current_syst]);
+				if (passSel[1]==1) hbdtDown[current_syst]->Fill(bdt_JESR[1],genweight*scaleWeightsDown[current_syst]);
+				if (passSel[1]==1) hbdt_atanhDown[current_syst]->Fill(TMath::ATanH((bdt_JESR[1]+1)/2),genweight*scaleWeightsDown[current_syst]);
+        }else  if ((current_syst!=0) && (uncertainty_name[current_syst].CompareTo("JER")==0)  ){
+				if (passSel[2]==1) hbdtUp[current_syst]->Fill(bdt_JESR[2],genweight*scaleWeightsUp[current_syst]);
+				if (passSel[2]==1) hbdt_atanhUp[current_syst]->Fill(TMath::ATanH((bdt_JESR[2]+1)/2),genweight*scaleWeightsUp[current_syst]);
+				if (passSel[3]==1) hbdtDown[current_syst]->Fill(bdt_JESR[3],genweight*scaleWeightsDown[current_syst]);
+				if (passSel[3]==1) hbdt_atanhDown[current_syst]->Fill(TMath::ATanH((bdt_JESR[3]+1)/2),genweight*scaleWeightsDown[current_syst]);
+        } else  if ((current_syst!=0) && (uncertainty_name[current_syst].CompareTo("MDG_NLO_corr")==0)  ){
+				hbdtUp[current_syst]->Fill(bdt,genweight*scaleWeightsUp[current_syst] * (1+3./2.*alpha));
+				hbdt_atanhUp[current_syst]->Fill(TMath::ATanH((bdt+1)/2),genweight*scaleWeightsUp[current_syst] * (1+3./2.*alpha));
+				hbdtDown[current_syst]->Fill(bdt,genweight*scaleWeightsDown[current_syst]* (1+1./2.*alpha));
+				hbdt_atanhDown[current_syst]->Fill(TMath::ATanH((bdt+1)/2),genweight*scaleWeightsDown[current_syst] * (1+1./2.*alpha));
 			}
-		
-        }
+
+
+
 
     
         hbdtUp[current_syst]->Draw();

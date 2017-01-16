@@ -8,14 +8,14 @@ declare -A file_names
 cp plot /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
 cp  batch.sh /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
 cp  EWcorr.C	/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
-cp muon_corrections/rochcor2016.cc 	/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
-cp muon_corrections/rochcor2016.h 	/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
-cp muon_corrections/RoccoR.cc /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
-cp muon_corrections/RoccoR.h /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
+#cp muon_corrections/rochcor2016.cc 	/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
+#cp muon_corrections/rochcor2016.h 	/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
+#cp muon_corrections/RoccoR.cc /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
+#cp muon_corrections/RoccoR.h /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
 
 
 #path=dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/skimmed/
-path=dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/mva/
+path=dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/mva_syst/
 file_names=(
 #["DYJetstoLL"]=DYJetstoLL
 ["DYJetstoLL_amc"]=DYJetsToLL_amc_full
@@ -33,7 +33,7 @@ file_names=(
 ["WW"]=WW
 ["WZ"]=WZ
 ["ZZ"]=ZZ
-["SingleMuon"]=SingleMuon_full
+["SingleMuon"]=SingleMuon
 #["SingleMuonB"]=SingleMuonB
 #["SingleMuonC"]=SingleMuonC
 #["SingleMuonD"]=SingleMuonD
@@ -48,12 +48,39 @@ file_names=(
 #["SingleElectronF"]=SingleElectronF
 #["SingleElectronG"]=SingleElectronG
 ["EWK_LLJJ"]=EWK_LLJJ
-#["interference"]=EWK_LLJJ
+#######["interference"]=EWK_LLJJ
+###["QCD_HT100to200"]=QCD_HT100to200_full
+###["QCD_HT200to300"]=QCD_HT200to300_full
+###["QCD_HT300to500"]=QCD_HT300to500_full
+###["QCD_HT500to700"]=QCD_HT500to700_full
+###["QCD_HT700to1000"]=QCD_HT700to1000_full
+###["QCD_HT1000to1500"]=QCD_HT1000to1500_full
+###["QCD_HT1500to2000"]=QCD_HT1500to2000_full
+###["QCD_HT2000toInf"]=QCD_HT2000toInf_full
+
+#["WJetsToLNu_HT100"]=WJetsToLNu_madgraph 
+#["WJetsToLNu_HT100To200"]=WJetsToLNu_HT-100To200_madgraph_full 
+#["WJetsToLNu_HT200To400"]=WJetsToLNu_HT-200To400_madgraph_full  
+#["WJetsToLNu_HT400To600"]=WJetsToLNu_HT-400To600_madgraph_full
+#["WJetsToLNu_HT600To800"]=WJetsToLNu_HT-600To800_madgraph_full
+#["WJetsToLNu_HT800To1200"]=WJetsToLNu_HT-800To1200_madgraph_full
+#["WJetsToLNu_HT1200To2500"]=WJetsToLNu_HT-1200To2500_madgraph_full
+#["WJetsToLNu_HT2500ToInf"]=WJetsToLNu_HT-2500ToInf_madgraph_full
+["WJetsToLNu"]=WJetsToLNu_madgraph
+#["WJetsToLNu_amc"]=WJetsToLNu_amcatnlo
+
+["ST_tW"]=ST_tW_5f_inclusiveDecays_powheg
+["ST_s-channel"]=ST_s-channel_4f_leptonDecays_amc
+["ST_t-channel_top_4f_inclusiveDecays"]=ST_t-channel_top_4f_inclusiveDecay_powheg
+["ST_t-channel_antitop_4f_inclusiveDecays"]=ST_t-channel_antitop_4f_inclusiveDecays_powheg
+###["ST_t-channel_top_4f_leptonDecays"]=ST_t-channel_top_4f_leptonDecays_powheg
+###["ST_t-channel_antitop_4f_leptonDecays"]=ST_t-channel_antitop_4f_leptonDecays_powheg
+
 )
 prefix='main_mva_v24_'
 #postfix='ewk_mucorr_MqqLog_bdt'
 #postfix='ewk_mucorr_nocorr_bdt_oldxsec'
-postfix='ewk_mucorr_MqqLog_bdt_oldxsec'
+postfix='ewk_mucorr_new'
 v=v24
 ROOT=.root
 region=(mu el)
@@ -79,7 +106,7 @@ for key in ${!file_names[@]}; do
 		#	f=$path$prefix${file_names[${key}]}_$v.root
 			f=$path$prefix${file_names[${key}]}_${region[$current_region]}.root
 			qsub -q short.q batch.sh  $f ${key} ${region[$current_region]} $data 0 nom 0 nom $v $postfix
-		#	echo  $f ${key} ${region[$current_region]} $data 0 nom 0 nom $v $postfix
+			echo  $f ${key} ${region[$current_region]} $data 0 nom 0 nom $v $postfix
 		fi 
 		if [ $key != SingleMuon ] && [ $key != SingleMuonB ] && [ $key != SingleMuonC ] && [ $key != SingleMuonD ] && [ $key != SingleMuonE ] && [ $key != SingleMuonF ] && [ $key != SingleMuonG ] && [ $key != SingleElectron ] && [ $key != SingleElectronB ] && [ $key != SingleElectronC ] && [ $key != SingleElectronD ] && [ $key != SingleElectronE ] && [ $key != SingleElectronF ] && [ $key != SingleElectronG ]     && [ $applyJESWeight -eq 1 ]
 		then
