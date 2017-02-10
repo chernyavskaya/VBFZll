@@ -15,39 +15,39 @@ cp  EWcorr.C	/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
 
 
 #path=dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/skimmed/
-path=dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/mva_syst/
+path=dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/
 file_names=(
 #["DYJetstoLL"]=DYJetstoLL
-["DYJetstoLL_amc"]=DYJetsToLL_amc_full
-["DYJetstoLL_HT100"]=DYJetstoLL
-["DYJetstoLL_HT100_200"]=DYJetstoLL_HT100_200_full
-["DYJetstoLL_HT200_400"]=DYJetstoLL_HT200_400_full
-["DYJetstoLL_HT400_600"]=DYJetstoLL_HT400_600_full
-["DYJetstoLL_HT600_Inf"]=DYJetstoLL_HT600_Inf_full
+#["DYJetstoLL_amc"]=DYJetsToLL_amc_full
+#["DYJetstoLL_HT100"]=DYJetstoLL
+#["DYJetstoLL_HT100_200"]=DYJetstoLL_HT100_200_full
+#["DYJetstoLL_HT200_400"]=DYJetstoLL_HT200_400_full
+#["DYJetstoLL_HT400_600"]=DYJetstoLL_HT400_600_full
+#["DYJetstoLL_HT600_Inf"]=DYJetstoLL_HT600_Inf_full
 #["DYJetstoLL_Pt-100_amc"]=DYJetstoLL_amc
 #["DYJetstoLL_Pt-100To250_amc"]=DYJetsToLL_Pt-100To250_amc
 #["DYJetstoLL_Pt-250To400_amc"]=DYJetsToLL_Pt-250To400_amc
 #["DYJetstoLL_Pt-400To650_amc"]=DYJetsToLL_Pt-400To650_amc
 #["DYJetstoLL_Pt-650ToInf_amc"]=DYJetsToLL_Pt-650ToInf_amc
-["TT"]=TT
-["WW"]=WW
-["WZ"]=WZ
-["ZZ"]=ZZ
-["SingleMuon"]=SingleMuon
+#["TT"]=TT
+#["WW"]=WW
+#["WZ"]=WZ
+#["ZZ"]=ZZ
+#["SingleMuon"]=SingleMuon
 #["SingleMuonB"]=SingleMuonB
 #["SingleMuonC"]=SingleMuonC
 #["SingleMuonD"]=SingleMuonD
 #["SingleMuonE"]=SingleMuonE
 #["SingleMuonF"]=SingleMuonF
 #["SingleMuonG"]=SingleMuonG
-["SingleElectron"]=SingleElectron
+#["SingleElectron"]=SingleElectron
 #["SingleElectronB"]=SingleElectronB
 #["SingleElectronC"]=SingleElectronC
 #["SingleElectronD"]=SingleElectronD
 #["SingleElectronE"]=SingleElectronE
 #["SingleElectronF"]=SingleElectronF
 #["SingleElectronG"]=SingleElectronG
-["EWK_LLJJ"]=EWK_LLJJ
+#["EWK_LLJJ"]=EWK_LLJJ
 #######["interference"]=EWK_LLJJ
 ###["QCD_HT100to200"]=QCD_HT100to200_full
 ###["QCD_HT200to300"]=QCD_HT200to300_full
@@ -66,22 +66,52 @@ file_names=(
 #["WJetsToLNu_HT800To1200"]=WJetsToLNu_HT-800To1200_madgraph_full
 #["WJetsToLNu_HT1200To2500"]=WJetsToLNu_HT-1200To2500_madgraph_full
 #["WJetsToLNu_HT2500ToInf"]=WJetsToLNu_HT-2500ToInf_madgraph_full
-["WJetsToLNu"]=WJetsToLNu_madgraph
+#["WJetsToLNu"]=WJetsToLNu_madgraph
 #["WJetsToLNu_amc"]=WJetsToLNu_amcatnlo
 
-["ST_tW"]=ST_tW_5f_inclusiveDecays_powheg
-["ST_s-channel"]=ST_s-channel_4f_leptonDecays_amc
-["ST_t-channel_top_4f_inclusiveDecays"]=ST_t-channel_top_4f_inclusiveDecay_powheg
-["ST_t-channel_antitop_4f_inclusiveDecays"]=ST_t-channel_antitop_4f_inclusiveDecays_powheg
+#["ST_tW"]=ST_tW_5f_inclusiveDecays_powheg
+#["ST_s-channel"]=ST_s-channel_4f_leptonDecays_amc
+#["ST_t-channel_top_4f_inclusiveDecays"]=ST_t-channel_top_4f_inclusiveDecay_powheg
+#["ST_t-channel_antitop_4f_inclusiveDecays"]=ST_t-channel_antitop_4f_inclusiveDecays_powheg
 ###["ST_t-channel_top_4f_leptonDecays"]=ST_t-channel_top_4f_leptonDecays_powheg
 ###["ST_t-channel_antitop_4f_leptonDecays"]=ST_t-channel_antitop_4f_leptonDecays_powheg
 
+
+
+#["DYJetstoLL_amc_0J"]=DYJetstoLL_amc_0J
+#["DYJetstoLL_amc_1J"]=DYJetstoLL_amc_1J
+#["DYJetstoLL_amc_2J"]=DYJetstoLL_amc_2J
+#["DYJetstoLL"]=DYJetstoLL_madgraph
+["DYJetstoLL_HT100"]=DYJetstoLL_madgraph
+#["DYJetstoLL_HT100_200"]=DYJetstoLL_HT100_200
+#["DYJetstoLL_HT200_400"]=DYJetstoLL_HT200_400
+#["DYJetstoLL_HT400_600"]=DYJetstoLL_HT400to600
+#["DYJetstoLL_HT600_800"]=DYJetstoLL_HT600to800
+#["DYJetstoLL_HT800_1200"]=DYJetstoLL_HT800to1200
+#["DYJetstoLL_HT1200_2500"]=DYJetstoLL_HT1200to2500
+#["DYJetstoLL_HT2500_Inf"]=DYJetstoLL_HT2500toInf
+#["EWK_LLJJ"]=EWK_LL_JJ
+#["EWK_LLJJ_herwig"]=EWK_LL_JJ_herwig
+#["SingleMuon"]=SingleMuon
+#["SingleElectron"]=SingleElectron
+#["ST_tW_top"]=ST_tW_top
+#["ST_tW_antitop"]=ST_tW_antitop
+#["ST_s-channel"]=ST_s
+#["ST_t-channel_top_4f_inclusiveDecays"]=ST_t_top
+#["ST_t-channel_antitop_4f_inclusiveDecays"]=ST_t_antitop
+#["TT"]=TT
+#["WW"]=WW
+#["WZ"]=WZ
+#["ZZ"]=ZZ
+#["WJetsToLNu"]=WJetsToLnu_madgraph
+
+
 )
-prefix='main_mva_v24_'
+prefix=''
 #postfix='ewk_mucorr_MqqLog_bdt'
 #postfix='ewk_mucorr_nocorr_bdt_oldxsec'
-postfix='ewk_mucorr_new'
-v=v24
+postfix='first'
+v='v25'
 ROOT=.root
 region=(mu el)
 applyJESWeight=1
@@ -103,8 +133,8 @@ for key in ${!file_names[@]}; do
 		fi
 		if [ $key == SingleMuon ] || [ $key == SingleMuonB ] || [ $key == SingleMuonC ] || [ $key == SingleMuonD ] || [ $key == SingleMuonE ] || [ $key == SingleMuonF ] || [ $key == SingleMuonG ] || [ $key == SingleElectron ]  || [ $key == SingleElectronB ] || [ $key == SingleElectronC ] || [ $key == SingleElectronD ] || [ $key == SingleElectronE ] || [ $key == SingleElectronF ] || [ $key == SingleElectronG ] || [ $applyJESWeight -eq 0 ]
 		then
-		#	f=$path$prefix${file_names[${key}]}_$v.root
-			f=$path$prefix${file_names[${key}]}_${region[$current_region]}.root
+			f=$path$prefix${file_names[${key}]}_$v.root
+		#	f=$path$prefix${file_names[${key}]}_${region[$current_region]}.root
 			qsub -q short.q batch.sh  $f ${key} ${region[$current_region]} $data 0 nom 0 nom $v $postfix
 			echo  $f ${key} ${region[$current_region]} $data 0 nom 0 nom $v $postfix
 		fi 
@@ -115,8 +145,8 @@ for key in ${!file_names[@]}; do
 	#		while [ $current_QCDWeight -lt  1 ] 
 			while [ $current_QCDWeight -lt  3 ] 
 			do
-		#		f=$path$prefix${file_names[${key}]}_$v.root
-				f=$path$prefix${file_names[${key}]}_${region[$current_region]}.root
+				f=$path$prefix${file_names[${key}]}_$v.root
+		#		f=$path$prefix${file_names[${key}]}_${region[$current_region]}.root
 				qsub -q short.q batch.sh  $f ${key} ${region[$current_region]} $data  $applyQCDWeight ${QCDWeightNom[$current_QCDWeight]} 0 nom $v $postfix
 	#			echo  $f ${key} ${region[$current_region]} $data  $applyQCDWeight ${QCDWeightNom[$current_QCDWeight]} 0 nom $v $postfix
 				current_QCDWeight=$(( $current_QCDWeight + 1 ))
@@ -124,7 +154,8 @@ for key in ${!file_names[@]}; do
 	#		while [ $current_JESWeight -lt  1 ] 
 			while [ $current_JESWeight -lt  3 ] 
 			do
-				f=$path$prefix${file_names[${key}]}_${region[$current_region]}.root
+				f=$path$prefix${file_names[${key}]}_$v.root
+			#	f=$path$prefix${file_names[${key}]}_${region[$current_region]}.root
 			#	f=$path$prefix${file_names[${key}]}_$v.root
 				qsub -q short.q batch.sh  $f ${key} ${region[$current_region]} $data 0 nom $applyJESWeight ${JESWeightNom[$current_JESWeight]} $v $postfix
 			#	echo $f ${key} ${region[$current_region]} $data  $applyJESWeight ${JESWeightNom[$current_JESWeight]} $v $postfix
