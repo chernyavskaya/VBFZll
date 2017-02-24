@@ -12,16 +12,19 @@ process        	 		EWKZ		DY		Top		VV
 process       	  		0     		1		2		3
 rate				$EWKZ           $DY             $Top            $VV                
 ------------
-lumi_13TeV    	lnN    		1.062  	 	1.062		1.062		1.062			Lumi for 13TeV 22fb-1
+lumi_13TeV    	lnN    		1.026  	 	1.026		1.026		1.026			Lumi for 13TeV 22fb-1
 CMS_ewkzjj_$channel_eff		lnN		1.030		1.030		1.030		1.030			Efficiencies
-CMS_ewkzjj_SigAcc  	lnN             1.060		-		-		-			signal acceptance
+CMS_ewkzjj_SigNLO  	lnN             1.060		-		-		-			accounting for NLO effects
+CMS_ewkzjj_SigPS  	lnN             $SigPS		-		-		-			accounting for PS differences
 CMS_ewkzjj_DY_norm		lnN		-		1.2		-		-			DY normalization
 CMS_ewkzjj_Top_norm	lnN		-		-		1.07		-			Top normalization
 CMS_ewkzjj_VV_norm		lnN		-		-		-		1.1			VV normalization
 CMS_ewkzjj_puWeight		shape		1.000		1.000		1.000		1.000			Pile-up shape
+CMS_ewkzjj_JES		shape		1.000		1.000		1.000		1.000			JES shape
+CMS_ewkzjj_JER		shape		1.000		1.000		1.000		1.000			JER shape
+CMS_ewkzjj_MDG_NLO_corr		shape		-		1.000		-		-			Correction for Madgraph LO MC to NLO shape
 CMS_ewkzjj_LHE_weights_scale_EWKZ		shape		1.000		-		-		-		-		QCD scale shape
 CMS_ewkzjj_LHE_weights_scale_DY		shape		-		1.000		-	-		-		QCD scale shape
-CMS_ewkzjj_LHE_weights_scale_Top		shape		-		-		1.000		-		-		QCD scale shape
 CMS_ewkzjj_stats_DY_$channel_b1		shape		-		1.000		-		-			Statiscal uncertainties per DY bin
 CMS_ewkzjj_stats_DY_$channel_b2		shape		-		1.000		-		-
 CMS_ewkzjj_stats_DY_$channel_b3		shape		-		1.000		-		-
@@ -46,3 +49,4 @@ CMS_ewkzjj_stats_DY_$channel_b21		shape		-		1.000		-		-
 CMS_ewkzjj_stats_DY_$channel_b23		shape		-		1.000		-		-
 CMS_ewkzjj_stats_DY_$channel_b24		shape		-		1.000		-		-
 CMS_ewkzjj_stats_DY_$channel_b25		shape		-		1.000		-		-
+#CMS_ewkzjj_LHE_weights_scale_Top		shape		-		-		1.000		-		QCD scale shape
