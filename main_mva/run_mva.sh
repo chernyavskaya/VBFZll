@@ -3,18 +3,19 @@ cd $WORKDIR
 
 g++ run_create_main_tmva_all.C -g -o run_all `root-config --cflags --glibs` 
 
-max_samples_num=2
-path=dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat///store/user/nchernya/VBFZll/skimmed/
-input_dir=( EWK_LLJJ DYJetstoLL )
+max_samples_num=9 #9
+path=dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat///store/user/nchernya/VBFZll/v25/
+input_dir=( EWK_LL_JJ DYJetstoLL_madgraph DYJetstoLL_HT100to200 DYJetstoLL_HT200to400 DYJetstoLL_HT400to600 DYJetstoLL_HT600to800 DYJetstoLL_HT800to1200 DYJetstoLL_HT1200to2500 DYJetstoLL_HT2500toInf )
 ROOT=.root
-v24=_v24
+v=_v25
 
 
 current_sample=0
 while [ $current_sample -lt $max_samples_num ]
-do	
-	./run_all $path${input_dir[ $current_sample ]}$v24$ROOT ${input_dir[ $current_sample ]} mu 
-	./run_all $path${input_dir[ $current_sample ]}$v24$ROOT ${input_dir[ $current_sample ]} el 
+do
+	file=$path${input_dir[ $current_sample ]}$v$ROOT
+	./run_all $file ${input_dir[ $current_sample ]} mu 
+	./run_all $file  ${input_dir[ $current_sample ]} el 
 
 	current_sample=$(( $current_sample + 1 ))
 done

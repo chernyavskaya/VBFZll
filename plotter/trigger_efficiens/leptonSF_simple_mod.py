@@ -1,5 +1,6 @@
 import ROOT
-import array
+from array import array
+import numpy as np
 import os
 import json
 
@@ -166,6 +167,50 @@ class LeptonSF:
             else:
                 return [1.0, 0.0]
 
+    def triggerMap1D(self):
+        if not self.valid:
+		      return -1       
+        stripForEta = 2
+        etaBins = []
+        # if no bin is found, search for closest one, and double the uncertainty
+        closestEtaBin = ""
+        closestPtBin = ""
+        closestEta = 9999.
+        closestPt = 9999.
+
+        # categorized first by eta
+
+        for etaKey, values in sorted(self.res[self.lep_binning].iteritems()) :
+           etaL = float(((etaKey[stripForEta:]).rstrip(']').split(',')[0]))
+           etaH = float(((etaKey[stripForEta:]).rstrip(']').split(',')[1]))
+           etaBins.append(etaL) 
+           etaBins.append(etaH)	
+        etaBins = list(set(etaBins)) # get rid of duplicates
+        etaBins = sorted(etaBins) 
+      #  print etaBins
+        triggerEffMap = ROOT.TH1F("TriggerEffMap_"+self.lep_name,"TriggerEffMap_"+self.lep_name,  len(etaBins)-1, np.asarray(etaBins))
+        
+        for etaKey, values in sorted(self.res[self.lep_binning].iteritems()): 
+            etaL = float(((etaKey[stripForEta:]).rstrip(']').split(',')[0]))
+            etaH = float(((etaKey[stripForEta:]).rstrip(']').split(',')[1]))
+           # print etaL,etaH
+            binLow1 = triggerEffMap.GetXaxis().FindBin(etaL)
+            binHigh1 = triggerEffMap.GetXaxis().FindBin(etaH) - 1
+            #print binLow1,binHigh1
+            for ibin1 in range(binLow1,binHigh1+1):
+                print 'i am here once'
+                triggerEffMap.SetBinContent(ibin1, values["value"])
+                triggerEffMap.SetBinError(ibin1, values["error"])
+                print values["value"]
+        fout = ROOT.TFile("TriggerEffMap_"+self.lep_name+".root","RECREATE")
+        fout.cd()
+        triggerEffMap.Write()
+        fout.Close()
+        return 0
+
+
+
+
 
     def triggerMap(self):
         if not self.valid:
@@ -196,6 +241,8 @@ class LeptonSF:
                 etaBins.append(etaL) 
                 etaBins.append(etaH)	
                 for ptKey, result in sorted(values.iteritems()) :
+                #    print ptKey
+                 #   print (ptKey[stripForEta:])
                     ptL = float(((ptKey[4:]).rstrip(']').split(',')[0]))
                     ptH = float(((ptKey[4:]).rstrip(']').split(',')[1]))             
                     ptBins.append(ptL)
@@ -204,16 +251,16 @@ class LeptonSF:
             print "got here"
             # categorized first by pt
             for ptKey, values in sorted(self.res[self.lep_binning].iteritems()):
-                print ptKey
-                print (ptKey[stripForEta:])
+             #   print ptKey
+            #    print (ptKey[stripForEta:])
                 ptL = float(((ptKey[4:]).rstrip(']').split(',')[0]))
                 ptH = float(((ptKey[4:]).rstrip(']').split(',')[1]))
                 ptBins.append(ptL)
                 ptBins.append(ptH)            
  
                 for etaKey, result in sorted(values.iteritems()):
-                    #print etaKey
-                    #print (etaKey[4:]).rstrip(']').split(',')
+                  #  print etaKey
+                  #  print (etaKey[4:]).rstrip(']').split(',')
                     etaL = float(((etaKey[stripForEta:]).rstrip(']').split(',')[0]))
                     etaH = float(((etaKey[stripForEta:]).rstrip(']').split(',')[1]))
                     etaBins.append(etaL)
@@ -225,26 +272,28 @@ class LeptonSF:
         etaBins = sorted(etaBins) 
         ptBins = sorted(ptBins)
 
-        triggerEffMap = ROOT.TH2F("TriggerEffMap_"+self.lep_name,"TriggerEffMap_"+self.lep_name,len(ptBins)-1,ptBins[0],ptBins[len(ptBins)-1],len(etaBins)-1,etaBins[0],etaBins[len(etaBins)-1] )
-       # triggerEffMap = ROOT.TH2F("tt","tt", len(ptBins)-1, array(ptBins), len(etaBins)-1, array(etaBins))
-        #print array(ptBins), array(etaBins)
+        triggerEffMap = ROOT.TH2F("TriggerEffMap_"+self.lep_name,"TriggerEffMap_"+self.lep_name, len(ptBins)-1, np.asarray(ptBins), len(etaBins)-1, np.asarray(etaBins))
+      #  print ptBins, etaBins
         
         if (self.lep_binning.find("pt") != 0 ):
+       #     print sorted(self.res[self.lep_binning].iteritems())
             for etaKey, values in sorted(self.res[self.lep_binning].iteritems()): 
                 etaL = float(((etaKey[stripForEta:]).rstrip(']').split(',')[0]))
                 etaH = float(((etaKey[stripForEta:]).rstrip(']').split(',')[1]))
                 binLow1 = triggerEffMap.GetYaxis().FindBin(etaL)
                 binHigh1 = triggerEffMap.GetYaxis().FindBin(etaH) - 1
+             #   print etaL, etaH, binLow1, binHigh1 
                 for ptKey, result in sorted(values.iteritems()):
                     ptL = float(((ptKey[4:]).rstrip(']').split(',')[0]))
                     ptH = float(((ptKey[4:]).rstrip(']').split(',')[1]))
                     binLow2 = triggerEffMap.GetXaxis().FindBin(ptL)
                     binHigh2 = triggerEffMap.GetXaxis().FindBin(ptH) - 1
+                #    print ptL, ptH, binLow2, binHigh2
                     for ibin1 in range(binLow1,binHigh1+1):
                         for ibin2 in range(binLow2,binHigh2+1):
                             triggerEffMap.SetBinContent(ibin2,ibin1, result["value"])
                             triggerEffMap.SetBinError(ibin2,ibin1, result["error"])
-                          #  print result["value"]
+                       #     print result["value"]
         else:
             # categorized first by pt
             for ptKey, values in sorted(self.res[self.lep_binning].iteritems()):
@@ -264,6 +313,12 @@ class LeptonSF:
         fout = ROOT.TFile("TriggerEffMap_"+self.lep_name+".root","RECREATE")
         fout.cd()
         triggerEffMap.Write()
+    #    nX = triggerEffMap.GetNbinsX()
+     #   nY = triggerEffMap.GetNbinsY()
+     #   for i in range(1,nX+1):
+     #       print "pt: ",triggerEffMap.GetXaxis().GetBinLowEdge(i)
+     #       for j in range(1, nY+1):
+     #           print "eta: ",triggerEffMap.GetYaxis().GetBinLowEdge(j),": ",triggerEffMap.GetBinContent(i,j)
         fout.Close()
         return 0
 
@@ -290,22 +345,26 @@ if __name__ == "__main__":
      #   jsonpath+'SingleMuonTrigger_LooseMuons_afterL2fix_Z_RunBCD_prompt80X_7p65.json' : ['MuonTrigger_data_all_IsoMu22_OR_IsoTkMu22_pteta_Run2016B_afterL2Fix', 'abseta_pt_MC' ],
      #   jsonpath+'SingleMuonTrigger_LooseMuons_beforeL2fix_Z_RunBCD_prompt80X_7p65.json' : ['MuonTrigger_data_all_IsoMu22_OR_IsoTkMu22_pteta_Run2016B_beforeL2Fix', 'abseta_pt_MC' ],
      #   jsonpath+'WP90_BCDEF_withRelIso.json' : ['electronTriggerEfficiencyHLT_Ele27_WPLoose_eta2p1_WP90_BCDEF','eta_pt_ratio'],
-        jsonpath+'SingleMuonTrigger_BCDEF.json' : ['IsoMu24_OR_IsoTkMu24_PtEtaBins', 'pt_abseta_ratio' ],
-        jsonpath+'SingleMuonTrigger_GH.json' : ['IsoMu24_OR_IsoTkMu24_PtEtaBins', 'pt_abseta_ratio' ],
-        jsonpath+'SingleMuonId_BCDEF.json' : ['MC_NUM_LooseID_DEN_genTracks_PAR_pt_eta', 'pt_abseta_ratio' ],
-        jsonpath+'SingleMuonId_GH.json' : ['MC_NUM_LooseID_DEN_genTracks_PAR_pt_eta', 'pt_abseta_ratio' ],
-        jsonpath+'SingleMuonIso_BCDEF.json' : ['LooseISO_LooseID_pt_eta', 'pt_abseta_ratio' ],
-        jsonpath+'SingleMuonIso_GH.json' : ['LooseISO_LooseID_pt_eta', 'pt_abseta_ratio' ],
-    #    jsonpath+'Electron_Id_WP80.json' : ['ScaleFactor_MVAIDWP80_80x', 'eta_pt_ratio' ],
+     #   jsonpath+'SingleMuonTrigger_BCDEF.json' : ['IsoMu24_OR_IsoTkMu24_PtEtaBins', 'pt_abseta_ratio' ],
+      #  jsonpath+'SingleMuonTrigger_GH.json' : ['IsoMu24_OR_IsoTkMu24_PtEtaBins', 'pt_abseta_ratio' ],
+      #  jsonpath+'SingleMuonId_BCDEF.json' : ['MC_NUM_LooseID_DEN_genTracks_PAR_pt_eta', 'pt_abseta_ratio' ],
+      #  jsonpath+'SingleMuonId_GH.json' : ['MC_NUM_LooseID_DEN_genTracks_PAR_pt_eta', 'pt_abseta_ratio' ],
+      #  jsonpath+'SingleMuonIso_BCDEF.json' : ['LooseISO_LooseID_pt_eta', 'pt_abseta_ratio' ],
+      #  jsonpath+'SingleMuonIso_GH.json' : ['LooseISO_LooseID_pt_eta', 'pt_abseta_ratio' ],
+     #   jsonpath+'Electron_Id_WP80.json' : ['ScaleFactor_MVAIDWP80_80x', 'eta_pt_ratio' ],
      #   jsonpath+'Electron_Id_WP90.json' : ['ScaleFactor_MVAID_80x', 'eta_pt_ratio' ],
       #  jsonpath+'Electron_tracker.json' : ['ScaleFactor_tracker_80x', 'eta_pt_ratio' ],
+      #  jsonpath+'trk_SF_RunBCDEF.json' : ['Graph', 'ratio_eff_eta3_dr030e030_corr' ],
+        jsonpath+'trk_SF_RunGH.json' : ['Graph', 'ratio_eff_eta3_dr030e030_corr' ],
+			
         }
     for j, name in jsons.iteritems():
         lepCorr = LeptonSF(j , name[0], name[1])
-        lepCorr.triggerMap()
+       # lepCorr.triggerMap()
+        lepCorr.triggerMap1D()
       #  weight = lepCorr.get_2D( 65 , -1.5)
-      #  val = weight[0]
-      #  err = weight[1]
+     #   val = weight[0]
+     #   err = weight[1]
       #  print 'SF: ',  val, ' +/- ', err
     
     
