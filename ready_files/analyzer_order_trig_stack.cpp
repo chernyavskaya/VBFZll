@@ -78,12 +78,13 @@ int main(int argc, char* argv[]){
 gROOT->ProcessLine(".x /afs/cern.ch/work/n/nchernya/setTDRStyle.C");
 int set_type=atoi(argv[1]); // 0 - analysis, 1 - control region , top
  
-const int nfiles  = 9;  //11;
+const int nfiles  = 9; //9;  //11;
 //TString leg_names[nfiles] = {"Data","VBF Z #rightarrow ll (#times 10)","WW + jets","ZZ + jets","WZ + jets", "t#bar{t}", "Z + jets"};
 //TString leg_names[nfiles] = {"Data","tZq #rightarrow ll","TTZ #rightarrow ll #nu#nu","W(l#nu) + jets","WW + jets","ZZ + jets","WZ + jets","Single Top", "t#bar{t}", "Z + jets","VBF Z #rightarrow ll"};
 
 //TString leg_names[nfiles] = {"Data","W(l#nu) + jets","WW + jets","ZZ + jets","WZ + jets","Single Top", "t#bar{t}", "Z + jets (MDG)","VBF Z #rightarrow ll"};
 TString leg_names[nfiles] = {"Data","W(l#nu) + jets","WW + jets","ZZ + jets","WZ + jets","Single Top", "t#bar{t}", "Z + jets (AMC)","VBF Z #rightarrow ll"};
+//TString leg_names[nfiles] = {"Data","WW + jets","ZZ + jets","WZ + jets","Single Top", "t#bar{t}", "Z + jets (AMC)","VBF Z #rightarrow ll"};
 TString set_names[2] = {"Dimuon","Dielectron"}; 
 //if (set_type==0)leg_names[0] = "Data (DoubleB)";
 //if (set_type==1)leg_names[0] = "Data (SingleB)";
@@ -102,11 +103,19 @@ TString file_names_JESup[nfiles] = {"SingleMuon","tZq_ll","TTZToLLNuNu","WJetsTo
 TString file_names_JESdown[nfiles] = {"SingleMuon","tZq_ll","TTZToLLNuNu","WJetsToLNu","WW","ZZ","WZ","ST","TT","DYJetstoLL_HT","EWK_LLJJ"};
 
 */
+
 TString file_names[nfiles] = {"SingleMuon","WJetsToLNu","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
 TString file_names_QCDup[nfiles] = {"SingleMuon","WJetsToLNu","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
 TString file_names_QCDdown[nfiles] = {"SingleMuon","WJetsToLNu","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
 TString file_names_JESup[nfiles] = {"SingleMuon","WJetsToLNu","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
 TString file_names_JESdown[nfiles] = {"SingleMuon","WJetsToLNu","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
+/*
+TString file_names[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
+TString file_names_QCDup[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
+TString file_names_QCDdown[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
+TString file_names_JESup[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
+TString file_names_JESdown[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
+*/
 int bg_begin;
 int qcd_begin=18;
  //bg_begin=2;
@@ -128,7 +137,13 @@ int LINECOLOR[nfiles] = {1,kSpring+7,kSpring+8, kSpring+5, kGreen-3,kAzure+1,kBl
 int LINESTYLE[nfiles] = {1,1,1,1,1,1,1,1,1};
 int LINEWIDTH[nfiles] = {1,1,1,1,1,1,1,1,3};
 int FILLSTYLE[nfiles] = {1001,1001,1001,1001,1001,1001,1001,1001,1001};
-
+/*
+int FILLCOLOR[nfiles] = {1,kSpring+8, kSpring+5, kGreen-3, kAzure+1,kBlue-4,kOrange-2,kRed-4};
+int LINECOLOR[nfiles] = {1,kSpring+8, kSpring+5, kGreen-3,kAzure+1,kBlue-4,kOrange-2,kRed-4};
+int LINESTYLE[nfiles] = {1,1,1,1,1,1,1,1};
+int LINEWIDTH[nfiles] = {1,1,1,1,1,1,1,3};
+int FILLSTYLE[nfiles] = {1001,1001,1001,1001,1001,1001,1001,1001};
+*/
 	
 //int order[nfiles] = {0,1,2,3,4,5,6,7,8,9,10};// number in file_names array as they should appear in the legend
 int order[nfiles] = {0,1,2,3,4,5,6,7,8};// number in file_names array as they should appear in the legend
@@ -143,19 +158,20 @@ TString set[3]={"_mu","_el"};
 
 for (int i=0;i<nfiles;i++){
 	if (i==0) file_names[i] = data_name[set_type];
-	file_names[i].Prepend("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat//store/user/nchernya/VBFZll/plotterOutput/v25/");
+   file_names[i].Prepend("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat//store/user/nchernya/VBFZll/plotterOutput/v25/");
+//	else  file_names[i].Prepend("/afs/cern.ch/work/n/nchernya/VBFZll/plotter/output_root/");
 	file_names[i].Append(set[set_type]);
 	file_names_QCDup[i] = file_names[i];
 	file_names_QCDdown[i] = file_names[i];
 	file_names_JESup[i] = file_names[i];
 	file_names_JESdown[i] = file_names[i];
-	if (i==0) file_names[i].Append("_QCDScalenom_JESnom_v25_bdt_varv24_reminiaod");
+	if (i==0) file_names[i].Append("_QCDScalenom_JESnom_v25_bdt_axis2jet2q_reminiaod");
 	if (i!=0) {
-		file_names[i].Append("_QCDScalenom_JESnom_v25_bdt_varv24_reminiaod");
-		file_names_QCDup[i].Append("_QCDScaleup_JESnom_v25_bdt_varv24_reminiaod");
-		file_names_QCDdown[i].Append("_QCDScaledown_JESnom_v25_bdt_varv24_reminiaod");
-		file_names_JESup[i].Append("_QCDScalenom_JESup_v25_bdt_varv24_reminiaod");
-		file_names_JESdown[i].Append("_QCDScalenom_JESdown_v25_bdt_varv24_reminiaod");
+		file_names[i].Append("_QCDScalenom_JESnom_v25_bdt_axis2jet2q_reminiaod");
+		file_names_QCDup[i].Append("_QCDScaleup_JESnom_v25_bdt_axis2jet2q_reminiaod");
+		file_names_QCDdown[i].Append("_QCDScaledown_JESnom_v25_bdt_axis2jet2q_reminiaod");
+		file_names_JESup[i].Append("_QCDScalenom_JESup_v25_bdt_axis2jet2q_reminiaod");
+		file_names_JESdown[i].Append("_QCDScalenom_JESdown_v25_bdt_axis2jet2q_reminiaod");
 	}
 	file_names[i].Append(".root");
 	file_names_QCDup[i].Append(".root");
@@ -167,7 +183,7 @@ TString trigger[2] = {"", ""};
 //TString dir_name= "plots_mdg_ht_bdt_alldata_v25_reaod";
 //TString dir_name= "plots_amc_bdt_alldata_v25_reaod";
 //TString dir_name= "plots_amc_bdt_axis2_v25_reaod";
-TString dir_name= "plots_amc_bdt_varv24_v25_reaod";
+TString dir_name= "plots_amc_bdt_axis2jet2q_v25_reaod";
 //TString dir_name= "plots_mdg_ht_bdt_axis2_v25_reaod";
 //TString dir_name= "plots_amc_bdt_v25";
 //TString dir_name= "plots_amc_herwig_bdt_v25";
@@ -189,8 +205,8 @@ leg2->SetBorderSize(0);
 leg2->SetTextFont(42);
 leg2->SetTextSize(0.025);
 
-const int nhistos = 88; //40//52
-TString hist_names[nhistos]={"hMqq", "hEtaQQ","hHTsoft","hSoft_n2","hSoft_n5","hSoft_n10","hHTsoftEWK","hSoft_n2EWK","hSoft_n5EWK","hSoft_n10EWK","hHTsoftEWK_bdt","hSoft_n2EWK_bdt","hSoft_n5EWK_bdt","hSoft_n10EWK_bdt","hPVs", "hJet1q_pt", "hJet1q_eta", "hJet1q_phi", "hJet2q_phi", "hJet1q_ptd", "hJet1q_axis2", "hJet1q_mult", "hJet2q_pt", "hJet2q_eta", "hJet2q_ptd", "hJet2q_axis2", "hJet2q_mult", "hmet",   "hJet1q_leadTrackPt", "hJet2q_leadTrackPt", "hqq_pt","hV_mass", "hqgl", "hqgl2", "hZll_mass", "hZll_pt", "hZll_phi", "hZll_eta",  "hrho", "hlepton1_pt", "hlepton2_pt", "hlepton1_eta", "hlepton2_eta","hlepton1_iso03", "hlepton2_iso03", "hDeltaRelQQ", "hRptHard", "hEtaQQSum", "hPhiZQ1", "hZll_y", "hZll_ystar", "hZll_zstar", "hMqq_log","hJet3_pt","hPhiQQ","hJets12_pt","hJets12_pt_log","hJet1q_pt_log","hJet2q_pt_log","hbdt","hbdt_atanh","hJet3_pt_bdt", "hAdJetHT_bdt","hHT","hlheHT_log","hNAdJets", "hNAdJets_bdt","hNAdJets_bdt2", "hJet3_pt_bdt2", "hAdJetHT_bdt2","hNAdJets_mjj1", "hJet3_pt_mjj1", "hAdJetHT_mjj1","hNAdJets_mjj2", "hJet3_pt_mjj2", "hAdJetHT_mjj2", "hHTsoftEWK_bdt2","hSoft_n2EWK_bdt2","hSoft_n5EWK_bdt2","hSoft_n10EWK_bdt2","hHTsoftEWK_mjj1","hSoft_n2EWK_mjj1","hSoft_n5EWK_mjj1","hSoft_n10EWK_mjj1","hHTsoftEWK_mjj2","hSoft_n2EWK_mjj2","hSoft_n5EWK_mjj2","hSoft_n10EWK_mjj2"};
+const int nhistos = 93; //40//52
+TString hist_names[nhistos]={"hMqq", "hEtaQQ","hHTsoft","hSoft_n2","hSoft_n5","hSoft_n10","hHTsoftEWK","hSoft_n2EWK","hSoft_n5EWK","hSoft_n10EWK","hHTsoftEWK_bdt","hSoft_n2EWK_bdt","hSoft_n5EWK_bdt","hSoft_n10EWK_bdt","hPVs", "hJet1q_pt", "hJet1q_eta", "hJet1q_phi", "hJet2q_phi", "hJet1q_ptd", "hJet1q_axis2", "hJet1q_mult", "hJet2q_pt", "hJet2q_eta", "hJet2q_ptd", "hJet2q_axis2", "hJet2q_mult", "hmet",   "hJet1q_leadTrackPt", "hJet2q_leadTrackPt", "hqq_pt","hV_mass", "hqgl", "hqgl2", "hZll_mass", "hZll_pt", "hZll_phi", "hZll_eta",  "hrho", "hlepton1_pt", "hlepton2_pt", "hlepton1_eta", "hlepton2_eta","hlepton1_iso03", "hlepton2_iso03", "hDeltaRelQQ", "hRptHard", "hEtaQQSum", "hPhiZQ1", "hZll_y", "hZll_ystar", "hZll_zstar", "hMqq_log","hJet3_pt","hPhiQQ","hJets12_pt","hJets12_pt_log","hJet1q_pt_log","hJet2q_pt_log","hbdt","hbdt_atanh","hJet3_pt_bdt", "hAdJetHT_bdt","hHT","hlheHT_log","hNAdJets", "hNAdJets_bdt","hNAdJets_bdt2", "hJet3_pt_bdt2", "hAdJetHT_bdt2","hNAdJets_mjj1", "hJet3_pt_mjj1", "hAdJetHT_mjj1","hNAdJets_mjj2", "hJet3_pt_mjj2", "hAdJetHT_mjj2", "hHTsoftEWK_bdt2","hSoft_n2EWK_bdt2","hSoft_n5EWK_bdt2","hSoft_n10EWK_bdt2","hHTsoftEWK_mjj1","hSoft_n2EWK_mjj1","hSoft_n5EWK_mjj1","hSoft_n10EWK_mjj1","hHTsoftEWK_mjj2","hSoft_n2EWK_mjj2","hSoft_n5EWK_mjj2","hSoft_n10EWK_mjj2","hJet1q_eta_bdt","hJet1q_eta_bdt2","hJet2q_eta_bdt","hJet2q_eta_bdt2","hbdt_atanh2"};
 std::array<int,100> LOGY_array = {};
 
 TString hist_names_sum[nhistos]={};
@@ -671,7 +687,7 @@ for (int i=0;i<nhistos;i++){
 		}
 		if (hist_names[i].CompareTo("hbdt_atanh")==0) {
 			xmin=0;
-			xmax=5;
+			xmax=3.5;
 		}
 		TH1F *frame = new TH1F("frame","",1,xmin,xmax);
 		TGaxis::SetExponentOffset(-0.07,0,"xy");

@@ -33,14 +33,14 @@ file_name=(
 DYJetstoLL_amc_0J
 DYJetstoLL_amc_1J
 DYJetstoLL_amc_2J
-DYJetstoLL_HT100
-DYJetstoLL_HT100_200
-DYJetstoLL_HT200_400
-DYJetstoLL_HT400_600
-DYJetstoLL_HT600_800
-DYJetstoLL_HT800_1200
-DYJetstoLL_HT1200_2500
-DYJetstoLL_HT2500_Inf
+#DYJetstoLL_HT100
+#DYJetstoLL_HT100_200
+#DYJetstoLL_HT200_400
+#DYJetstoLL_HT400_600
+#DYJetstoLL_HT600_800
+#DYJetstoLL_HT800_1200
+#DYJetstoLL_HT1200_2500
+#DYJetstoLL_HT2500_Inf
 #DYJetstoLL_HT600_Inf
 #DYJetstoLL_Pt-100_amc
 #DYJetstoLL_Pt-100To250_amc
@@ -64,7 +64,7 @@ ST_t-channel_antitop_4f_inclusiveDecays
 )
 
 prefix=''
-postfix=v25_bdt_varv24_reminiaod
+postfix=v25_bdt_axis2jet2q_reminiaod
 v=v25
 ROOT=.root
 dataset_type=(mu el)
@@ -77,7 +77,7 @@ pathhome=/afs/cern.ch/work/n/nchernya/VBFZll/plotter/output_root/
 current_region=0
 current_file=0
 current_trigWeight=0
-max_files=16 #16 #35
+max_files=8 #16 #35
 #	tail -n+3 /afs/cern.ch/work/n/nchernya/VBFZll/plotter/output_txt/${file_name[$current_file]}_${region[$current_region]}_$postfix.txt  | head -n $((1))
 #	xrdcp $path${file_name[$current_file]}_${region[$current_region]}_JESnom_$postfix.txt /afs/cern.ch/work/n/nchernya/VBFZll/plotter/output_txt/
 while [ $current_file -lt $max_files  ]
@@ -104,9 +104,9 @@ done
 #WJetsToLNu_HT
 list="
 DYJetstoLL_amc
-DYJetstoLL_HT
 ST
 "
+#DYJetstoLL_HT
 #DYJetstoLL_amc
 
 for arg in $list
@@ -125,10 +125,13 @@ xrdfs t3dcachedb03.psi.ch rm //pnfs/psi.ch/cms/trivcat/store/user//nchernya/VBFZ
 xrdfs t3dcachedb03.psi.ch rm //pnfs/psi.ch/cms/trivcat/store/user//nchernya/VBFZll/plotterOutput/v25/${arg}_${dataset_type[$current_region]}_QCDScalenom_JESdown_$postfix.root
 
 
-xrdcp ${pathhome}${arg}_${dataset_type[$current_region]}_QCDScaledown_JESnom_$postfix.root root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat//store/user/nchernya/VBFZll/plotterOutput/v25/
-xrdcp ${pathhome}${arg}_${dataset_type[$current_region]}_QCDScaleup_JESnom_$postfix.root root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/plotterOutput/v25/
-xrdcp ${pathhome}${arg}_${dataset_type[$current_region]}_QCDScalenom_JESnom_$postfix.root root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat//store/user/nchernya/VBFZll/plotterOutput/v25/
-xrdcp ${pathhome}${arg}_${dataset_type[$current_region]}_QCDScalenom_JESup_$postfix.root root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat//store/user/nchernya/VBFZll/plotterOutput/v25/
-xrdcp ${pathhome}${arg}_${dataset_type[$current_region]}_QCDScalenom_JESdown_$postfix.root root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/plotterOutput/v25/
+#path2=root://t3se01.psi.ch///
+path2=root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat/
+
+xrdcp -f ${pathhome}${arg}_${dataset_type[$current_region]}_QCDScaledown_JESnom_$postfix.root $path2/store/user/nchernya/VBFZll/plotterOutput/v25/
+xrdcp -f ${pathhome}${arg}_${dataset_type[$current_region]}_QCDScaleup_JESnom_$postfix.root $path2/store/user/nchernya/VBFZll/plotterOutput/v25/
+xrdcp -f ${pathhome}${arg}_${dataset_type[$current_region]}_QCDScalenom_JESnom_$postfix.root $path2/store/user/nchernya/VBFZll/plotterOutput/v25/
+xrdcp -f ${pathhome}${arg}_${dataset_type[$current_region]}_QCDScalenom_JESup_$postfix.root $path2/store/user/nchernya/VBFZll/plotterOutput/v25/
+xrdcp -f ${pathhome}${arg}_${dataset_type[$current_region]}_QCDScalenom_JESdown_$postfix.root $path2/store/user/nchernya/VBFZll/plotterOutput/v25/
 
 done

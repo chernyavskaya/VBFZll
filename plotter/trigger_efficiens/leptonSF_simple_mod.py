@@ -355,13 +355,15 @@ if __name__ == "__main__":
      #   jsonpath+'Electron_Id_WP90.json' : ['ScaleFactor_MVAID_80x', 'eta_pt_ratio' ],
       #  jsonpath+'Electron_tracker.json' : ['ScaleFactor_tracker_80x', 'eta_pt_ratio' ],
       #  jsonpath+'trk_SF_RunBCDEF.json' : ['Graph', 'ratio_eff_eta3_dr030e030_corr' ],
-        jsonpath+'trk_SF_RunGH.json' : ['Graph', 'ratio_eff_eta3_dr030e030_corr' ],
+      #  jsonpath+'trk_SF_RunGH.json' : ['Graph', 'ratio_eff_eta3_dr030e030_corr' ],
+        jsonpath+'ElectronTight27AfterIDIso.json' : ['Tight27AfterIDISO', 'eta_pt_ratio' ],
+        jsonpath+'ElectronIDIsoWH.json' : ['EIDISO_WH', 'eta_pt_ratio' ],
 			
         }
     for j, name in jsons.iteritems():
         lepCorr = LeptonSF(j , name[0], name[1])
-       # lepCorr.triggerMap()
-        lepCorr.triggerMap1D()
+        lepCorr.triggerMap()
+     #   lepCorr.triggerMap1D()
       #  weight = lepCorr.get_2D( 65 , -1.5)
      #   val = weight[0]
      #   err = weight[1]

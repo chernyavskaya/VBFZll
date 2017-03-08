@@ -359,10 +359,14 @@ float gen_neg_weight=0;
 	TFile* file_iso_mu_aft = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_LooseISO_LooseID_pt_eta_RunGH.root");
 	TH2F* iso_mu_aft = (TH2F*)file_iso_mu_aft->Get("TriggerEffMap_LooseISO_LooseID_pt_eta");
 
-	TFile* file_id_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_ScaleFactor_MVAIDWP80_80x.root");
-	TH2F* id_el = (TH2F*)file_id_el->Get("TriggerEffMap_ScaleFactor_MVAIDWP80_80x");
+//	TFile* file_id_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_ScaleFactor_MVAIDWP80_80x.root");
+//	TH2F* id_el = (TH2F*)file_id_el->Get("TriggerEffMap_ScaleFactor_MVAIDWP80_80x");
 	TFile* file_tracker_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_ScaleFactor_tracker_80x.root");
 	TH2F* tracker_el = (TH2F*)file_tracker_el->Get("TriggerEffMap_ScaleFactor_tracker_80x");
+	TFile* file_trig_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_Tight27AfterIDISO.root");
+	TH2F* trig_el = (TH2F*)file_trig_el->Get("TriggerEffMap_Tight27AfterIDISO");
+	TFile* file_id_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_EIDISO_WH.root");
+	TH2F* id_el = (TH2F*)file_id_el->Get("TriggerEffMap_EIDISO_WH");
 
 	TFile* file_track_mu_bf = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_Muons_trk_SF_RunBCDEF.root");
 	TH1F* track_mu_bf = (TH1F*)file_track_mu_bf->Get("TriggerEffMap_Graph");
@@ -397,6 +401,7 @@ float gen_neg_weight=0;
 			if (events_generated==0) events_generated =  countPos->GetBinContent(1) - countNeg->GetBinContent(1);
 		}
 	} else events_generated = 1;
+//	if (file_tag.CompareTo("EWK_LLJJ")==0)  events_generated=events_generated/2.00703;
     Jets Jet;
     Float_t v_type;
     Float_t wrong_type=0.;
@@ -594,6 +599,15 @@ Float_t LHE_weights_scale_wgt[10];
 	hbdt->GetXaxis()->SetTitle("BDT output");
 	TH1F *hbdt_atanh = new TH1F("hbdt_atanh","",500,0.,5.);
 	hbdt_atanh->GetXaxis()->SetTitle("AThanH((BDT+1)/2)");
+
+	float bining[50];
+	bining[0]=0.;
+	for (int i=1;i<31;i++)
+		bining[i]=bining[i-1]+0.1;
+	bining[31] = 3.5;
+			
+	TH1F *hbdt_atanh2 = new TH1F("hbdt_atanh2","",31,bining);
+	hbdt_atanh2->GetXaxis()->SetTitle("AThanH((BDT+1)/2)");
 
 	TH1F *hPhiQQ = new TH1F("hPhiQQ","",32,0.,3.2);
 	hPhiQQ->GetXaxis()->SetTitle("|#Delta#phi_{qq}|");
@@ -806,30 +820,30 @@ Float_t LHE_weights_scale_wgt[10];
 	hlheV_pt->GetXaxis()->SetTitle("lheV_pt (GeV)");
 
 
-	TH1F *hJet3_pt_bdt = new TH1F("hJet3_pt_bdt","",10,0,200);
+	TH1F *hJet3_pt_bdt = new TH1F("hJet3_pt_bdt","",13,0,195);
 	hJet3_pt_bdt->GetXaxis()->SetTitle("p_{T} 3^{rd} jet, BDT>0.92 (GeV)");
-	TH1F *hAdJetHT_bdt = new TH1F("hAdJetHT_bdt","",23,0,460);
+	TH1F *hAdJetHT_bdt = new TH1F("hAdJetHT_bdt","",30,0,450);
 	hAdJetHT_bdt->GetXaxis()->SetTitle("additional jets HT, BDT>0.92 (GeV)");
 	TH1F *hNAdJets_bdt = new TH1F("hNAdJets_bdt","",10,0,10);
 	hNAdJets_bdt->GetXaxis()->SetTitle("N of jets, BDT>0.92");
 	TH1F *hNAdJets = new TH1F("hNAdJets","",10,0,10);
 	hNAdJets->GetXaxis()->SetTitle("N of jets");
 
-	TH1F *hJet3_pt_bdt2 = new TH1F("hJet3_pt_bdt2","",10,0,200);
+	TH1F *hJet3_pt_bdt2 = new TH1F("hJet3_pt_bdt2","",13,0,195);
 	hJet3_pt_bdt2->GetXaxis()->SetTitle("p_{T} 3^{rd} jet, BDT>0.84 (GeV)");
-	TH1F *hAdJetHT_bdt2 = new TH1F("hAdJetHT_bdt2","",23,0,460);
+	TH1F *hAdJetHT_bdt2 = new TH1F("hAdJetHT_bdt2","",30,0,450);
 	hAdJetHT_bdt2->GetXaxis()->SetTitle("additional jets HT, BDT>0.84 (GeV)");
 	TH1F *hNAdJets_bdt2 = new TH1F("hNAdJets_bdt2","",10,0,10);
 	hNAdJets_bdt2->GetXaxis()->SetTitle("N of jets, BDT>0.84");
-	TH1F *hJet3_pt_mjj1 = new TH1F("hJet3_pt_mjj1","",10,0,200);
+	TH1F *hJet3_pt_mjj1 = new TH1F("hJet3_pt_mjj1","",13,0,195);
 	hJet3_pt_mjj1->GetXaxis()->SetTitle("p_{T} 3^{rd} jet, m(qq) > 1500 (GeV)");
-	TH1F *hAdJetHT_mjj1 = new TH1F("hAdJetHT_mjj1","",23,0,460);
+	TH1F *hAdJetHT_mjj1 = new TH1F("hAdJetHT_mjj1","",30,0,450);
 	hAdJetHT_mjj1->GetXaxis()->SetTitle("additional jets HT, m(qq) > 1500 (GeV)");
 	TH1F *hNAdJets_mjj1 = new TH1F("hNAdJets_mjj1","",10,0,10);
 	hNAdJets_mjj1->GetXaxis()->SetTitle("N of jets, m(qq) > 1500");
-	TH1F *hJet3_pt_mjj2 = new TH1F("hJet3_pt_mjj2","",10,0,200);
+	TH1F *hJet3_pt_mjj2 = new TH1F("hJet3_pt_mjj2","",13,0,195);
 	hJet3_pt_mjj2->GetXaxis()->SetTitle("p_{T} 3^{rd} jet, m(qq) > 2500 (GeV)");
-	TH1F *hAdJetHT_mjj2 = new TH1F("hAdJetHT_mjj2","",23,0,460);
+	TH1F *hAdJetHT_mjj2 = new TH1F("hAdJetHT_mjj2","",30,0,450);
 	hAdJetHT_mjj2->GetXaxis()->SetTitle("additional jets HT, m(qq) > 2500 (GeV)");
 	TH1F *hNAdJets_mjj2 = new TH1F("hNAdJets_mjj2","",10,0,10);
 	hNAdJets_mjj2->GetXaxis()->SetTitle("N of jets, m(qq) > 2500 ");
@@ -859,8 +873,8 @@ Float_t LHE_weights_scale_wgt[10];
 
 
 
-   		const int numArray= 101;  //64+8 
-   		TH1F* histArray[numArray] = { hMqq, hEtaQQ,hHTsoft,hSoft_n2,hSoft_n5,hSoft_n10,hHTsoftEWK,hSoft_n2EWK,hSoft_n5EWK,hSoft_n10EWK,hHTsoftEWK_bdt,hSoft_n2EWK_bdt,hSoft_n5EWK_bdt,hSoft_n10EWK_bdt,hnPVs, hJet1q_pt, hJet1q_eta, hJet1q_ptd, hJet1q_axis2, hJet1q_mult, hJet2q_pt, hJet2q_eta, hJet2q_ptd, hJet2q_axis2, hJet2q_mult, hmet,   hJet1q_leadTrackPt, hJet2q_leadTrackPt, hqq_pt,hV_mass, hqgl, hqgl2, hZll_mass, hZll_pt, hZll_phi, hZll_eta, hrho, hlepton1_pt, hlepton2_pt, hlepton1_eta, hlepton2_eta, hHT, hDeltaRelQQ, hRptHard, hEtaQQSum, hPhiZQ1, hZll_y, hZll_ystar, hZll_zstar, hMqq_log, hlheV_pt, hJet3_pt, hlheHT_log, hPhiQQ, hJets12_pt_log, hJets12_pt, hJet1q_pt_log, hJet2q_pt_log, hbdt, hbdt_atanh, hlepton1_iso03, hlepton2_iso03, hveto_jet3pt_nom, hveto_jet3pt_denom, hveto_ht_nom, hveto_ht_denom, hveto_softht_nom, hveto_softht_denom, hveto_softpt_nom, hveto_softpt_denom, hJet2q_phi, hJet1q_phi, hNAdJets, hNAdJets_bdt, hJet3_pt_bdt, hAdJetHT_bdt, hNAdJets_bdt2, hJet3_pt_bdt2, hAdJetHT_bdt2,hNAdJets_mjj1, hJet3_pt_mjj1, hAdJetHT_mjj1,hNAdJets_mjj2, hJet3_pt_mjj2, hAdJetHT_mjj2, hHTsoftEWK_bdt2,hSoft_n2EWK_bdt2,hSoft_n5EWK_bdt2,hSoft_n10EWK_bdt2,hHTsoftEWK_mjj1,hSoft_n2EWK_mjj1,hSoft_n5EWK_mjj1,hSoft_n10EWK_mjj1 ,hHTsoftEWK_mjj2,hSoft_n2EWK_mjj2,hSoft_n5EWK_mjj2,hSoft_n10EWK_mjj2 ,hJet1q_eta_bdt, hJet1q_eta_bdt2, hJet2q_eta_bdt, hJet2q_eta_bdt2  };
+   		const int numArray= 102;  //64+8 
+   		TH1F* histArray[numArray] = { hMqq, hEtaQQ,hHTsoft,hSoft_n2,hSoft_n5,hSoft_n10,hHTsoftEWK,hSoft_n2EWK,hSoft_n5EWK,hSoft_n10EWK,hHTsoftEWK_bdt,hSoft_n2EWK_bdt,hSoft_n5EWK_bdt,hSoft_n10EWK_bdt,hnPVs, hJet1q_pt, hJet1q_eta, hJet1q_ptd, hJet1q_axis2, hJet1q_mult, hJet2q_pt, hJet2q_eta, hJet2q_ptd, hJet2q_axis2, hJet2q_mult, hmet,   hJet1q_leadTrackPt, hJet2q_leadTrackPt, hqq_pt,hV_mass, hqgl, hqgl2, hZll_mass, hZll_pt, hZll_phi, hZll_eta, hrho, hlepton1_pt, hlepton2_pt, hlepton1_eta, hlepton2_eta, hHT, hDeltaRelQQ, hRptHard, hEtaQQSum, hPhiZQ1, hZll_y, hZll_ystar, hZll_zstar, hMqq_log, hlheV_pt, hJet3_pt, hlheHT_log, hPhiQQ, hJets12_pt_log, hJets12_pt, hJet1q_pt_log, hJet2q_pt_log, hbdt, hbdt_atanh,hbdt_atanh2 , hlepton1_iso03, hlepton2_iso03, hveto_jet3pt_nom, hveto_jet3pt_denom, hveto_ht_nom, hveto_ht_denom, hveto_softht_nom, hveto_softht_denom, hveto_softpt_nom, hveto_softpt_denom, hJet2q_phi, hJet1q_phi, hNAdJets, hNAdJets_bdt, hJet3_pt_bdt, hAdJetHT_bdt, hNAdJets_bdt2, hJet3_pt_bdt2, hAdJetHT_bdt2,hNAdJets_mjj1, hJet3_pt_mjj1, hAdJetHT_mjj1,hNAdJets_mjj2, hJet3_pt_mjj2, hAdJetHT_mjj2, hHTsoftEWK_bdt2,hSoft_n2EWK_bdt2,hSoft_n5EWK_bdt2,hSoft_n10EWK_bdt2,hHTsoftEWK_mjj1,hSoft_n2EWK_mjj1,hSoft_n5EWK_mjj1,hSoft_n10EWK_mjj1 ,hHTsoftEWK_mjj2,hSoft_n2EWK_mjj2,hSoft_n5EWK_mjj2,hSoft_n10EWK_mjj2 ,hJet1q_eta_bdt, hJet1q_eta_bdt2, hJet2q_eta_bdt, hJet2q_eta_bdt2  };
 			for (int i=0;i<numArray;i++){
 				histArray[i]->Sumw2();
 			}
@@ -926,7 +940,7 @@ Float_t LHE_weights_scale_wgt[10];
 
 //	cout<<nentries<<endl;
 	for (int entry=0; entry<nentries;++entry){
-//	for (int entry=0; entry<1000;++entry){
+//	for (int entry=0; entry<20000;++entry){
         tree_initial->GetEntry(entry);
 	
 
@@ -939,6 +953,7 @@ Float_t LHE_weights_scale_wgt[10];
 			continue;
 		}
 
+	//	if ((file_tag.CompareTo("EWK_LLJJ")==0) &&(evt%2!=0)) continue;
 
 	//	if (region.CompareTo("mu")==0) if (!(v_type==0)) continue;
 	//	if (region.CompareTo("el")==0) if (!(v_type==1)) continue;
@@ -978,7 +993,8 @@ Float_t LHE_weights_scale_wgt[10];
 
 		for (int i=0;i<nJets;i++){
 			TLorentzVector jet0;
-			if (!((Jet.id[i]>2)&&(Jet.puId[i]>0)&&(Jet.pt[i]>20))) continue;
+		//	if (!((Jet.id[i]>2)&&(Jet.puId[i]>0)&&(Jet.pt[i]>20))) continue;
+			if (!((Jet.id[i]>2)&&(Jet.puId[i]>0))) continue;
 			jet0.SetPtEtaPhiM(Jet.pt[i],Jet.eta[i],Jet.phi[i],Jet.mass[i]);
 			jets_pv.push_back(jet0);
 			jets_indices.push_back(i);
@@ -989,7 +1005,7 @@ Float_t LHE_weights_scale_wgt[10];
 		Qjet1 = jets_pv[0];
 		Qjet2 = jets_pv[1];
 		float jet3_pt = 0;
-		if (good_jets>=3) if (jets_pv[2].Pt()>20) jet3_pt=jets_pv[2].Pt();
+		if (good_jets>=3) jet3_pt=jets_pv[2].Pt();
 		qq=Qjet1+Qjet2;
 		Float_t Mqq = qq.M();
 		Float_t qq_pt = qq.Pt();
@@ -1105,32 +1121,27 @@ Float_t LHE_weights_scale_wgt[10];
 				float SF_mu_aft_err2 = 0.;
 				bool abs=1;
 				float eff1 =20.1/36.4*getScaleFactor(trig_mu_bf, lepton1.Pt(), lepton1.Eta(), SF_mu_bf_err1,abs ) + 16.3/36.4*getScaleFactor(trig_mu_aft, lepton1.Pt(), lepton1.Eta(), SF_mu_bf_err1,abs ) ;  	
-				float eff2 =20.1/36.4*getScaleFactor(trig_mu_bf, lepton2.Pt(), lepton2.Eta(), SF_mu_bf_err2,abs ) + 16.3/36.4*getScaleFactor(trig_mu_aft, lepton2.Pt(), lepton2.Eta(), SF_mu_bf_err2,abs  ) ;  
-				genweight*= (eff1*(1-eff2)*eff1 + eff2*(1-eff1)*eff2 + eff1*eff1*eff2*eff2); 
 	
 				float eff1_id =20.1/36.4*getScaleFactor(id_mu_bf, lepton1.Pt(), lepton1.Eta(), SF_mu_bf_err1,abs ) + 16.3/36.4*getScaleFactor(id_mu_aft, lepton1.Pt(), lepton1.Eta(), SF_mu_bf_err1,abs ) ;  	
 				float eff2_id =20.1/36.4*getScaleFactor(id_mu_bf, lepton2.Pt(), lepton2.Eta(), SF_mu_bf_err2,abs ) + 16.3/36.4*getScaleFactor(trig_mu_aft, lepton2.Pt(), lepton2.Eta(), SF_mu_bf_err2,abs  ) ;  
 				float eff1_iso =20.1/36.4*getScaleFactor(iso_mu_bf, lepton1.Pt(), lepton1.Eta(), SF_mu_bf_err1,abs ) + 16.3/36.4*getScaleFactor(id_mu_aft, lepton1.Pt(), lepton1.Eta(), SF_mu_bf_err1,abs ) ;  	
 				float eff2_iso =20.1/36.4*getScaleFactor(iso_mu_bf, lepton2.Pt(), lepton2.Eta(), SF_mu_bf_err2,abs ) + 16.3/36.4*getScaleFactor(trig_mu_aft, lepton2.Pt(), lepton2.Eta(), SF_mu_bf_err2,abs  ) ; 
 				abs=0; 
-			//	float eff1_tracker =20.1/36.4*getScaleFactor1D(track_mu_bf, lepton1.Eta(), SF_el_err1,abs ) + 16.3/36.4*getScaleFactor(track_mu_aft,  lepton1.Eta(), SF_mu_bf_err1,abs );  	
-			//	float eff2_tracker =20.1/36.4*getScaleFactor1D(track_mu_bf, lepton2.Eta(), SF_el_err1,abs ) + 16.3/36.4*getScaleFactor(track_mu_aft,  lepton2.Eta(), SF_mu_bf_err1,abs );  	
+				float eff1_tracker =20.1/36.4*getScaleFactor1D(track_mu_bf, lepton1.Eta(), SF_mu_bf_err1,abs ) + 16.3/36.4*getScaleFactor1D(track_mu_aft,  lepton1.Eta(), SF_mu_bf_err1,abs );  	
+				float eff2_tracker =20.1/36.4*getScaleFactor1D(track_mu_bf, lepton2.Eta(), SF_mu_bf_err1,abs ) + 16.3/36.4*getScaleFactor1D(track_mu_aft,  lepton2.Eta(), SF_mu_bf_err1,abs );  	
 
-			//	genweight*= eff1_id*eff2_id*eff1_iso*eff2_iso*eff1_tracker*eff2_tracker; 	
-				genweight*= eff1_id*eff2_id*eff1_iso*eff2_iso; 	
+				genweight*= eff1*eff1_id*eff2_id*eff1_iso*eff2_iso*eff1_tracker*eff2_tracker; 	
 			}
 			if (region.CompareTo("el")==0) {
 				float SF_el_err1 = 0.;
 				float SF_el_err2 = 0.;
 				bool abs=0;
-	//			float eff1 = getScaleFactor(trig_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs );  	
-	//			float eff2 = getScaleFactor(trig_el, lepton2.Pt(), lepton2.Eta(), SF_el_err2,abs ); 
-	//			genweight*= eff1*(1-eff2)*eff1 + eff2*(1-eff1)*eff2 + eff1*eff1*eff2*eff2; 	
+				float eff1 = getScaleFactor(trig_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs );  	
 				float eff1_id =getScaleFactor(id_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs ) ;  	
 				float eff2_id =getScaleFactor(id_el, lepton2.Pt(), lepton2.Eta(), SF_el_err2,abs  ) ;  
 				float eff1_tracker =getScaleFactor(tracker_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs ) ;  	
 				float eff2_tracker =getScaleFactor(tracker_el, lepton2.Pt(), lepton2.Eta(), SF_el_err2,abs  ) ;  
-				genweight*= eff1_id*eff2_id*eff1_tracker*eff2_tracker; 	
+				genweight*=eff1* eff1_id*eff2_id*eff1_tracker*eff2_tracker; 	
 			}
 		}
 
@@ -1267,16 +1278,18 @@ Float_t LHE_weights_scale_wgt[10];
 				if  (file_tag.CompareTo("interference")!=0) {
 					hbdt->Fill(bdt,genweight);
 					hbdt_atanh->Fill(TMath::ATanH((bdt+1)/2),genweight);
+					hbdt_atanh2->Fill(TMath::ATanH((bdt+1)/2),genweight);
 				}
 				else {
 					float interference_weight= interference_func->Eval(TMath::Log(Mqq))  ;
 					hbdt->Fill(bdt,genweight*interference_weight);
 					hbdt_atanh->Fill(TMath::ATanH((bdt+1)/2),genweight*interference_weight);
+					hbdt_atanh2->Fill(TMath::ATanH((bdt+1)/2),genweight*interference_weight);
 				}
 				float AdJetHT = 0;
 				if (good_jets>=3)
 					for (int i=2;i<good_jets;i++)
-						if (jets_pv[i].Pt() > 20 ) AdJetHT+=jets_pv[i].Pt();
+						if (jets_pv[i].Pt() > 15 ) AdJetHT+=jets_pv[i].Pt();
 		 
 
 				if (bdt>0.92) {

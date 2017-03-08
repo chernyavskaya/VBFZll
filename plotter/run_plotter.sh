@@ -13,8 +13,8 @@ cp  EWcorr.C	/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
 #cp muon_corrections/RoccoR.cc /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
 #cp muon_corrections/RoccoR.h /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
 
-
-path=dcap://t3dcachedb.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/mva_v25_new/
+path=dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/mva_v25_axis2jet2q/
+#path=dcap://t3dcachedb.psi.ch:1094//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/mva_v25_new/
 file_names=(
 #["DYJetstoLL"]=DYJetstoLL
 #["DYJetstoLL_amc"]=DYJetsToLL_amc_full
@@ -79,17 +79,17 @@ file_names=(
 
 ["DYJetstoLL_amc_0J"]=DYJetstoLL_amc_0J
 ["DYJetstoLL_amc_1J"]=DYJetstoLL_amc_1J
-["DYJetstoLL_amc_2J"]=DYJetstoLL_amc_2J_all
+["DYJetstoLL_amc_2J"]=DYJetstoLL_amc_2J
 #["DYJetstoLL_amc_2J"]=DYJetstoLL_amc_2J
-["DYJetstoLL"]=DYJetstoLL_madgraph
-["DYJetstoLL_HT100"]=DYJetstoLL_madgraph
-["DYJetstoLL_HT100_200"]=DYJetstoLL_HT100to200
-["DYJetstoLL_HT200_400"]=DYJetstoLL_HT200to400
-["DYJetstoLL_HT400_600"]=DYJetstoLL_HT400to600
-["DYJetstoLL_HT600_800"]=DYJetstoLL_HT600to800
-["DYJetstoLL_HT800_1200"]=DYJetstoLL_HT800to1200
-["DYJetstoLL_HT1200_2500"]=DYJetstoLL_HT1200to2500
-["DYJetstoLL_HT2500_Inf"]=DYJetstoLL_HT2500toInf
+#["DYJetstoLL"]=DYJetstoLL_madgraph
+#["DYJetstoLL_HT100"]=DYJetstoLL_madgraph
+#["DYJetstoLL_HT100_200"]=DYJetstoLL_HT100to200
+#["DYJetstoLL_HT200_400"]=DYJetstoLL_HT200to400
+#["DYJetstoLL_HT400_600"]=DYJetstoLL_HT400to600
+#["DYJetstoLL_HT600_800"]=DYJetstoLL_HT600to800
+#["DYJetstoLL_HT800_1200"]=DYJetstoLL_HT800to1200
+#["DYJetstoLL_HT1200_2500"]=DYJetstoLL_HT1200to2500
+#["DYJetstoLL_HT2500_Inf"]=DYJetstoLL_HT2500toInf
 ["EWK_LLJJ"]=EWK_LL_JJ
 ["EWK_LLJJ_herwig"]=EWK_LL_JJ_herwig
 ["SingleMuon"]=SingleMuon_reminiaod
@@ -104,7 +104,7 @@ file_names=(
 ["WZ"]=WZ
 ["ZZ"]=ZZ
 ["WJetsToLNu"]=WJetsToLnu_madgraph
-#["interference"]=EWK_LL_JJ
+["interference"]=EWK_LL_JJ
 #["TTZToLLNuNu"]=TTZToLLNuNu
 #["tZq_ll"]=tZq_ll
 
@@ -113,7 +113,7 @@ file_names=(
 prefix='main_mva_v25_'
 #postfix='ewk_mucorr_MqqLog_bdt'
 #postfix='ewk_mucorr_nocorr_bdt_oldxsec'
-postfix='bdt_alldata2_reminiaod'
+postfix='bdt_axis2jet2q_reminiaod'
 v='v25'
 ROOT=.root
 region=(mu el)
