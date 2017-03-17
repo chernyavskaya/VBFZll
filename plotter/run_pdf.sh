@@ -1,11 +1,11 @@
 export WORKDIR=`pwd`
 cd $WORKDIR
 
-g++ plotter_vbfzll.C -g -o plot `root-config --cflags --glibs`  -lMLP -lXMLIO -lTMVA  
+g++ plotter_vbfzll_pdf.C -g -o pdf `root-config --cflags --glibs`  -lMLP -lXMLIO -lTMVA  
 
 declare -A file_names
 
-cp plot /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
+cp pdf /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
 cp  batch.sh /mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
 cp  EWcorr.C	/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
 #cp muon_corrections/rochcor2016.cc 	/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/
@@ -78,8 +78,8 @@ file_names=(
 
 
 
-["DYJetstoLL_amc_0J"]=DYJetstoLL_amc_0J
-["DYJetstoLL_amc_1J"]=DYJetstoLL_amc_1J
+#["DYJetstoLL_amc_0J"]=DYJetstoLL_amc_0J
+#["DYJetstoLL_amc_1J"]=DYJetstoLL_amc_1J
 ["DYJetstoLL_amc_2J"]=DYJetstoLL_amc_2J
 #["DYJetstoLL_amc_2J"]=DYJetstoLL_amc_2J_all
 #["DYJetstoLL"]=DYJetstoLL_madgraph
@@ -91,20 +91,20 @@ file_names=(
 #["DYJetstoLL_HT800_1200"]=DYJetstoLL_HT800to1200
 #["DYJetstoLL_HT1200_2500"]=DYJetstoLL_HT1200to2500
 #["DYJetstoLL_HT2500_Inf"]=DYJetstoLL_HT2500toInf
-["EWK_LLJJ"]=EWK_LL_JJ
-["EWK_LLJJ_herwig"]=EWK_LL_JJ_herwig
-["SingleMuon"]=SingleMuon_reminiaod
-["SingleElectron"]=SingleElectron_reminiaod
-["ST_tW_top"]=ST_tW_top
-["ST_tW_antitop"]=ST_tW_antitop
-["ST_s-channel"]=ST_s
-["ST_t-channel_top_4f_inclusiveDecays"]=ST_t_top
-["ST_t-channel_antitop_4f_inclusiveDecays"]=ST_t_antitop
-["TT"]=TT
-["WW"]=WW
-["WZ"]=WZ
-["ZZ"]=ZZ
-["WJetsToLNu"]=WJetsToLnu_madgraph
+#["EWK_LLJJ"]=EWK_LL_JJ
+#["EWK_LLJJ_herwig"]=EWK_LL_JJ_herwig
+#["SingleMuon"]=SingleMuon_reminiaod
+#["SingleElectron"]=SingleElectron_reminiaod
+#["ST_tW_top"]=ST_tW_top
+#["ST_tW_antitop"]=ST_tW_antitop
+#["ST_s-channel"]=ST_s
+#["ST_t-channel_top_4f_inclusiveDecays"]=ST_t_top
+#["ST_t-channel_antitop_4f_inclusiveDecays"]=ST_t_antitop
+#["TT"]=TT
+#["WW"]=WW
+#["WZ"]=WZ
+#["ZZ"]=ZZ
+#["WJetsToLNu"]=WJetsToLnu_madgraph
 #["interference"]=EWK_LL_JJ
 #["TTZToLLNuNu"]=TTZToLLNuNu
 #["tZq_ll"]=tZq_ll
@@ -114,21 +114,21 @@ file_names=(
 prefix='main_mva_v25_'
 #postfix='ewk_mucorr_MqqLog_bdt'
 #postfix='ewk_mucorr_nocorr_bdt_oldxsec'
-postfix='bdt_alldata4_qglweightsnormChrisEl_reminiaod'
+postfix='_pdf_unc2try_reminiaod'
 v='v25'
 ROOT=.root
 region=(mu el)
-applyJESWeight=1
-applyQCDWeight=1
+applyJESWeight=0
+applyQCDWeight=0
 JESWeightNom=(nom up down)
 QCDWeightNom=(nom up down)
 output_dir=$TMPDIR
 
 
 for key in ${!file_names[@]}; do
-	current_region=1
+	current_region=0
 #	while [ $current_region -lt 1  ] 
-	while [ $current_region -lt  2 ] 
+	while [ $current_region -lt  1 ] 
 	do
 		data=0
 		if [ $key == SingleMuon ] || [ $key == SingleMuonB ] || [ $key == SingleMuonC ] || [ $key == SingleMuonD ] || [ $key == SingleMuonE ] || [ $key == SingleMuonF ] || [ $key == SingleMuonG ] ||[ $key == SingleElectron ] || [ $key == SingleElectron ] || [ $key == SingleElectronB ] || [ $key == SingleElectronC ] || [ $key == SingleElectronD ] || [ $key == SingleElectronE ] || [ $key == SingleElectronF ] || [ $key == SingleElectronG ] 
@@ -139,32 +139,9 @@ for key in ${!file_names[@]}; do
 		then
 		#	f=$path$prefix${file_names[${key}]}_$v.root
 			f=$path$prefix${file_names[${key}]}_${region[$current_region]}.root
-			qsub -q short.q batch.sh  $f ${key} ${region[$current_region]} $data 0 nom 0 nom $v $postfix
-			echo  $f ${key} ${region[$current_region]} $data 0 nom 0 nom $v $postfix
+			qsub -q all.q batch_pdf.sh  $f ${key} ${region[$current_region]} $data  $v $postfix
+			echo  $f ${key} ${region[$current_region]} $data  $v $postfix
 		fi 
-		if [ $key != SingleMuon ] && [ $key != SingleMuonB ] && [ $key != SingleMuonC ] && [ $key != SingleMuonD ] && [ $key != SingleMuonE ] && [ $key != SingleMuonF ] && [ $key != SingleMuonG ] && [ $key != SingleElectron ] && [ $key != SingleElectronB ] && [ $key != SingleElectronC ] && [ $key != SingleElectronD ] && [ $key != SingleElectronE ] && [ $key != SingleElectronF ] && [ $key != SingleElectronG ]     && [ $applyJESWeight -eq 1 ]
-		then
-			current_JESWeight=0
-			current_QCDWeight=0
-	#		while [ $current_QCDWeight -lt  1 ] 
-			while [ $current_QCDWeight -lt  3 ] 
-			do
-		#		f=$path$prefix${file_names[${key}]}_$v.root
-				f=$path$prefix${file_names[${key}]}_${region[$current_region]}.root
-				qsub -q short.q batch.sh  $f ${key} ${region[$current_region]} $data  $applyQCDWeight ${QCDWeightNom[$current_QCDWeight]} 0 nom $v $postfix
-	#			echo  $f ${key} ${region[$current_region]} $data  $applyQCDWeight ${QCDWeightNom[$current_QCDWeight]} 0 nom $v $postfix
-				current_QCDWeight=$(( $current_QCDWeight + 1 ))
-			done
-	#		while [ $current_JESWeight -lt  1 ] 
-			while [ $current_JESWeight -lt  3 ] 
-			do
-			#	f=$path$prefix${file_names[${key}]}_$v.root
-				f=$path$prefix${file_names[${key}]}_${region[$current_region]}.root
-				qsub -q short.q batch.sh  $f ${key} ${region[$current_region]} $data 0 nom $applyJESWeight ${JESWeightNom[$current_JESWeight]} $v $postfix
-			#	echo $f ${key} ${region[$current_region]} $data  $applyJESWeight ${JESWeightNom[$current_JESWeight]} $v $postfix
-				current_JESWeight=$(( $current_JESWeight + 1 ))
-			done
-		fi
 		current_region=$(( $current_region + 1 ))
 #		break
 	done
