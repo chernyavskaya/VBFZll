@@ -210,8 +210,17 @@ if __name__ == "__main__":
         #jsonpath+'SingleMuonTrigger_Z_RunCD_Reco76X_Feb15.json' : ['runC_IsoMu20_OR_IsoTkMu20_PtEtaBins', 'abseta_pt_ratio' ]
         #jsonpath+'SingleMuonTrigger_Z_RunCD_Reco76X_Feb15.json' : ['runD_IsoMu20_OR_IsoTkMu20_HLTv4p2_PtEtaBins', 'abseta_pt_ratio' ],
      #   jsonpath+'SingleMuonTrigger_LooseMuons_afterL2fix_Z_RunBCD_prompt80X_7p65.json' : ['MuonTrigger_data_all_IsoMu22_OR_IsoTkMu22_pteta_Run2016B_afterL2Fix', 'abseta_pt_MC' ],
-        jsonpath+'SingleMuonTrigger_LooseMuons_beforeL2fix_Z_RunBCD_prompt80X_7p65.json' : ['MuonTrigger_data_all_IsoMu22_OR_IsoTkMu22_pteta_Run2016B_beforeL2Fix', 'abseta_pt_MC' ],
-        jsonpath+'WP90_BCDEF_withRelIso.json' : ['electronTriggerEfficiencyHLT_Ele27_WPLoose_eta2p1_WP90_BCDEF','eta_pt_ratio'],
+     #   jsonpath+'SingleMuonTrigger_LooseMuons_beforeL2fix_Z_RunBCD_prompt80X_7p65.json' : ['MuonTrigger_data_all_IsoMu22_OR_IsoTkMu22_pteta_Run2016B_beforeL2Fix', 'abseta_pt_MC' ],
+     #   jsonpath+'WP90_BCDEF_withRelIso.json' : ['electronTriggerEfficiencyHLT_Ele27_WPLoose_eta2p1_WP90_BCDEF','eta_pt_ratio'],
+     #   jsonpath+'SingleMuonTrigger_BCDEF.json' : ['IsoMu24_OR_IsoTkMu24_PtEtaBins', 'pt_abseta_ratio' ],
+      #  jsonpath+'SingleMuonTrigger_GH.json' : ['IsoMu24_OR_IsoTkMu24_PtEtaBins', 'pt_abseta_ratio' ],
+        #jsonpath+'SingleMuonId_BCDEF.json' : ['MC_NUM_LooseID_DEN_genTracks_PAR_pt_eta', 'pt_abseta_ratio' ],
+        #jsonpath+'SingleMuonId_GH.json' : ['MC_NUM_LooseID_DEN_genTracks_PAR_pt_eta', 'pt_abseta_ratio' ],
+      #  jsonpath+'SingleMuonIso_BCDEF.json' : ['LooseISO_LooseID_pt_eta', 'pt_abseta_ratio' ],
+        jsonpath+'SingleMuonIso_GH.json' : ['LooseISO_LooseID_pt_eta', 'pt_abseta_ratio' ],
+    #    jsonpath+'Electron_Id_WP80.json' : ['ScaleFactor_MVAIDWP80_80x', 'eta_pt_ratio' ],
+     #   jsonpath+'Electron_Id_WP90.json' : ['ScaleFactor_MVAID_80x', 'eta_pt_ratio' ],
+      #  jsonpath+'Electron_tracker.json' : ['ScaleFactor_tracker_80x', 'eta_pt_ratio' ],
         }
     for j, name in jsons.iteritems():
         lepCorr = LeptonSF(j , name[0], name[1])

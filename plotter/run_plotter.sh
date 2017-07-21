@@ -78,9 +78,9 @@ file_names=(
 
 
 
-["DYJetstoLL_amc_0J"]=DYJetstoLL_amc_0J
-["DYJetstoLL_amc_1J"]=DYJetstoLL_amc_1J
-["DYJetstoLL_amc_2J"]=DYJetstoLL_amc_2J
+#["DYJetstoLL_amc_0J"]=DYJetstoLL_amc_0J
+#["DYJetstoLL_amc_1J"]=DYJetstoLL_amc_1J
+#["DYJetstoLL_amc_2J"]=DYJetstoLL_amc_2J
 #["DYJetstoLL_amc_2J"]=DYJetstoLL_amc_2J_all
 #["DYJetstoLL"]=DYJetstoLL_madgraph
 #["DYJetstoLL_HT100"]=DYJetstoLL_madgraph
@@ -91,44 +91,46 @@ file_names=(
 #["DYJetstoLL_HT800_1200"]=DYJetstoLL_HT800to1200
 #["DYJetstoLL_HT1200_2500"]=DYJetstoLL_HT1200to2500
 #["DYJetstoLL_HT2500_Inf"]=DYJetstoLL_HT2500toInf
-["EWK_LLJJ"]=EWK_LL_JJ
-["EWK_LLJJ_herwig"]=EWK_LL_JJ_herwig
-["SingleMuon"]=SingleMuon_reminiaod
-["SingleElectron"]=SingleElectron_reminiaod
-["ST_tW_top"]=ST_tW_top
-["ST_tW_antitop"]=ST_tW_antitop
-["ST_s-channel"]=ST_s
-["ST_t-channel_top_4f_inclusiveDecays"]=ST_t_top
-["ST_t-channel_antitop_4f_inclusiveDecays"]=ST_t_antitop
-["TT"]=TT
-["WW"]=WW
-["WZ"]=WZ
-["ZZ"]=ZZ
-["WJetsToLNu"]=WJetsToLnu_madgraph
+#["EWK_LLJJ"]=EWK_LL_JJ
+#["EWK_LLJJ_herwig"]=EWK_LL_JJ_herwig
+#["SingleMuon"]=SingleMuon_reminiaod
+#["SingleElectron"]=SingleElectron_reminiaod
+#["ST_tW_top"]=ST_tW_top
+#["ST_tW_antitop"]=ST_tW_antitop
+#["ST_s-channel"]=ST_s
+#["ST_t-channel_top_4f_inclusiveDecays"]=ST_t_top
+#["ST_t-channel_antitop_4f_inclusiveDecays"]=ST_t_antitop
+#["TT"]=TT
+#["WW"]=WW
+#["WZ"]=WZ
+#["ZZ"]=ZZ
+#["WJetsToLNu"]=WJetsToLnu_madgraph
 #["interference"]=EWK_LL_JJ
 #["TTZToLLNuNu"]=TTZToLLNuNu
 #["tZq_ll"]=tZq_ll
-
+#["EWK_LLJJ_aTGC"]=EWK_LLJJ_aTGC
+["EWK_LLJJ_aTGC_full"]=EWK_LLJJ_aTGC_full2
 
 )
 prefix='main_mva_v25_'
 #postfix='ewk_mucorr_MqqLog_bdt'
 #postfix='ewk_mucorr_nocorr_bdt_oldxsec'
-postfix='bdt_alldata4_qglweightsnormChrisEl_reminiaod'
+#postfix='bdt_alldata4_qglweightsnorm_vetoeff_newGapAct_reminiaod'
+postfix='aTGC_new_qglnorm'
 v='v25'
 ROOT=.root
 region=(mu el)
-applyJESWeight=1
-applyQCDWeight=1
+applyJESWeight=0
+applyQCDWeight=0
 JESWeightNom=(nom up down)
 QCDWeightNom=(nom up down)
 output_dir=$TMPDIR
 
 
 for key in ${!file_names[@]}; do
-	current_region=1
+	current_region=0
 #	while [ $current_region -lt 1  ] 
-	while [ $current_region -lt  2 ] 
+	while [ $current_region -lt 2 ] 
 	do
 		data=0
 		if [ $key == SingleMuon ] || [ $key == SingleMuonB ] || [ $key == SingleMuonC ] || [ $key == SingleMuonD ] || [ $key == SingleMuonE ] || [ $key == SingleMuonF ] || [ $key == SingleMuonG ] ||[ $key == SingleElectron ] || [ $key == SingleElectron ] || [ $key == SingleElectronB ] || [ $key == SingleElectronC ] || [ $key == SingleElectronD ] || [ $key == SingleElectronE ] || [ $key == SingleElectronF ] || [ $key == SingleElectronG ] 

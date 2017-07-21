@@ -1,0 +1,53 @@
+imax 1  number of channels
+jmax *  number of backgrounds
+kmax *  number of nuisance parameters (sources of systematical uncertainties)
+------------
+shapes * mu  /afs/cern.ch/work/n/nchernya/VBFZll/combine/shapes//ewkZjj_13TeV_shapes_mu_DY_amc_atanh_v25alldata5_qgl05.root atanhBDT_$CHANNEL_$PROCESS atanhBDT_$CHANNEL_$PROCESS_$SYSTEMATIC
+------------
+bin mu
+observation 422499
+------------
+bin          	 		mu		mu		mu		mu		mu	
+process        	 		EWKZ		DY		Top		VV		EWKinterference
+process       	  		0     		1		2		3		4
+rate				6678.430        395421.800      13788.096       3598.463        554.936                            
+------------
+lumi_13TeV    	lnN    		1.025  	 	1.025		1.025		1.025		-		Lumi for 13TeV 22fb-1
+CMS_ewkzjj_mu_eff		lnN		1.030		1.030		1.030		1.030		-		Efficiencies
+CMS_ewkzjj_SigNLO  	lnN             1.060		-		-		-		-		accounting for NLO effects
+CMS_ewkzjj_SigPS  	lnN             1.024		-		-		-		-   	accounting for PS differences
+CMS_ewkzjj_DY_norm		lnN		-		1.1		-		-		-		DY normalization
+CMS_ewkzjj_Top_norm	lnN		-		-		1.10		-		-		Top normalization
+CMS_ewkzjj_VV_norm		lnN		-		-		-		1.1		-		VV normalization
+CMS_ewkzjj_int_shape		shape		-		-		-		-		1.000		interference shape and normalization
+CMS_ewkzjj_puWeight		shape		1.000		1.000		1.000		1.000		-		Pile-up shape
+CMS_ewkzjj_JES		shape		1.000		1.000		1.000		1.000		-			JES shape
+CMS_ewkzjj_JER		shape		1.000		1.000		1.000		1.000		-			JER shape
+CMS_ewkzjj_LHE_weights_scale_EWKZ		shape		1.000		-		-		-		-		QCD scale shape
+CMS_ewkzjj_LHE_weights_scale_DY		shape		-		1.000		-	-		-		QCD scale shape
+CMS_ewkzjj_QGL		shape		1.000		1.000		1.000		1.000		-		QGL shape
+CMS_ewkzjj_stats_DY_mu_b1		shape		-		1.000		-		-		-		Statiscal uncertainties per DY bin
+CMS_ewkzjj_stats_DY_mu_b2		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b3		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b4		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b5		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b6		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b7		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b8		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b9		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b10		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b11		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b12		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b13		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b14		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b15		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b16		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b17		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b18		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b19		shape		-		1.000		-		-		-
+CMS_ewkzjj_stats_DY_mu_b20		shape		-		1.000		-		-		-
+#CMS_ewkzjj_stats_DY_mu_b21		shape		-		1.000		-		-		-
+#CMS_ewkzjj_stats_DY_mu_b23		shape		-		1.000		-		-		-
+#CMS_ewkzjj_stats_DY_mu_b24		shape		-		1.000		-		-		-
+#CMS_ewkzjj_stats_DY_mu_b25		shape		-		1.000		-		-		-
+#CMS_ewkzjj_LHE_weights_scale_Top		shape		-		-		1.000		-		-		QCD scale shape

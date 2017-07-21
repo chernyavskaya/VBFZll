@@ -17,11 +17,12 @@ int main(int argc, char* argv[]){
 		TString input_filename = std::string(argv[1]);
 		TString file_tag = std::string(argv[2]);
 		TString region  = std::string(argv[3]);
+		TString option  = std::string(argv[4]);
 		
 		TFile *f = TFile::Open(input_filename);
 		if (f!=0){	
 			CreateTree_tmva_all	*c = new CreateTree_tmva_all(0,input_filename);
-			c->Loop(file_tag, region);
+			c->Loop(file_tag, region, input_filename,option);
 		}
 	return 0;
 }

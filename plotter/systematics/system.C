@@ -259,9 +259,9 @@ xsec["TT"] =809.;
 xsec["WW"] =118.7;
 xsec["WZ"] = 47.13;
 xsec["ZZ"] =16.523;
-xsec["EWK_LLJJ"]=1.664;
-xsec["EWK_LLJJ_herwig"]=1.664;
-xsec["interference"]=1.664;
+xsec["EWK_LLJJ"]=1.630;
+xsec["EWK_LLJJ_herwig"]=1.630;
+xsec["interference"]=1.630;
 
 xsec["QCD_HT100to200"] = 27990000;
 xsec["QCD_HT200to300"] = 1712000 ;
@@ -305,6 +305,8 @@ xsec["WJetsToLNu_HT1200To2500"] = 1.608089;
 xsec["WJetsToLNu_HT2500ToInf"] = 0.0389135;
 xsec["TTZToLLNuNu"] = 0.2529;
 xsec["tZq_ll"]=0.0758;
+
+xsec["EWKinterference"]=0.1701;
 
 
 
@@ -379,12 +381,10 @@ float gen_neg_weight=0;
 
 	TFile* file_tracker_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_ScaleFactor_tracker_80x.root");
 	TH2F* tracker_el = (TH2F*)file_tracker_el->Get("TriggerEffMap_ScaleFactor_tracker_80x");
-//	TFile* file_id_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_EIDISO_WH.root");
-//	TH2F* id_el = (TH2F*)file_id_el->Get("TriggerEffMap_EIDISO_WH");
-//	TFile* file_trig_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_Tight27AfterIDISO.root");
-//	TH2F* trig_el = (TH2F*)file_trig_el->Get("TriggerEffMap_Tight27AfterIDISO");
-	TFile* file_id_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_ScaleFactor_MVAIDWP80_80x.root");
-	TH2F* id_el = (TH2F*)file_id_el->Get("TriggerEffMap_ScaleFactor_MVAIDWP80_80x");
+	TFile* file_trig_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_Tight27AfterIDISO.root");
+	TH2F* trig_el = (TH2F*)file_trig_el->Get("TriggerEffMap_Tight27AfterIDISO");
+	TFile* file_id_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_EIDISO_ZH.root");
+	TH2F* id_el = (TH2F*)file_id_el->Get("TriggerEffMap_EIDISO_ZH");
 
 
 
@@ -625,6 +625,17 @@ Float_t LHE_weights_scale_wgt[10];
 			hbdt_atanhDown[i] = new TH1F(histTitleDown,"",900,0.,3.);
 		}
 		}	
+
+	for (int i=0;i<Nsyst;i++){
+		hbdt_atanhUp[i]->Sumw2();
+		if (i!=0) {
+			hbdt_atanhDown[i]->Sumw2();
+			hbdtDown[i]->Sumw2();
+		}
+		hbdtUp[i]->Sumw2();
+	}
+
+
 	/*
 	for (int i=0;i<30;i++){
 		char histTitleUp[150];
@@ -742,6 +753,7 @@ for (int current_syst=0;current_syst<Nsyst;current_syst++){
 	if ((current_syst==3) || (current_syst==4)) continue;
 ///////////////////////////////////////////////
 	if ((data==1)&&(current_syst!=0)) continue;
+	if (( file_tag.CompareTo("EWKinterference")==0 )&&(current_syst!=0)) continue;
 	string uncNotAppl_str = uncNotAppl[current_syst].Data();
 	if (current_syst!=0) if (uncNotAppl_str.find(file_tag_str)!=std::string::npos) continue;
 	if  ( (uncertainty_name[current_syst].CompareTo("MDG_NLO_corr")==0) &&(  !((file_tag.CompareTo("DYJetstoLL")==0)  || (file_tag_str.find("DYJetstoLL_HT")!=std::string::npos) ) ))  continue;
@@ -930,12 +942,12 @@ for (int current_syst=0;current_syst<Nsyst;current_syst++){
 				float SF_el_err1 = 0.;
 				float SF_el_err2 = 0.;
 				bool abs=0;
-			//	float eff1 = getScaleFactor(trig_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs );  	
+				float eff1 = getScaleFactor(trig_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs );  	
 				float eff1_id =getScaleFactor(id_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs ) ;  	
 				float eff2_id =getScaleFactor(id_el, lepton2.Pt(), lepton2.Eta(), SF_el_err2,abs  ) ;  
 				float eff1_tracker =getScaleFactor(tracker_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs ) ;  	
 				float eff2_tracker =getScaleFactor(tracker_el, lepton2.Pt(), lepton2.Eta(), SF_el_err2,abs  ) ;  
-				genweight*= eff1_id*eff2_id*eff1_tracker*eff2_tracker; 	
+				genweight*=eff1* eff1_id*eff2_id*eff1_tracker*eff2_tracker; 	
 			}
 		}
 

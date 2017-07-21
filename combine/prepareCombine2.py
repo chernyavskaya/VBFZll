@@ -95,23 +95,30 @@ JESnorm = {}
 for type in ["mu","el"]:
  if type=="mu" : sigAccPS = "1.024"
  if type=="el" : sigAccPS = "1.068"
- combineFile = TFile("shapes/ewkZjj_13TeV_shapes_"+type+"_DY_"+dy_option+"_"+ bdt_option +"_v25alldata.root","RECREATE")
- combineFilename = "ewkZjj_13TeV_shapes_"+type+"_DY_"+dy_option+"_"+ bdt_option +"_v25alldata.root" 
+ combineFile = TFile("shapes/ewkZjj_13TeV_shapes_"+type+"_DY_"+dy_option+"_"+ bdt_option +"_v25alldata5_qgl05_test.root","RECREATE")
+ combineFilename = "ewkZjj_13TeV_shapes_"+type+"_DY_"+dy_option+"_"+ bdt_option +"_v25alldata5_qgl05_test.root" 
  for process in ["SingleMuon","SingleElectron"] :
   if process=="SingleMuon" and type!="mu" :
     continue
   if process=="SingleElectron" and type!="el" : 
     continue  
   print "prepare " + type + process
-  sourceFile13var = TFile(getTreeLocation() + "ewkZjj_13TeV_"+type+"_v25alldata_range053.root")
+  #sourceFile13var = TFile(getTreeLocation() + "ewkZjj_13TeV_"+type+"_v25alldata_range053.root")
+  sourceFile13var = TFile(getTreeLocation() + "ewkZjj_13TeV_"+type+"_v25alldata5_qgl05.root")
    # for basePlot in ["BDT","atanhBDT"]:
  
  # for basePlot in ["BDT","atanhBDT"]:
-  hBkg = TH1F("hBkg","",750,0.5,3)
-  hSig = TH1F("hSig","",750,0.5,3)
-  nBinsFine=750
+#  hBkg = TH1F("hBkg","",750,0.5,3)
+ # hSig = TH1F("hSig","",750,0.5,3)
+ # xmin=0.4
+ # nbins=900-120
+  xmin=0.
+  nbins=900
+  hBkg = TH1F("hBkg","",nbins,xmin,3)
+  hSig = TH1F("hSig","",nbins,xmin,3)
+  nBinsFine=nbins
   binBoundaries = numpy.zeros(NBINS+1,dtype=float)
-  binBoundaries[0] = 0.5
+  binBoundaries[0] = xmin
   binBoundaries[NBINS] = 3
   foundHighBinEdge = False
   foundLowBinEdge = True
@@ -135,7 +142,7 @@ for type in ["mu","el"]:
           if name!="EWKZ" : 
             hBkg.Add(thisGroup)
             print name, hBkg.Integral()
-    hBkg.Add(merge(sourceFile, basePlot_ + "_" + type + "_interference", ["interference"]))
+    hBkg.Add(merge(sourceFile, basePlot_ + "_" + type + "_EWKinterference", ["EWKinterference"]))
  #   print "Bkg", hBkg.GetBinCenter(hBkg.FindLastBinAbove(0))
     print hBkg.Integral()
     for ibin in range(1,nBinsFine):
@@ -151,8 +158,8 @@ for type in ["mu","el"]:
         S_high = hSig.Integral(nBinsFine-ibin+1, nBinsFine) 
         data_high = data.Integral(nBinsFine-ibin+1, nBinsFine) 
        # if (B_high > 0 and data_high > 1 and sqrt(B_err2_high)/B_high < 0.35):
-        if ((S_high+B_high > 0)  and sqrt(B_err2_high)/B_high < 0.35):
-       # if ((S_high+B_high) > 1. and sqrt(B_err2_high)/B_high < 0.35 ):
+     ######   if (( B_high > 0)  and sqrt(B_err2_high)/B_high < 0.35):   #this is what i used
+        if ((B_high) > 1. and sqrt(B_err2_high)/B_high < 0.35 ):   #this is for I use now with  qglsyst_test
       #  if (B_high > 0 and B_high > 1 and sqrt(B_err2_high)/B_high < 0.35):
             binBoundaries[NBINS-1] = hBkg.GetBinLowEdge(nBinsFine-ibin+1)
             foundHighBinEdge = True
@@ -162,10 +169,10 @@ for type in ["mu","el"]:
     lowBinNum = -1
     nBinsLeft = nBinsFine - highBinNum
     nBinsRemain = nBinsLeft % (NBINS-2)
-    binBoundaries[0]=0.5
+   # binBoundaries[0]=0.5
+    binBoundaries[0]=xmin
     print nBinsRemain
     binBoundaries[1]=hBkg.GetBinLowEdge(nBinsRemain)
-  #####  binBoundaries[1]=0.3
     for i in range(1,NBINS-1):
       binBoundaries[i] = binBoundaries[0] + i*((binBoundaries[NBINS-1] - binBoundaries[0])/(NBINS-1)) 
     print binBoundaries
@@ -190,12 +197,13 @@ for type in ["mu","el"]:
     combineFile.cd()
     data.Write()
 
-    for systematic in ["","_CMS_ewkzjj_puWeightUp","_CMS_ewkzjj_puWeightDown","_CMS_ewkzjj_LHE_weights_scaleUp","_CMS_ewkzjj_LHE_weights_scaleDown","_CMS_ewkzjj_MDG_NLO_corrUp","_CMS_ewkzjj_MDG_NLO_corrDown","_CMS_ewkzjj_JESUp","_CMS_ewkzjj_JESDown","_CMS_ewkzjj_JERUp","_CMS_ewkzjj_JERDown"]:
+    for systematic in ["","_CMS_ewkzjj_puWeightUp","_CMS_ewkzjj_puWeightDown","_CMS_ewkzjj_LHE_weights_scaleUp","_CMS_ewkzjj_LHE_weights_scaleDown","_CMS_ewkzjj_MDG_NLO_corrUp","_CMS_ewkzjj_MDG_NLO_corrDown","_CMS_ewkzjj_JESUp","_CMS_ewkzjj_JESDown","_CMS_ewkzjj_JERUp","_CMS_ewkzjj_JERDown","_CMS_ewkzjj_QGLUp","_CMS_ewkzjj_QGLDown"]:
   #  for systematic in ["","_CMS_ewkzjj_puWeightUp","_CMS_ewkzjj_puWeightDown","_CMS_ewkzjj_LHE_weights_scaleUp","_CMS_ewkzjj_LHE_weights_scaleDown","_CMS_ewkzjj_JESUp","_CMS_ewkzjj_JESDown","_CMS_ewkzjj_JERUp","_CMS_ewkzjj_JERDown"]:
       for name, mcs in mcGroups.iteritems():
         if (name=="VV" or name=="Top" ) and (systematic=="_CMS_ewkzjj_LHE_weights_scaleUp" or systematic=="_CMS_ewkzjj_LHE_weights_scaleDown") : continue
         if name!="DY_mdg" and (systematic=="_CMS_ewkzjj_MDG_NLO_corrUp" or systematic=="_CMS_ewkzjj_MDG_NLO_corrDown" ) : continue
-        if name!="interference" and (systematic=="_CMS_ewkzjj_int_shapeUp" or systematic=="_CMS_ewkzjj_int_shapeDown" ) : continue
+        if name!="EWKinterference" and (systematic=="_CMS_ewkzjj_int_shapeUp" or systematic=="_CMS_ewkzjj_int_shapeDown" ) : continue
+        if name=="EWKinterference" and not(systematic=="" or systematic=="_CMS_ewkzjj_int_shapeUp" or systematic=="_CMS_ewkzjj_int_shapeDown" ) : continue
         plot = basePlot_ +"_"+ type +"_"+ name+systematic
         DYplot = basePlot_ +"_"+ type +"_DY"+systematic
         thisGroup = merge(sourceFile, plot, mcs)
@@ -234,23 +242,29 @@ for type in ["mu","el"]:
             plotWithBinErrorDown.Write(DYplot + "_CMS_ewkzjj_stats_DY_"+type+"_b" + str(bin) + "Down")
 
  
-    interferenceHist = merge(sourceFile, basePlot_ + "_" + type + "_interference", ["interference"])
+    interferenceHist = merge(sourceFile, basePlot_ + "_" + type + "_EWKinterference", ["EWKinterference"])
    # rebin_factor = interferenceHist.GetNbinsX()/NBINS
    # interferenceHist.Rebin(rebin_factor)
     interferenceHist = interferenceHist.Rebin(NBINS,"",binBoundaries)
     print "Last bin in process has that many events in interference", interferenceHist.GetBinContent(interferenceHist.GetNbinsX())
-    interferenceHist.Write(basePlot_+"_"+type+"_interference")
-    interferenceHistUp = merge(sourceFile, basePlot_ + "_" + type + "_interference_CMS_ewkzjj_int_shapeUp", ["interference"])
+    interferenceHist.Write(basePlot_+"_"+type+"_EWKinterference")
+    interferenceHistUp = merge(sourceFile, basePlot_ + "_" + type + "_EWKinterference_CMS_ewkzjj_int_shapeUp", ["EWKinterference"])
     interferenceHistUp = interferenceHistUp.Rebin(NBINS,"",binBoundaries)
-    interferenceHistUp.Write(basePlot_+"_"+type+"_interference_CMS_ewkzjj_int_shapeUp")
-    interferenceHistDown = merge(sourceFile, basePlot_ + "_" + type + "_interference_CMS_ewkzjj_int_shapeDown", ["interference"])
+    interferenceHistUp.Write(basePlot_+"_"+type+"_EWKinterference_CMS_ewkzjj_int_shapeUp")
+    interferenceHistDown = merge(sourceFile, basePlot_ + "_" + type + "_EWKinterference_CMS_ewkzjj_int_shapeDown", ["EWKinterference"])
     interferenceHistDown = interferenceHistDown.Rebin(NBINS,"",binBoundaries)
-    interferenceHistDown.Write(basePlot_+"_"+type+"_interference_CMS_ewkzjj_int_shapeDown")
+    interferenceHistDown.Write(basePlot_+"_"+type+"_EWKinterference_CMS_ewkzjj_int_shapeDown")
+ #   interferenceQGLHistUp = merge(sourceFile, basePlot_ + "_" + type + "_interference_CMS_ewkzjj_QGLUp", ["interference"])
+ #   interferenceQGLHistUp = interferenceQGLHistUp.Rebin(NBINS,"",binBoundaries)
+ #   interferenceQGLHistUp.Write(basePlot_+"_"+type+"_interference_CMS_ewkzjj_QGLUp")
+ #   interferenceQGLHistDown = merge(sourceFile, basePlot_ + "_" + type + "_interference_CMS_ewkzjj_QGLDown", ["interference"])
+ #   interferenceQGLHistDown = interferenceQGLHistDown.Rebin(NBINS,"",binBoundaries)
+ #   interferenceQGLHistDown.Write(basePlot_+"_"+type+"_interference_CMS_ewkzjj_QGLDown")
     expectedStr["interference"] = ('%.3f' % interferenceHist.Integral())
     expected["interference"] = interferenceHist.Integral()
     for intOption in ["","_interference"]:
   #  for intOption in [""]:
-      with open("cards/ewkZjj_13TeV_datacard"+ intOption + "_" + type + "_DY"+dy_option+"_"+ bdt_option + "_v25alldata.txt", "wt") as card:
+      with open("cards/ewkZjj_13TeV_datacard"+ intOption + "_" + type + "_DY"+dy_option+"_"+ bdt_option + "_v25alldata5_qgl05_test.txt", "wt") as card:
         with open("ewkZjj_all_template" + intOption + ".txt", "rt") as template:
           for line in template:
             line = line.replace('$DIRECTORY', directoryName).replace('$data', '%d'%data.Integral()).replace('$channel',type).replace('$shapesfilename',combineFilename).replace('$bdtname',bdts[0]).replace('$SigPS',sigAccPS)

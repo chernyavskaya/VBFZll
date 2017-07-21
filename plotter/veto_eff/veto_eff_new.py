@@ -29,7 +29,8 @@ gStyle.SetPadRightMargin(0.04)
 gStyle.SetPadLeftMargin(0.15)
 
 path="dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat//store/user/nchernya/VBFZll/plotterOutput/v25/"
-end="_QCDScalenom_JESnom_v25_bdt_alldata.root"
+#end="_QCDScalenom_JESnom_v25_bdt_alldata4_qglweightsnorm_vetoeff_reminiaod.root"
+end="_QCDScalenom_JESnom_v25_bdt_alldata4_qglweightsnorm_vetoeff_newGapAct_reminiaod.root"
 
 list_nom_data = []
 list_denom_data = []
@@ -81,8 +82,17 @@ for channel_name in channel:
 		list_denom_ewk_herwig.append(hist)
 
 
+for i in range(0,len(hist_names_denom)):
+	list_denom_dy[i].Scale(0.992)
+	list_nom_dy[i].Scale(0.992)
+	list_denom_ewk[i].Scale(1.017)
+	list_nom_ewk[i].Scale(1.017)
+	list_denom_ewk_herwig[i].Scale(1.017)
+	list_nom_ewk_herwig[i].Scale(1.017)
+	
 
 for i in range(0,len(hist_names_denom)):
+	print hist_names_denom[i]
 	hist_new = list_denom_data[i].Clone("new_data") 
 	hist_new.Add(list_nom_data[i],-1)
 	hist_new_2 = hist_new.Clone("new_data2") 
@@ -139,13 +149,13 @@ pCMS1.SetFillStyle(-1)
 pCMS1.SetBorderSize(0)
 pCMS1.AddText("CMS")
 
-pCMS12 = ROOT.TPaveText(left,1.-top*3.5,0.57,1.,"NDC")
-pCMS12.SetTextFont(52)
-pCMS12.SetTextSize(0.02)
-pCMS12.SetTextAlign(12)
-pCMS12.SetFillStyle(-1)
-pCMS12.SetBorderSize(0)
-pCMS12.AddText("ee + #mu#mu events, BDT > 0.92")
+#pCMS12 = ROOT.TPaveText(left,1.-top*3.5,0.57,1.,"NDC")
+#pCMS12.SetTextFont(52)
+#pCMS12.SetTextSize(0.02)
+#pCMS12.SetTextAlign(12)
+#pCMS12.SetFillStyle(-1)
+#pCMS12.SetBorderSize(0)
+#pCMS12.AddText("ee + #mu#mu events, BDT > 0.92")
 pCMS13 = ROOT.TPaveText(left,1.-top*4.6,0.57,1.,"NDC")
 pCMS13.SetTextFont(52)
 pCMS13.SetTextSize(0.02)
@@ -153,6 +163,23 @@ pCMS13.SetTextAlign(12)
 pCMS13.SetFillStyle(-1)
 pCMS13.SetBorderSize(0)
 pCMS13.AddText("DY (%s)"%dy_model)
+
+
+pCMS122 = ROOT.TPaveText(0.4,1.-top*2.,0.6,.92,"NDC")
+pCMS122.SetTextFont(42)
+pCMS122.SetTextSize(0.75*top)
+pCMS122.SetTextAlign(12)
+pCMS122.SetFillStyle(-1)
+pCMS122.SetBorderSize(0)
+pCMS122.AddText("BDT > 0.92")
+
+pCMS123 = ROOT.TPaveText(left,1.-top*2.,0.6,.92,"NDC")
+pCMS123.SetTextFont(42)
+pCMS123.SetTextSize(0.75*top)
+pCMS123.SetTextAlign(12)
+pCMS123.SetFillStyle(-1)
+pCMS123.SetBorderSize(0)
+pCMS123.AddText("Dilepton")
 
 
 
@@ -171,11 +198,12 @@ for i,name in enumerate(hist_names_denom):
 	c.SetBottomMargin(0.15)
 	xmin = list_nom_data[i].GetXaxis().GetXmin() -  list_nom_data[i].GetXaxis().GetBinWidth(1)
 	xmax = list_nom_data[i].GetXaxis().GetXmax() +  list_nom_data[i].GetXaxis().GetBinWidth(1)
+	if name=='hveto_softpt_denom' : xmax=180
 	frame = ROOT.TH1F("frame","",1,xmin,xmax)
 	frame.SetStats(0)
 	frame.GetXaxis().SetTitleOffset(1.03)
 	frame.GetXaxis().SetTitle(axisx_names[i])
-	frame.GetYaxis().SetTitle("Gap fraction")
+	frame.GetYaxis().SetTitle("Gap veto efficiency")
 	frame.GetYaxis().SetLabelSize(0.04)
 	frame.GetYaxis().SetRangeUser(list_new_data_th1f[i].GetMinimum()*0.7,1.1)
 #	frame.GetYaxis().SetRangeUser(0.6,1.1)
@@ -218,15 +246,17 @@ for i,name in enumerate(hist_names_denom):
 	line.SetLineStyle(3)
 	line.Draw("same")
 	pCMS1.Draw()
-	pCMS12.Draw()
+#	pCMS12.Draw()
+	pCMS122.Draw()
+	pCMS123.Draw()
 #	pCMS13.Draw()
 	pCMS2.Draw()
 
-	leg = ROOT.TLegend(0.45,0.2,0.85,0.35)
-	leg.AddEntry(list_new_data[i],"Data" ,"P")
-	leg.AddEntry(list_new_dy[i],"DY (%s)"%dy_model ,"F")
-	leg.AddEntry(list_new_dy_ewk[i],"DY + EWK Zjj (Madgraph + Pythia8)" ,"F")
-	leg.AddEntry(list_new_dy_ewk_herwig[i],"DY + EWK Zjj (Madgraph + Herwig)" ,"F")
+	leg = ROOT.TLegend(0.4,0.2,0.85,0.35)
+	leg.AddEntry(list_new_data[i],"Data" ,"PE")
+	leg.AddEntry(list_new_dy[i],"DY (MG5_aMC NLO)","F")
+	leg.AddEntry(list_new_dy_ewk[i],"DY + EWK Zjj (MG5_aMC LO + Pythia8)" ,"F")
+	leg.AddEntry(list_new_dy_ewk_herwig[i],"DY + EWK Zjj (MG5_aMC LO + Herwig)" ,"F")
 	leg.SetFillStyle(-1)
 	leg.SetBorderSize(0)
 	leg.SetTextFont(42)
@@ -235,8 +265,8 @@ for i,name in enumerate(hist_names_denom):
 
 	ROOT.gPad.Update()
 	ROOT.gPad.RedrawAxis()
-	c.SaveAs("plots_eff/veto_eff_%s_%s.pdf"%(name,dy))
-	c.SaveAs("plots_eff/veto_eff_%s_%s.C"%(name,dy))
+	c.SaveAs("plots_eff/new_gapAct_unblinded2_final/veto_eff_%s_%s.pdf"%(name,dy))
+	c.SaveAs("plots_eff/new_gapAct_unblinded2_final/veto_eff_%s_%s.C"%(name,dy))
 
 
 

@@ -1,6 +1,6 @@
 from ROOT import TFile,TH1F
-tfile = TFile.Open("../inputs/root/v25_alldata/EWKzjj_v25_systematics.root")
-ofile = TFile.Open("../inputs/root/v25_alldata/EWKzjj_v25_systematics_range053.root","RECREATE")
+tfile = TFile.Open("../inputs/root/v25_alldata32/EWKzjj_v25_systematics.root")
+ofile = TFile.Open("../inputs/root/v25_alldata32/EWKzjj_v25_systematics_range053.root","RECREATE")
 new_edge_low = 0.5
 new_edge_up = 3
 new_hist_list = []

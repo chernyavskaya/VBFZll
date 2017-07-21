@@ -44,6 +44,7 @@
 //#include "/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/systematics/RoccoR.h"
 #include "/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/mucorr/2016/RoccoR.cc"
 
+
 Double_t erf( Double_t *x, Double_t *par){
   return par[0]/2.*(1.+TMath::Erf((x[0]-par[1])/par[2]));
 }
@@ -260,6 +261,10 @@ xsec["ST_t-channel_antitop_4f_leptonDecays"] = 26.38;//leptonDecays ,multiplied 
 xsec["WJetsToLNu_amc"]  = 61526.7; //not going to use these ones
 xsec["WJetsToLNu"]  = 61526.7;
 
+xsec["LLJJ_EWK_5f_LO_13TeV"]=0.1701;
+xsec["EWK_LLJJ_aTGC"]=1.624;
+xsec["EWK_LLJJ_aTGC_full"]=1.624;
+
 //k factors 1.21 are not included// 
 /*xsec["WJetsToLNu_HT100To200"] = 1345 ;
 xsec["WJetsToLNu_HT200To400"] = 359.7  ;
@@ -299,7 +304,9 @@ qgl_norm["WJetsToLNu"]=1;
 qgl_norm["DYJetstoLL_amc_0J"]=0.996136594;
 qgl_norm["DYJetstoLL_amc_1J"]=0.956949008;
 qgl_norm["DYJetstoLL_amc_2J"]=0.952277759;
-
+qgl_norm["LLJJ_EWK_5f_LO_13TeV"]=0.983692;
+qgl_norm["EWK_LLJJ_aTGC"]=0.929502;
+qgl_norm["EWK_LLJJ_aTGC_full"]=0.934688;
 }
 
 if (region.CompareTo("mu")==0) {
@@ -318,6 +325,9 @@ qgl_norm["WJetsToLNu"]=1;
 qgl_norm["DYJetstoLL_amc_0J"]=1.002031915;
 qgl_norm["DYJetstoLL_amc_1J"]=0.966710372;
 qgl_norm["DYJetstoLL_amc_2J"]=0.954117783;
+qgl_norm["LLJJ_EWK_5f_LO_13TeV"]=0.983032;
+qgl_norm["EWK_LLJJ_aTGC"]=0.932706;
+qgl_norm["EWK_LLJJ_aTGC_full"]=0.939383;
 
 }
 
@@ -401,14 +411,14 @@ float gen_neg_weight=0;
 	TFile* file_iso_mu_aft = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_LooseISO_LooseID_pt_eta_RunGH.root");
 	TH2F* iso_mu_aft = (TH2F*)file_iso_mu_aft->Get("TriggerEffMap_LooseISO_LooseID_pt_eta");
 
-	TFile* file_id_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_ScaleFactor_MVAIDWP80_80x.root");
-	TH2F* id_el = (TH2F*)file_id_el->Get("TriggerEffMap_ScaleFactor_MVAIDWP80_80x");
+//	TFile* file_id_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_ScaleFactor_MVAIDWP80_80x.root");
+//	TH2F* id_el = (TH2F*)file_id_el->Get("TriggerEffMap_ScaleFactor_MVAIDWP80_80x");
 	TFile* file_tracker_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_ScaleFactor_tracker_80x.root");
 	TH2F* tracker_el = (TH2F*)file_tracker_el->Get("TriggerEffMap_ScaleFactor_tracker_80x");
 	TFile* file_trig_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_Tight27AfterIDISO.root");
 	TH2F* trig_el = (TH2F*)file_trig_el->Get("TriggerEffMap_Tight27AfterIDISO");
-//	TFile* file_id_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_EIDISO_WH.root");
-//	TH2F* id_el = (TH2F*)file_id_el->Get("TriggerEffMap_EIDISO_WH");
+	TFile* file_id_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_EIDISO_ZH.root");
+	TH2F* id_el = (TH2F*)file_id_el->Get("TriggerEffMap_EIDISO_ZH");
 
 	TFile* file_track_mu_bf = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_Muons_trk_SF_RunBCDEF.root");
 	TH1F* track_mu_bf = (TH1F*)file_track_mu_bf->Get("TriggerEffMap_Graph");
@@ -418,15 +428,17 @@ float gen_neg_weight=0;
 
 	RoccoR  *rc = new RoccoR("/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/mucorr/2016/rcdata.2016.v3/");
 
-
 	
 	file_initial = TFile::Open(file_name);
 	
 	tree_initial = (TChain*)file_initial->Get("tree");
-	Int_t events_generated;
+	Float_t events_generated;
+	Float_t events_aTGC_nom=1.;
 	TH1F *countPos;
 	TH1F *countNeg;
 	TH1F *countLHEScale;
+	TH1F *countLHEaTGC_nom;
+	TH1F *countLHEaTGC;
 	TH1F *countLHEPdf;
 	TH1F *countWeighted;
 	if ((data!=1)){
@@ -443,6 +455,12 @@ float gen_neg_weight=0;
 			if (events_generated==0) events_generated =  countPos->GetBinContent(1) - countNeg->GetBinContent(1);
 		}
 	} else events_generated = 1;
+	if (file_tag.CompareTo("EWK_LLJJ_aTGC_full")==0) {
+		countLHEaTGC=	(TH1F*)file_initial->Get("CountWeightedLHEWeightaTGC");
+		countLHEaTGC_nom=	(TH1F*)file_initial->Get("CountWeightedLHEWeightaTGC_nom");
+		events_aTGC_nom = countLHEaTGC_nom->GetBinContent(1);
+	}
+	
 //	if (file_tag.CompareTo("EWK_LLJJ")==0)  events_generated=events_generated/2.00703;
     Jets Jet;
     Float_t v_type;
@@ -472,6 +490,7 @@ float gen_neg_weight=0;
 
 Float_t LHE_weights_pdf_wgt[103];
 Float_t LHE_weights_scale_wgt[10];
+Float_t LHE_weights_aTGC_wgt[130];
 	
 	float V_mass;
 	ULong64_t evt;
@@ -596,6 +615,7 @@ Float_t LHE_weights_scale_wgt[10];
 
 	tree_initial->SetBranchAddress("LHE_weights_pdf_wgt",LHE_weights_pdf_wgt);
 	tree_initial->SetBranchAddress("LHE_weights_scale_wgt",LHE_weights_scale_wgt);
+	tree_initial->SetBranchAddress("LHE_weights_aTGC_wgt",LHE_weights_aTGC_wgt);
 	tree_initial->SetBranchAddress("lheHT",&lheHT);
 	tree_initial->SetBranchAddress("lheV_pt",&lheV_pt);
 	tree_initial->SetBranchAddress("BDT_VBF",&bdt);
@@ -727,6 +747,24 @@ Float_t LHE_weights_scale_wgt[10];
 	
 	TH1F* hqgl2 = new TH1F("hqgl2","",20.,0.,1.);
 	hqgl2->GetXaxis()->SetTitle("QGL 2^{nd} q-jet");
+
+
+	TH1F *hMqq_bdt = new TH1F("hMqq_bdt","",100.,0.,3000.);
+	hMqq_bdt->GetXaxis()->SetTitle("m(qq) (GeV), BDT > 0.92");
+	TH1F *hEtaQQ_bdt = new TH1F("hEtaQQ_bdt","",90,0.,9.);
+	hEtaQQ_bdt->GetXaxis()->SetTitle("|#Delta#eta_{qq}|, BDT > 0.92");
+	TH1F* hqgl_bdt = new TH1F("hqgl_bdt","",20.,0.,1.);
+	hqgl_bdt->GetXaxis()->SetTitle("QGL 1^{st} q-jet, BDT > 0.92");
+	TH1F* hqgl2_bdt = new TH1F("hqgl2_bdt","",20.,0.,1.);
+	hqgl2_bdt->GetXaxis()->SetTitle("QGL 2^{nd} q-jet, BDT > 0.92");
+	TH1F *hqq_pt_bdt = new TH1F("hqq_pt_bdt","",80.,0.,800.);
+	hqq_pt_bdt->GetXaxis()->SetTitle("p_{T}(qq) (GeV), BDT > 0.92");
+	TH1F *hRptHard_bdt = new TH1F("hRptHard_bdt","",25.,0.,1.);
+	hRptHard_bdt->GetXaxis()->SetTitle("R(p_{T}^{hard}), BDT > 0.92");
+	TH1F* hZll_zstar_bdt = new TH1F("hZll_zstar_bdt","",15,0,3.);
+	hZll_zstar_bdt->GetXaxis()->SetTitle("z*(Z)");
+
+
 
 	
 	TH1F *hPtSoftJets = new TH1F("hPtSoftJets","",30,0.,300);
@@ -923,7 +961,23 @@ Float_t LHE_weights_scale_wgt[10];
 	hJet2q_eta_bdt2->GetXaxis()->SetTitle("#eta 2^{nd} q-jet, BDT > 0.84");
 
 
-	
+	Float_t jet3pt_array[17] = {10,20,30,40,50,60,70,80,90,100,120,140,170,200,230,260,290};
+
+	Float_t softpt_array[21]={0.5,1.5,2.5,5.5,8.5,11.5,18.5,21.5,28.5,31.5, 38.5,41.5, 58.5,101.5,118.5,161.5,178.5,221.5,238.5,281.5,298.5};
+	Float_t softht_array[21]={0.5,1.5,2.5,5.5,8.5,11.5,18.5,21.5,28.5,31.5, 38.5,41.5, 58.5,101.5,118.5,161.5,178.5,221.5,238.5,281.5,298.5};
+//1,2,4,7,10,15,20,25,30, 35,40 50
+	TH1F *hveto_softht_nom = new TH1F("hveto_softht_nom","",20,softht_array);
+	TH1F *hveto_softht_denom = new TH1F("hveto_softht_denom","",20,softht_array);
+	TH1F *hveto_softpt_nom = new TH1F("hveto_softpt_nom","",20,softpt_array);
+	TH1F *hveto_softpt_denom = new TH1F("hveto_softpt_denom","",20,softpt_array);
+	TH1F *hveto_jet3pt_nom = new TH1F("hveto_jet3pt_nom","",16,jet3pt_array);
+	TH1F *hveto_jet3pt_denom = new TH1F("hveto_jet3pt_denom","",16,jet3pt_array);
+	TH1F *hveto_ht_nom = new TH1F("hveto_ht_nom","",14,0,420);
+	TH1F *hveto_ht_denom = new TH1F("hveto_ht_denom","",14,0,420);
+
+
+
+/*	
 	TH1F *hveto_jet3pt_nom = new TH1F("hveto_jet3pt_nom","",9,0,270);
 	TH1F *hveto_jet3pt_denom = new TH1F("hveto_jet3pt_denom","",9,0,270);
 	TH1F *hveto_ht_nom = new TH1F("hveto_ht_nom","",14,0,420);
@@ -933,6 +987,11 @@ Float_t LHE_weights_scale_wgt[10];
 	TH1F *hveto_softpt_nom = new TH1F("hveto_softpt_nom","",6,0,180);
 	TH1F *hveto_softpt_denom = new TH1F("hveto_softpt_denom","",6,0,180);
 	
+
+*/
+
+
+
 
 	TProfile *hprof_htsoft_pu  = new TProfile("hprof_htsoft_pu","",50,0.,50,0.,300.);
 	hprof_htsoft_pu->GetXaxis()->SetTitle("number of PVs");
@@ -952,9 +1011,10 @@ Float_t LHE_weights_scale_wgt[10];
 
 
 
-   		const int numArray= 109;  //64+8 
+   		const int numArray= 116;  //64+8 
    		TH1F* histArray[numArray] = { hMqq, hEtaQQ,hHTsoft,hSoft_n2,hSoft_n5,hSoft_n10,hHTsoftEWK,hSoft_n2EWK,hSoft_n5EWK,hSoft_n10EWK,hHTsoftEWK_bdt,hSoft_n2EWK_bdt,hSoft_n5EWK_bdt,hSoft_n10EWK_bdt,hnPVs, hJet1q_pt, hJet1q_eta, hJet1q_ptd, hJet1q_axis2, hJet1q_mult, hJet2q_pt, hJet2q_eta, hJet2q_ptd, hJet2q_axis2, hJet2q_mult, hmet,   hJet1q_leadTrackPt, hJet2q_leadTrackPt, hqq_pt,hV_mass, hqgl, hqgl2, hZll_mass, hZll_pt, hZll_phi, hZll_eta, hrho, hlepton1_pt, hlepton2_pt, hlepton1_eta, hlepton2_eta, hHT, hDeltaRelQQ, hRptHard, hEtaQQSum, hPhiZQ1, hZll_y, hZll_ystar, hZll_zstar, hMqq_log, hlheV_pt, hJet3_pt, hlheHT_log, hPhiQQ, hJets12_pt_log, hJets12_pt, hJet1q_pt_log, hJet2q_pt_log, hbdt, hbdt_atanh,hbdt_atanh2 , hlepton1_iso03, hlepton2_iso03, hveto_jet3pt_nom, hveto_jet3pt_denom, hveto_ht_nom, hveto_ht_denom, hveto_softht_nom, hveto_softht_denom, hveto_softpt_nom, hveto_softpt_denom, hJet2q_phi, hJet1q_phi, hNAdJets, hNAdJets_bdt, hJet3_pt_bdt, hAdJetHT_bdt, hNAdJets_bdt2, hJet3_pt_bdt2, hAdJetHT_bdt2,hNAdJets_mjj1, hJet3_pt_mjj1, hAdJetHT_mjj1,hNAdJets_mjj2, hJet3_pt_mjj2, hAdJetHT_mjj2, hHTsoftEWK_bdt2,hSoft_n2EWK_bdt2,hSoft_n5EWK_bdt2,hSoft_n10EWK_bdt2,hHTsoftEWK_mjj1,hSoft_n2EWK_mjj1,hSoft_n5EWK_mjj1,hSoft_n10EWK_mjj1 ,hHTsoftEWK_mjj2,hSoft_n2EWK_mjj2,hSoft_n5EWK_mjj2,hSoft_n10EWK_mjj2 ,hJet1q_eta_bdt, hJet1q_eta_bdt2, hJet2q_eta_bdt, hJet2q_eta_bdt2,
-	hsoftleadTrackPt, hsoftleadTrackEta, hAdJetHT, hJet3_eta , hJet3_pt_new , hJet3_eta_bdt, hJet3_eta_bdt2};
+	hsoftleadTrackPt, hsoftleadTrackEta, hAdJetHT, hJet3_eta , hJet3_pt_new , hJet3_eta_bdt, hJet3_eta_bdt2,  
+	hMqq_bdt, hEtaQQ_bdt, hqgl_bdt, hqgl2_bdt,hqq_pt_bdt, hRptHard_bdt,hZll_zstar_bdt};
 			for (int i=0;i<numArray;i++){
 				histArray[i]->Sumw2();
 			}
@@ -967,6 +1027,8 @@ Float_t LHE_weights_scale_wgt[10];
 		
 		TString cut_flow_names[30] = {"triggers","2jets events","q1_pt>50","q2_pt>30","Mqq>200","leptons_pt<20","(mll-mz)<15"};
 		Float_t cut_flow[30] = {0,0,0,0,0,0,0};
+		Float_t cut_flow_cut_based[30] = {0,0};
+		TString cut_flow_names_cut_based[30] = {"preselection","cutbased : mjj>400, detajj>3.4 , qgl1 >0.4 , qgl2>0.5 , qq_pt>120 , Rpt<0.15 , z*<0.7"};
 
 	float qq_matching = 0;
 	float qq_matching_all = 0;
@@ -1041,7 +1103,11 @@ Float_t LHE_weights_scale_wgt[10];
 
 //	cout<<nentries<<endl;
 	for (int entry=0; entry<nentries;++entry){
-//	for (int entry=0; entry<20000;++entry){
+//	for (int entry=0; entry<100;++entry){
+		for (int i=0;i<5;i++)
+		Jet.EWKsoft_pt[i]=0.;
+
+
         tree_initial->GetEntry(entry);
 	
 
@@ -1065,11 +1131,25 @@ Float_t LHE_weights_scale_wgt[10];
 		else PU=puweight;
 		genweight0 = genweight/TMath::Abs(genweight);
 		genweight=genweight/TMath::Abs(genweight)*PU;   
-		genweight/=events_generated/xsec[file_tag]; 
+		genweight=genweight*xsec[file_tag]/events_generated;
 		if  ((data!=1 ) && (file_tag.CompareTo("WW")!=0) && (file_tag.CompareTo("ZZ")!=0) && (file_tag.CompareTo("WZ")!=0)&& (file_tag.CompareTo("ST_tW_top")!=0)&& (file_tag.CompareTo("ST_tW_antitop")!=0)) if (whichQCDScaleWeight==1)  genweight*=LHE_weights_scale_wgt[4];
 		if  ((data!=1 ) && (file_tag.CompareTo("WW")!=0) && (file_tag.CompareTo("ZZ")!=0) && (file_tag.CompareTo("WZ")!=0)&& (file_tag.CompareTo("ST_tW_antitop")!=0)&& (file_tag.CompareTo("ST_tW_antitop")!=0)) if (whichQCDScaleWeight==2)  genweight*=LHE_weights_scale_wgt[5];
 
-		
+	
+
+		int aTGC_norm;
+		if ((file_tag.CompareTo("EWK_LLJJ_aTGC_full")==0))  {
+			genweight=genweight*LHE_weights_aTGC_wgt[61]/ (countLHEaTGC->GetBinContent(61+1)/events_generated); ///LHE_weights_aTGC_wgt[0];
+			genweight = genweight*countLHEaTGC->GetBinContent(61+1)/events_aTGC_nom;  //xsec change
+		//	if (region.CompareTo("mu")==0) genweight*=9.03884;
+		//	if (region.CompareTo("el")==0) genweight*=22.8877;
+
+			
+	//		aTGC_norm = countLHEaTGC->GetBinContent(1) ;
+	//		genweight=genweight/aTGC_norm;
+		}
+
+	
 		double GenVbosons_pt_first = GenVbosons_pt[0];
 		int GenVbosons_pdgId_first = GenVbosons_pdgId[0];
 
@@ -1241,13 +1321,13 @@ Float_t LHE_weights_scale_wgt[10];
 				float SF_el_err1 = 0.;
 				float SF_el_err2 = 0.;
 				bool abs=0;
-		//		float eff1 = getScaleFactor(trig_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs );  	
+				float eff1 = getScaleFactor(trig_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs );  	
 				float eff1_id =getScaleFactor(id_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs ) ;  	
 				float eff2_id =getScaleFactor(id_el, lepton2.Pt(), lepton2.Eta(), SF_el_err2,abs  ) ;  
 				float eff1_tracker =getScaleFactor(tracker_el, lepton1.Pt(), lepton1.Eta(), SF_el_err1,abs ) ;  	
 				float eff2_tracker =getScaleFactor(tracker_el, lepton2.Pt(), lepton2.Eta(), SF_el_err2,abs  ) ;  
-			//	genweight*=eff1* eff1_id*eff2_id*eff1_tracker*eff2_tracker; 	
-				genweight*= eff1_id*eff2_id*eff1_tracker*eff2_tracker; 	
+				genweight*=eff1* eff1_id*eff2_id*eff1_tracker*eff2_tracker; 	
+			//	genweight*= eff1_id*eff2_id*eff1_tracker*eff2_tracker; 	
 			}
 		}
 
@@ -1331,10 +1411,53 @@ Float_t LHE_weights_scale_wgt[10];
 		Float_t DeltaRelQQ = (Qjet1+Qjet2).Pt()/( Qjet1.Pt()+Qjet2.Pt()); 
 		Float_t RptHard = (Qjet1+Qjet2+ Zll).Pt()/( Qjet1.Pt()+Qjet2.Pt() + Zll.Pt()); 
 
-
+	
 
 /////////////////////////////////////////////////////////
+/*
+		TVector3 BoostVector_toMuonRestFrame = Zll.BoostVector();
+        TLorentzVector positiveMuon_newSys;
+		  TLorentzVector chosen_mu ;
+        if (selLeptons_charge[idx_1stLepton] > 0) {
+				positiveMuon_newSys = lepton1;
+				chosen_mu = lepton1;
+			}
+        else {
+			positiveMuon_newSys = lepton2;
+				chosen_mu = lepton2;
+			}
+			TLorentzVector positiveMuon_OldSys = chosen_mu;
+        positiveMuon_newSys.Boost(-1*BoostVector_toMuonRestFrame);
+        TVector3 H_direction  = Zll.Vect();
+        TVector3 mu_direction = positiveMuon_newSys.Vect();
+        float cosThetaStar = TMath::ACos(H_direction.Dot(mu_direction)/H_direction.Mag()/mu_direction.Mag());
+			
+cout << "NADYA CHECK" << endl;
+        float beta_CM = Zll.Beta();
+        float gamma_CM = Zll.Gamma();
+        TVector3 mu_direction_oldSys = positiveMuon_OldSys.Vect();
+        float E_mu = positiveMuon_OldSys.Energy();
+        float p_mu = mu_direction_oldSys.Mag();
+        
+        cout << "beta_CM  " << beta_CM << "\tgamma_CM  " << gamma_CM << "\tE_mu  " << E_mu << "\tp_mu  " << p_mu << endl;
+        
+        float cosTheta = H_direction.Dot(mu_direction_oldSys)/H_direction.Mag()/mu_direction_oldSys.Mag();
+        float sinTheta = sqrt(1 - cosTheta*cosTheta);
+        
+        float shouldBeCosThetaStar = atan( p_mu*sinTheta / (gamma_CM*(p_mu*cosTheta -  beta_CM*E_mu ))) ;
+        
+        cout << "cosThetaStar  " << cosThetaStar << "\t shouldBeCosThetaStar  " << shouldBeCosThetaStar << endl;
+        
+        
+     //   cosThetaStar = abs(cosThetaStar - shouldBeCosThetaStar);
 
+		//	cout<<"cos =   "<<cosThetaStar<<"   "<<cosThetaStar2<<endl;
+			
+*/
+
+
+
+/////////////////////////
 
 			counter++;
 
@@ -1399,19 +1522,53 @@ Float_t LHE_weights_scale_wgt[10];
 				if (good_jets>=3) hJet3_pt_new->Fill(jets_pv[2].Pt(),genweight);
 				if (good_jets==2) hJet3_pt_new->Fill(10.,genweight);
 				float AdJetHT = 0;
-				if (good_jets>=3)
-					for (int i=2;i<good_jets;i++)
-						if (jets_pv[i].Pt() > 15 ) AdJetHT+=jets_pv[i].Pt();
-				if (good_jets==2) hAdJetHT->Fill(10.,genweight);
-				if (good_jets>=3) hAdJetHT->Fill(AdJetHT,genweight);
-				hsoftleadTrackPt->Fill(Jet.EWKsoft_pt[0],genweight);	
-				hsoftleadTrackEta->Fill(Jet.EWKsoft_eta[0],genweight);	
+				int NAdJet = 0;
+				if (good_jets>=3) {
+					for (int i=2;i<good_jets;i++){
+						if ((jets_pv[i].Pt() > 15 )&& (jets_pv[i].Eta() > std::min(Qjet1.Eta(),Qjet2.Eta())) && (jets_pv[i].Eta() < std::max(Qjet1.Eta(),Qjet2.Eta()) ) ) {
+							AdJetHT+=jets_pv[i].Pt();
+							NAdJet++;
+						}
+					}
+				}
+				if (NAdJet==0) hAdJetHT->Fill(10.,genweight);
+				if (NAdJet>0) hAdJetHT->Fill(AdJetHT,genweight);
+				int jet3_in_gap=0;
+				if (NAdJet>0) {
+					for (int i=2;i<good_jets;i++){
+						if ((jets_pv[i].Pt() > 15 )&&(jets_pv[i].Eta() > std::min(Qjet1.Eta(),Qjet2.Eta())) && (jets_pv[i].Eta() < std::max(Qjet1.Eta(),Qjet2.Eta()) )) {
+							jet3_in_gap = i;
+							break;
+						}
+					}
+				}
+
+				int EWK_array_len = 5;
+				int soft_lead_idx=-1;
+				for (int i=0;i<EWK_array_len;i++){
+				 if  ( (Jet.EWKsoft_eta[i] > std::min(Qjet1.Eta(),Qjet2.Eta())) && (Jet.EWKsoft_eta[i] < std::max(Qjet1.Eta(),Qjet2.Eta())))   {	
+							soft_lead_idx = i;
+							break;
+					}
+				}
+		//		cout<<"before  "<<Jet.EWKHTsoft<<endl;
+				for (int i=0;i<EWK_array_len;i++){
+				 if (Jet.EWKsoft_pt[i]>0.3) if  (!( (Jet.EWKsoft_eta[i] > std::min(Qjet1.Eta(),Qjet2.Eta())) && (Jet.EWKsoft_eta[i] < std::max(Qjet1.Eta(),Qjet2.Eta())))){
+						  	Jet.EWKHTsoft-=Jet.EWKsoft_pt[i];
+			//				cout<<Jet.EWKsoft_pt[i]<<" "<<Jet.EWKsoft_eta[i]<<"  "<<std::min(Qjet1.Eta(),Qjet2.Eta()) <<"  "<<std::max(Qjet1.Eta(),Qjet2.Eta())  <<endl;
+					}
+				}
+		
+			//	cout<<"after  "<<Jet.EWKHTsoft<<endl;
+			
+				if (soft_lead_idx>=0)hsoftleadTrackPt->Fill(Jet.EWKsoft_pt[soft_lead_idx],genweight);	
+				if (soft_lead_idx>=0)hsoftleadTrackEta->Fill(Jet.EWKsoft_eta[soft_lead_idx],genweight);	
 			
 				hJets12_pt->Fill((jets_pv[0].Pt() + jets_pv[1].Pt()),genweight);
 				hJets12_pt_log->Fill(TMath::Log(jets_pv[0].Pt() + jets_pv[1].Pt()),genweight);
 				hJet1q_pt_log->Fill(TMath::Log(jets_pv[0].Pt()),genweight);
 				hJet2q_pt_log->Fill(TMath::Log(jets_pv[1].Pt()),genweight);
-				hNAdJets->Fill(good_jets, genweight);	
+				hNAdJets->Fill(NAdJet, genweight);	
 
 				if  (file_tag.CompareTo("interference")!=0) {
 					hbdt->Fill(bdt,genweight);
@@ -1444,71 +1601,94 @@ Float_t LHE_weights_scale_wgt[10];
 						hveto_softpt_denom->Fill(hveto_softpt_denom->GetBinCenter(i+1),genweight);
 			//		cout<<hveto_jet3pt_denom->GetBinCenter(1)<<" , "<<hveto_jet3pt_denom->GetBinCenter(2)<<endl;
 			
-					hNAdJets_bdt->Fill(good_jets, genweight);	
+					hMqq_bdt->Fill(Mqq,genweight);
+					hEtaQQ_bdt->Fill(qqDeltaEta,genweight);
+					hqgl_bdt->Fill(Jet.qgl[jets_indices[0]],genweight);
+					hqgl2_bdt->Fill(Jet.qgl[jets_indices[1]],genweight);
+					hqq_pt_bdt->Fill(qq_pt,genweight);
+					hRptHard_bdt->Fill(RptHard,genweight);
+					hZll_zstar_bdt->Fill(Zll_zstar,genweight);
+
+
+
+					hNAdJets_bdt->Fill(NAdJet, genweight);	
 			   	hHTsoftEWK_bdt->Fill(Jet.EWKHTsoft,genweight);
 			 	 	hSoft_n2EWK_bdt->Fill(Jet.EWKnsoft2, genweight);
 			  		hSoft_n5EWK_bdt->Fill(Jet.EWKnsoft5, genweight);
 			  		hSoft_n10EWK_bdt->Fill(Jet.EWKnsoft10, genweight);
-					if (good_jets>=3) {
-						hJet3_pt_bdt->Fill(jets_pv[2].Pt(),genweight);
-						hJet3_eta_bdt->Fill(jets_pv[2].Eta(),genweight);
+					if (jet3_in_gap>0) {
+						hJet3_pt_bdt->Fill(jets_pv[jet3_in_gap].Pt(),genweight);
+						hJet3_eta_bdt->Fill(jets_pv[jet3_in_gap].Eta(),genweight);
 					}
-					if (good_jets==2) hJet3_pt_bdt->Fill(10.,genweight);
-					if (good_jets==2) hAdJetHT_bdt->Fill(10.,genweight);
-					if (good_jets>=3) hAdJetHT_bdt->Fill(AdJetHT,genweight);	
+					if (jet3_in_gap==0) hJet3_pt_bdt->Fill(10.,genweight);
+					if (NAdJet==0) hAdJetHT_bdt->Fill(10.,genweight);
+					if (NAdJet>0) hAdJetHT_bdt->Fill(AdJetHT,genweight);	
 
 					hJet1q_eta_bdt->Fill(Qjet1.Eta(),genweight);
 					hJet2q_eta_bdt->Fill(Qjet2.Eta(),genweight);
 			
-					if (good_jets>2) {
+					if (NAdJet>0) {
 						for (int i=0;i<hveto_jet3pt_nom->GetNbinsX();i++)
-							if (jets_pv[2].Pt()>hveto_jet3pt_nom->GetBinCenter(i+1)) hveto_jet3pt_nom->Fill(hveto_jet3pt_nom->GetBinCenter(i+1),genweight);
+							if (jets_pv[jet3_in_gap].Pt()>hveto_jet3pt_nom->GetBinCenter(i+1)) hveto_jet3pt_nom->Fill(hveto_jet3pt_nom->GetBinCenter(i+1),genweight);
 						for (int i=0;i<hveto_ht_nom->GetNbinsX();i++)
 							if (AdJetHT>hveto_ht_nom->GetBinCenter(i+1)) hveto_ht_nom->Fill(hveto_ht_nom->GetBinCenter(i+1),genweight);
 					}
 					for (int i=0;i<hveto_softht_nom->GetNbinsX();i++)
 						if (Jet.EWKHTsoft>hveto_softht_nom->GetBinCenter(i+1)) hveto_softht_nom->Fill(hveto_softht_nom->GetBinCenter(i+1),genweight);
 					for (int i=0;i<hveto_softpt_nom->GetNbinsX();i++)
-						if (Jet.EWKsoft_pt[0] > hveto_softpt_nom->GetBinCenter(i+1)) hveto_softpt_nom->Fill(hveto_softpt_nom->GetBinCenter(i+1),genweight);
+						if (soft_lead_idx>=0)	if (Jet.EWKsoft_pt[soft_lead_idx] > hveto_softpt_nom->GetBinCenter(i+1)) hveto_softpt_nom->Fill(hveto_softpt_nom->GetBinCenter(i+1),genweight);
 				}
 				if (bdt>0.84) {
-					hNAdJets_bdt2->Fill(good_jets, genweight);	
+					hNAdJets_bdt2->Fill(NAdJet, genweight);	
 			   	hHTsoftEWK_bdt2->Fill(Jet.EWKHTsoft,genweight);
 			 	 	hSoft_n2EWK_bdt2->Fill(Jet.EWKnsoft2, genweight);
 			  		hSoft_n5EWK_bdt2->Fill(Jet.EWKnsoft5, genweight);
 			  		hSoft_n10EWK_bdt2->Fill(Jet.EWKnsoft10, genweight);
-					if (good_jets>=3) {
-						hJet3_pt_bdt2->Fill(jets_pv[2].Pt(),genweight);
-						hJet3_eta_bdt2->Fill(jets_pv[2].Eta(),genweight);
+					if (NAdJet>0) {
+						hJet3_pt_bdt2->Fill(jets_pv[jet3_in_gap].Pt(),genweight);
+						hJet3_eta_bdt2->Fill(jets_pv[jet3_in_gap].Eta(),genweight);
 					}
-					if (good_jets==2) hJet3_pt_bdt2->Fill(10.,genweight);
-					if (good_jets==2) hAdJetHT_bdt2->Fill(10.,genweight);
-					if (good_jets>=3) hAdJetHT_bdt2->Fill(AdJetHT,genweight);	
+					if (NAdJet==0) hJet3_pt_bdt2->Fill(10.,genweight);
+					if (NAdJet==0) hAdJetHT_bdt2->Fill(10.,genweight);
+					if (NAdJet>0) hAdJetHT_bdt2->Fill(AdJetHT,genweight);	
 					hJet1q_eta_bdt2->Fill(Qjet1.Eta(),genweight);
 					hJet2q_eta_bdt2->Fill(Qjet2.Eta(),genweight);
 				}
 				if (Mqq > 1500) {
-					hNAdJets_mjj1->Fill(good_jets, genweight);	
+					hNAdJets_mjj1->Fill(NAdJet, genweight);	
 			   	hHTsoftEWK_mjj1->Fill(Jet.EWKHTsoft,genweight);
 			 	 	hSoft_n2EWK_mjj1->Fill(Jet.EWKnsoft2, genweight);
 			  		hSoft_n5EWK_mjj1->Fill(Jet.EWKnsoft5, genweight);
 			  		hSoft_n10EWK_mjj1->Fill(Jet.EWKnsoft10, genweight);
-					if (good_jets>=3) hJet3_pt_mjj1->Fill(jets_pv[2].Pt(),genweight);
-					if (good_jets==2) hJet3_pt_mjj1->Fill(10.,genweight);
-					if (good_jets==2) hAdJetHT_mjj1->Fill(10.,genweight);
-					if (good_jets>=3) hAdJetHT_mjj1->Fill(AdJetHT,genweight);	
+					if (NAdJet>0) hJet3_pt_mjj1->Fill(jets_pv[jet3_in_gap].Pt(),genweight);
+					if (NAdJet==0) hJet3_pt_mjj1->Fill(10.,genweight);
+					if (NAdJet==0) hAdJetHT_mjj1->Fill(10.,genweight);
+					if (NAdJet>0) hAdJetHT_mjj1->Fill(AdJetHT,genweight);	
 				}
 				if (Mqq > 2500) {
-					hNAdJets_mjj2->Fill(good_jets, genweight);	
+					hNAdJets_mjj2->Fill(NAdJet, genweight);	
 			   	hHTsoftEWK_mjj2->Fill(Jet.EWKHTsoft,genweight);
 			 	 	hSoft_n2EWK_mjj2->Fill(Jet.EWKnsoft2, genweight);
 			  		hSoft_n5EWK_mjj2->Fill(Jet.EWKnsoft5, genweight);
 			  		hSoft_n10EWK_mjj2->Fill(Jet.EWKnsoft10, genweight);
-					if (good_jets>=3) hJet3_pt_mjj2->Fill(jets_pv[2].Pt(),genweight);
-					if (good_jets==2) hJet3_pt_mjj2->Fill(10.,genweight);
-					if (good_jets==2) hAdJetHT_mjj2->Fill(10.,genweight);
-					if (good_jets>=3) hAdJetHT_mjj2->Fill(AdJetHT,genweight);	
+					if (NAdJet>0) hJet3_pt_mjj2->Fill(jets_pv[jet3_in_gap].Pt(),genweight);
+					if (NAdJet==0) hJet3_pt_mjj2->Fill(10.,genweight);
+					if (NAdJet==0) hAdJetHT_mjj2->Fill(10.,genweight);
+					if (NAdJet>0) hAdJetHT_mjj2->Fill(AdJetHT,genweight);	
 				}
+
+
+		cut_flow_cut_based[0]+=genweight;	
+		if ((Mqq>400) && (qqDeltaEta>3.4) && (Jet.qgl[jets_indices[0]]>0.4) && (Jet.qgl[jets_indices[1]]>0.5 ) && (qq_pt>120) &&(RptHard<0.15) && (Zll_zstar<0.7)) cut_flow_cut_based[1]+=genweight;
+
+
+
+
+
+
+
+
+
 
 		
 		if (genweight>0) pos_weight_presel++;
@@ -1561,6 +1741,8 @@ Float_t LHE_weights_scale_wgt[10];
 		out<<cut_flow[i]<<"\t";
 	}
 	out<<endl;
+	out<<cut_flow_names_cut_based[0]<<"\t"<<cut_flow_names_cut_based[1]<<endl;
+	out<<cut_flow_cut_based[0]<<"\t"<<cut_flow_cut_based[1]<<endl;
 
 return 0;
     

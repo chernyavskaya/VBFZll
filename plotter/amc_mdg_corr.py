@@ -64,21 +64,21 @@ for i,name in enumerate(hist_names):
 		hist_mdg=hnew_mdg
 		hist_amc2=hnew_amc2	
 		hist_mdg2=hnew_mdg2
-#	hist_amc.SetLineColor(ROOT.kRed)
-#	hist_mdg.SetLineColor(ROOT.kBlue)
-#	hist_amc.SetLineWidth(2)
-#	hist_mdg.SetLineWidth(2)
-#	hist_mdg.SetLineStyle(2)
-	hist_amc2.SetLineColor(ROOT.kRed)
-	hist_mdg2.SetLineColor(ROOT.kBlue)
-	hist_amc2.SetLineWidth(2)
-	hist_mdg2.SetLineWidth(2)
-	hist_mdg2.SetLineStyle(2)
-#	hist_amc.Add(hist_amc2)
-#	hist_mdg.Add(hist_mdg2)
-	list_amc.append(hist_amc2)
-	list_amc_ratio.append(hist_amc2)
-	list_mdg.append(hist_mdg2)
+	hist_amc.SetLineColor(ROOT.kRed)
+	hist_mdg.SetLineColor(ROOT.kBlue)
+	hist_amc.SetLineWidth(2)
+	hist_mdg.SetLineWidth(2)
+	hist_mdg.SetLineStyle(2)
+#	hist_amc2.SetLineColor(ROOT.kRed)
+#	hist_mdg2.SetLineColor(ROOT.kBlue)
+#	hist_amc2.SetLineWidth(2)
+#	hist_mdg2.SetLineWidth(2)
+#	hist_mdg2.SetLineStyle(2)
+	hist_amc.Add(hist_amc2)
+	hist_mdg.Add(hist_mdg2)
+	list_amc.append(hist_amc)
+	list_amc_ratio.append(hist_amc)
+	list_mdg.append(hist_mdg)
 
 
 right,top   = gStyle.GetPadRightMargin(),gStyle.GetPadTopMargin()
@@ -112,8 +112,10 @@ pCMS2.AddText("(13 TeV)")
 
 
 for num in range(0,len(hist_names)):
-	list_amc[num].Scale(1./list_amc[num].Integral())
-	list_mdg[num].Scale(1./list_mdg[num].Integral())
+#	list_amc[num].Scale(1./list_amc[num].Integral())
+#	list_mdg[num].Scale(1./list_mdg[num].Integral())
+	list_amc[num].Scale(35900.)
+	list_mdg[num].Scale(35900.)
 	hist_ratio = list_amc_ratio[num].Clone("ratio")
 	hist_ratio.Divide(list_mdg[num])
 
@@ -135,7 +137,7 @@ for num in range(0,len(hist_names)):
 	func_res_down.SetLineColor(ROOT.kRed-7) 
 	func_res_down.SetFillColor(10)  
 	func_res_down.SetFillStyle(1001)
-	if (num==3) :
+	if (num==2) :
 		hist_ratio_up.Fit(func_res_up,"R","N")
 		hist_ratio_down.Fit(func_res_down,"R","N")
 		for i in range(0,7):
@@ -159,7 +161,7 @@ for num in range(0,len(hist_names)):
 	frame.GetXaxis().SetTitleOffset(0.91);
 	frame.GetYaxis().SetTitle("Events")
 	frame.GetYaxis().SetLabelSize(0.04)
-#	list_amc[num].GetXaxis().SetTitle(list_amc[num].GetTitle())
+	list_amc[num].GetXaxis().SetTitle(list_amc[num].GetTitle())
 	frame.GetYaxis().SetRangeUser(0.,list_amc[num].GetMaximum()*1.2)
 	frame.Draw()
 	list_amc[num].Draw("HISTsameE")
@@ -170,8 +172,8 @@ for num in range(0,len(hist_names)):
 
 	leg = ROOT.TLegend(0.7,0.75,0.9,0.9)
 	#leg.AddEntry(list_amc[num],"Dielectron" ,"P")
-	leg.AddEntry(list_amc[num],"Dimuon" ,"P")
-#	leg.AddEntry(list_amc[num],"Dileptons" ,"P")
+#	leg.AddEntry(list_amc[num],"Dimuon" ,"P")
+	leg.AddEntry(list_amc[num],"Dileptons" ,"P")
 	leg.AddEntry(list_amc[num],"AMC@NLO" ,"L")
 	leg.AddEntry(list_mdg[num],"Madgraph" ,"L")
 	leg.SetFillStyle(-1)
@@ -225,14 +227,14 @@ for num in range(0,len(hist_names)):
 #	func_res_copy.SetLineColor(ROOT.kGreen-3)
 #	func_res2.SetLineColor(ROOT.kGreen-3)
 #	if (num==len(hist_names)-1) :
-	if (num==3) :
+	if (num==2) :
 		hist_ratio.Fit(func_res,"R","SAMe")
 #		for i in range(0,4):
 #			func_res_copy.FixParameter(i,func_res.GetParameter(i))
 #		hist_ratio.Fit(func_res2,"R","SAMe")
 #		func_res_copy.Draw("L SAME")
 		for i in range(0,7):
-			print 'func_Mqq->FixParameter(%i,%f);'% (i,func_res.GetParameter(i))
+			print 'func_EtaQQ->FixParameter(%i,%f);'% (i,func_res.GetParameter(i))
 #		print hist_names[num],func_res.GetChisquare(), func_res.GetNDF(), func_res.Eval(7.7113)
 		print hist_names[num],func_res.GetChisquare(), func_res.GetNDF(), func_res.GetChisquare()/func_res.GetNDF(), func_res.GetX(1.,5.1,5.3),func_res.GetX(1.,7.3,9)
 	line = ROOT.TLine(xmin,1,xmax,1)
@@ -241,7 +243,7 @@ for num in range(0,len(hist_names)):
 	ROOT.gPad.Update()
 	ROOT.gPad.RedrawAxis()
 #	c.SaveAs("plots_amc_mdg_corr/plot_amc_mdg_corr_mu_Ptsumcorr_ForEta_%s_after.pdf" %list_amc[num].GetName() )
-	c.SaveAs("plots_amc_mdg_corr/v25/plot_newest4_amc_mdg_corr_mu_%s.pdf" %list_amc[num].GetName() )
+	c.SaveAs("plots_amc_mdg_corr/v25/plot_newest5_amc_mdg_corr_mu_%s.pdf" %list_amc[num].GetName() )
 
 
 

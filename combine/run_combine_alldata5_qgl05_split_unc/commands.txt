@@ -1,0 +1,18 @@
+combine -M MultiDimFit  ../cards/el_split.root --robustFit=1 --stepSize=0.05
+--preFitValue=1.0 --rMin=-2 --rMax=2  --algo none --saveWorkspace  -n _snap_el
+> logs/log_snap_el.log
+
+
+ combine -M MaxLikelihoodFit --freezeNuisanceGroups exp,theo  --robustFit 1 --stepSize=0.05   --preFitValue=1.0 --rMin=-2 --rMax=2 -d higgsCombine_snap_el.MultiDimFit.mH120.root -w w --snapshotName "MultiDimFit" -n _frozen_el -v9
+
+
+combine -M MaxLikelihoodFit --freezeNuisanceGroups exp   --robustFit 1
+--stepSize=0.05   --preFitValue=1.0 --rMin=-2 --rMax=2 -d
+higgsCombine_snap_elmu.MultiDimFit.mH120.root -w w --snapshotName
+"MultiDimFit" -n _frozen_exp_elmu -v9 > logs/frozen_exp_elmu.log
+
+
+combine -M MaxLikelihoodFit --freezeNuisanceGroups theo   --robustFit 1
+--stepSize=0.05   --preFitValue=1.0 --rMin=-2 --rMax=2 -d
+higgsCombine_snap_mu.MultiDimFit.mH120.root -w w --snapshotName "MultiDimFit"
+-n _frozen_theo_mu -v9 > logs/frozen_theo_mu.log

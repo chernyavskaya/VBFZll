@@ -1,0 +1,75 @@
+Unblinded results for  mu  channel :
+
+ The (post-fit) full uncertainty is given by (frozen_none):
+Best fit r: 0.995666  -0.112979/+0.113864  (68% CL)
+
+ The (post-fit) stat-only uncertainty is given by (frozen_all):
+Best fit r: 0.995143  -0.0420068/+0.0427031  (68% CL)
+
+ The difference (the syst) is:
+Best fit r: 0.995666  -0.112979/+0.113864  (68% CL)
+Best fit r: 0.995143  -0.0420068/+0.0427031  (68% CL)
+(-0.1048793827747269, 0.10555291778504984)
+
+ The exp. syst. uncertainty. (exp) = (tot) - (stat+theo)
+Best fit r: 0.995666  -0.112979/+0.113864  (68% CL)
+Best fit r: 0.995168  -0.0947741/+0.108902  (68% CL)
+(-0.061498936371093785, 0.033247817042194705)
+
+ The theo. syst. uncertainty. (theo) = (tot) - (stat+exp)
+Best fit r: 0.995666  -0.112979/+0.113864  (68% CL)
+Best fit r: 0.995323  -0.0759014/+0.0618112  (68% CL)
+(-0.083685296478642, 0.09562608085395219)
+
+
+
+#################################################################
+Unblinded results for  el  channel :
+
+ The (post-fit) full uncertainty is given by (frozen_none):
+Best fit r: 1.01988  -0.14184/+0.135351  (68% CL)
+
+ The (post-fit) stat-only uncertainty is given by (frozen_all):
+Best fit r: 1.01967  -0.063346/+0.0644792  (68% CL)
+
+ The difference (the syst) is:
+Best fit r: 1.01988  -0.14184/+0.135351  (68% CL)
+Best fit r: 1.01967  -0.063346/+0.0644792  (68% CL)
+(-0.12690866321277644, 0.11900566447949314)
+
+ The exp. syst. uncertainty. (exp) = (tot) - (stat+theo)
+Best fit r: 1.01988  -0.14184/+0.135351  (68% CL)
+Best fit r: 1.01988  -0.11585/+0.131134  (68% CL)
+(-0.08183720487133261, 0.03352291892767766)
+
+ The theo. syst. uncertainty. (theo) = (tot) - (stat+exp)
+Best fit r: 1.01988  -0.14184/+0.135351  (68% CL)
+Best fit r: 1.01938  -0.105409/+0.0868228  (68% CL)
+(-0.09490777653847089, 0.10383502321129018)
+
+#################################################################
+
+Unblinded results for  elmu  channel :
+
+ The (post-fit) full uncertainty is given by (frozen_none):
+Best fit r: 1.01699  -0.106143/+0.109065  (68% CL)
+
+ The (post-fit) stat-only uncertainty is given by (frozen_all):
+Best fit r: 1.01686  -0.0354047/+0.036107  (68% CL)
+
+ The difference (the syst) is:
+Best fit r: 1.01699  -0.106143/+0.109065  (68% CL)
+Best fit r: 1.01686  -0.0354047/+0.036107  (68% CL)
+(-0.10006394819907044, 0.10291455500719168)
+
+ The exp. syst. uncertainty. (exp) = (tot) - (stat+theo)
+Best fit r: 1.01699  -0.106143/+0.109065  (68% CL)
+Best fit r: 1.01676  -0.0930092/+0.10899  (68% CL)
+(-0.05114260417685987, 0.0040299342947214345)
+
+ The theo. syst. uncertainty. (theo) = (tot) - (stat+exp)
+Best fit r: 1.01699  -0.106143/+0.109065  (68% CL)
+Best fit r: 1.01709  -0.0625542/+0.0421661  (68% CL)
+(-0.08575112600653576, 0.1005839856109402)
+
+

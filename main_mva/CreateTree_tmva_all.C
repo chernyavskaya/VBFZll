@@ -57,10 +57,33 @@ float getScaleFactor(TH2F *scaleMap, double pt, double eta, float sf_err, bool a
     //std::cout<<sfactor<<std::endl;
     return sfactor;
 }
+float getScaleFactor1D(TH1F *scaleMap, double eta, float sf_err, bool abs) {
+//    std::cout<<"called getScaleFactor"<<std::endl;
+  //  std::cout<<pt<<":, "<<eta<<std::endl;
+    float sfactor = 1.0;
+	 int binx;
+    if (abs==0) binx = scaleMap->GetXaxis()->FindBin(eta);
+    else binx = scaleMap->GetXaxis()->FindBin(TMath::Abs(eta));
+    if ( (binx != 0) && (binx != scaleMap->GetNbinsX()+1) ) {
+        sfactor = scaleMap->GetBinContent(binx);
+        sf_err = scaleMap->GetBinError(binx);
+	//		cout<<sfactor<<endl;
+        if (sfactor == 0.0) {
+            // bin was not filled for w/e reason, assume we don't have value in this 2D bin from the json
+            sfactor = 1.0;
+            sf_err = 0.0;
+        }
+    }
+    //std::cout<<sfactor<<std::endl;
+    return sfactor;
+}
+
+
+
 
 using namespace std;
 
-void CreateTree_tmva_all::Loop(TString file_tag, TString region, TString file_name)
+void CreateTree_tmva_all::Loop(TString file_tag, TString region, TString file_name,TString option)
 {
    if (fChain == 0) return;
 
@@ -112,6 +135,10 @@ xsec["DYJetstoLL_HT2500toInf"] = 0.00438495;
 	TFile* file_tracker_el = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_ScaleFactor_tracker_80x.root");
 	TH2F* tracker_el = (TH2F*)file_tracker_el->Get("TriggerEffMap_ScaleFactor_tracker_80x");
 	
+	TFile* file_track_mu_bf = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_Muons_trk_SF_RunBCDEF.root");
+	TH1F* track_mu_bf = (TH1F*)file_track_mu_bf->Get("TriggerEffMap_Graph");
+	TFile* file_track_mu_aft = TFile::Open("dcap://t3se01.psi.ch:22125//pnfs/psi.ch/cms/trivcat/store/user/nchernya/VBFZll/v25/TriggerEffMap_Muons_trk_SF_RunGH.root");
+	TH1F* track_mu_aft = (TH1F*)file_track_mu_aft->Get("TriggerEffMap_Graph");
 
 	RoccoR  *rc = new RoccoR("/mnt/t3nfs01/data01/shome/nchernya/VBFZll/plotter/mucorr/2016/rcdata.2016.v3/");
 
@@ -126,16 +153,19 @@ xsec["DYJetstoLL_HT2500toInf"] = 0.00438495;
 	func_Mqq->FixParameter(5,0.826140);
 	func_Mqq->FixParameter(6,-0.021376);
 
+	Float_t cut_flow_cut_based[30] = {0,0};
 
 	int events_saved=0;
 
 	float weight;	
- 
 
-	TFile file("main_tmva_tree_"+file_tag+"_v25"+region+"_new.root","recreate");
+	ULong64_t event; 
+
+	TFile file("main_tmva_tree_"+file_tag+"_v25"+region+"_"+option+"_test.root","recreate");
 	TTree *tree0 = new TTree("TMVA","TMVA");
 
 	tree0->Branch("Mqq",&TMVA.Mqq,"Mqq/F");
+	tree0->Branch("evt",&event,"evt/I");
 	tree0->Branch("DeltaEtaQQ",&TMVA.DeltaEtaQQ,"DeltaEtaQQ/F");
 	tree0->Branch("Jet2q_pt",&TMVA.Jet2q_pt,"Jet2q_pt/F");
 	tree0->Branch("Jet1q_pt",&TMVA.Jet1q_pt,"Jet1q_pt/F");
@@ -161,13 +191,17 @@ xsec["DYJetstoLL_HT2500toInf"] = 0.00438495;
 	   Long64_t ientry = LoadTree(jentry);
 	   if (ientry < 0) break;
 	   nb = fChain->GetEntry(jentry);   nbytes += nb;
-			  
+			 
+	//	if (option.CompareTo("train")==0) if (evt%2!=1) continue; 	
+//		if (option.CompareTo("test")==0) if (evt%2!=0) continue; 
+//		cout<<evt<<endl;	
+ 
 		if (isData==1) genWeight = 1.;
 		if (genWeight <0) continue;
 		if (json!=1) continue;
 		weight=1;
 
-		weight=1./events_generated*xsec[file_tag]*1000.; 
+	//	weight=1./events_generated*xsec[file_tag]*1000.; 
 		
 	//	if (region.CompareTo("mu")==0) if (!(Vtype==0)) continue;
 	//	if (region.CompareTo("el")==0) if (!(Vtype==1)) continue;
@@ -176,7 +210,7 @@ xsec["DYJetstoLL_HT2500toInf"] = 0.00438495;
 		int GenVbosons_pdgId_first = GenVbosons_pdgId[0];
 
 		string file_tag_str = file_tag.Data();
-		if  ((file_tag.CompareTo("DYJetstoLL_madgraph")==0) && (lheHT > 100)) continue;		
+//		if  ((file_tag.CompareTo("DYJetstoLL_madgraph")==0) && (lheHT > 100)) continue;		
 
 
 		int good_jets = 0;
@@ -296,7 +330,10 @@ xsec["DYJetstoLL_HT2500toInf"] = 0.00438495;
 				float eff2_id =20.1/36.4*getScaleFactor(id_mu_bf, lepton2.Pt(), lepton2.Eta(), SF_mu_bf_err2,abs ) + 16.3/36.4*getScaleFactor(trig_mu_aft, lepton2.Pt(), lepton2.Eta(), SF_mu_bf_err2,abs  ) ;  
 				float eff1_iso =20.1/36.4*getScaleFactor(iso_mu_bf, lepton1.Pt(), lepton1.Eta(), SF_mu_bf_err1,abs ) + 16.3/36.4*getScaleFactor(id_mu_aft, lepton1.Pt(), lepton1.Eta(), SF_mu_bf_err1,abs ) ;  	
 				float eff2_iso =20.1/36.4*getScaleFactor(iso_mu_bf, lepton2.Pt(), lepton2.Eta(), SF_mu_bf_err2,abs ) + 16.3/36.4*getScaleFactor(trig_mu_aft, lepton2.Pt(), lepton2.Eta(), SF_mu_bf_err2,abs  ) ;  
-				weight*= eff1_id*eff2_id*eff1_iso*eff2_iso; 	
+				abs=0; 
+				float eff1_tracker =20.1/36.4*getScaleFactor1D(track_mu_bf, lepton1.Eta(), SF_mu_bf_err1,abs ) + 16.3/36.4*getScaleFactor1D(track_mu_aft,  lepton1.Eta(), SF_mu_bf_err1,abs );  	
+				float eff2_tracker =20.1/36.4*getScaleFactor1D(track_mu_bf, lepton2.Eta(), SF_mu_bf_err1,abs ) + 16.3/36.4*getScaleFactor1D(track_mu_aft,  lepton2.Eta(), SF_mu_bf_err1,abs );  	
+				weight*= eff1_id*eff2_id*eff1_iso*eff2_iso*eff1_tracker*eff2_tracker; 	
 
 			}
 			if (region.CompareTo("el")==0) {
@@ -392,8 +429,15 @@ xsec["DYJetstoLL_HT2500toInf"] = 0.00438495;
 		
 
 		tree0->Fill();	
-		events_saved++;	
-		float a1,a2,a3,a4,a5,a6,a7,a8,total;
+		events_saved++;
+
+
+		cut_flow_cut_based[0]+=genWeight/TMath::Abs(genWeight)*puWeight;	
+		if ((Mqq>400) && (qqDeltaEta>3.4) && (Jet_qgl[jets_indices[0]]>0.4) && (Jet_qgl[jets_indices[1]]>0.5 ) && (qq_pt>120) &&(RptHard<0.15) && (zll_zstar<0.7)) cut_flow_cut_based[1]+=genWeight/TMath::Abs(genWeight)*puWeight;
+
+
+	
+/*		float a1,a2,a3,a4,a5,a6,a7,a8,total;
 		a1=0.15;
 		a2=0.32;	
 		a3=0.39;
@@ -402,8 +446,8 @@ xsec["DYJetstoLL_HT2500toInf"] = 0.00438495;
 		a6=0.011;	
 		a7=0.0026;
 		a8=0.00055;
-		if  (region.CompareTo("mu")==0) total=180000;
-		if  (region.CompareTo("el")==0) total=91000;
+		if  (region.CompareTo("mu")==0) total=180000./2;
+		if  (region.CompareTo("el")==0) total=91000./2;
 
 			
 		if (file_tag.CompareTo("DYJetstoLL_madgraph")==0) if (events_saved>=total*a1) break;
@@ -417,8 +461,17 @@ xsec["DYJetstoLL_HT2500toInf"] = 0.00438495;
 
 		if (file_tag_str.find("EWK")!=std::string::npos) if (region.CompareTo("mu")==0) if (events_saved>=total) break;
 		if (file_tag_str.find("EWK")!=std::string::npos) if (region.CompareTo("el")==0) if (events_saved>=total) break;
-
+*/
+		if  (region.CompareTo("el")==0) if (events_saved>= 13442) {
+			cout<<evt<<endl;
+			break;
+		}
+		if  (region.CompareTo("mu")==0) if (events_saved>= 30150){
+			cout<<evt<<endl;
+			break;
+		}
 	}  
+	cout<<cut_flow_cut_based[0]<<"\t"<<cut_flow_cut_based[1]<<endl;
 
 	file.Write();
 	file.Close();
