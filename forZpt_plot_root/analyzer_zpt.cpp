@@ -159,9 +159,13 @@ TString data_name[2] = {"SingleMuon","SingleElectron"};
 TString set[3]={"_mu","_el"}; 
 
 for (int i=0;i<nfiles;i++){
-//	if (i==0) file_names[i] = data_name[set_type];
-  if (set_type==0) file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/histos_EWK_LL_ptZ_mu_SMfromATGC_added.root");
-  if (set_type==1) file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/histos_EWK_LL_ptZ_el_15bins_added.root");
+/*	if (i==0) {
+		if (set_type==0)	file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/new_files/histos_EWK_LL_ptZ_mu_SMfromATGC_dataOnly_PoissonErrors.root");
+		if (set_type==1)	file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/new_files/histos_EWK_LL_ptZ_el_SMfromATGC_dataOnly_PoissonErrors.root");
+	} else{*/
+  if (set_type==0) file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/new_files/histos_EWK_LL_ptZ_mu_SMfromATGC_BDTcut_added.root");
+  if (set_type==1) file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/new_files/histos_EWK_LL_ptZ_el_SMfromATGC_BDTcut_added.root");
+//	}
  //  file_names[i].Prepend("root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat//store/user/nchernya/VBFZll/plotterOutput/v25/");
 //	else  file_names[i].Prepend("/afs/cern.ch/work/n/nchernya/VBFZll/plotter/output_root/");
 //	file_names[i].Append(set[set_type]);
@@ -236,7 +240,7 @@ for (int i=0;i<nhistos;i++){
 //	output_names[i].Prepend("triggercorr/");
 //	output_names[i].Prepend("Aftertriggercorr2/");
 	output_names[i].Append(set[set_type]);
-	output_names[i].Append("_amc.pdf");
+	output_names[i].Append("_amc_BDTcut.pdf");
 //	output_names[i].Append(set[set_type]+"_v25.png");
 }
 
@@ -418,18 +422,18 @@ out_efficiency.close();
 TH1F *hist_aTGC[3];
 for (int atgc = 0;atgc<3;atgc++){
 	TString file_name_atgc;
-	if (atgc==0) {file_name_atgc = "histos_aTGC_plot_ptZ";
+	if (atgc==0) {file_name_atgc = "new_files/histos_aTGC_plot_ptZ";
 		file_name_atgc.Append(set[set_type]);
-		file_name_atgc.Append("_SMfromATGC_cw0_cx6_cb750.root");
+		file_name_atgc.Append("_SMfromATGC_cw0_cx6_cb750_BDTcut.root");
 	}	
 	if (atgc==1) {
-		file_name_atgc = "histos_aTGC_plot_ptZ";
+		file_name_atgc = "new_files/histos_aTGC_plot_ptZ";
 		file_name_atgc.Append(set[set_type]);
-		file_name_atgc.Append("_SMfromATGC_cwww0_cw20_cb750.root");
+		file_name_atgc.Append("_SMfromATGC_cwww0_cw20_cb750_BDTcut.root");
 	}
-	if (atgc==2) {		file_name_atgc= "histos_aTGC_plot_ptZ";
+	if (atgc==2) {		file_name_atgc= "new_files/histos_aTGC_plot_ptZ";
 		file_name_atgc.Append(set[set_type]);
-		file_name_atgc.Append("_SMfromATGC_cw0_cx6_cb750.root");
+		file_name_atgc.Append("_SMfromATGC_cw0_cx6_cb750_BDTcut.root");
 	}
 	TString hist_name_atgc;
 //	int tgc_color[3] = {kViolet+1,kMagenta,kBlue};
@@ -670,7 +674,7 @@ for (int i=0;i<nhistos;i++){
 		//Double_t xmax = signal_histos[i]->GetBinCenter((signal_histos[i]->GetNbinsX()))+signal_histos[i]->GetBinWidth((signal_histos[i]->GetNbinsX()));
 		Double_t xmax = data_histos[i]->GetBinCenter((data_histos[i]->GetNbinsX()))+data_histos[i]->GetBinWidth((data_histos[i]->GetNbinsX()));
 		cout<<xmin<<"  "<<xmax<<"  "<<data_histos[i]->GetBinError(data_histos[i]->GetNbinsX())<<endl;
-		data_histos[i]->SetBinError(data_histos[i]->GetNbinsX() ,TMath::Sqrt(data_histos[i]->GetBinContent(data_histos[i]->GetNbinsX())));
+//		data_histos[i]->SetBinError(data_histos[i]->GetNbinsX() ,TMath::Sqrt(data_histos[i]->GetBinContent(data_histos[i]->GetNbinsX())));
 		string tmp_hist_name = hist_names[i].Data();
 		TH1F *frame = new TH1F("frame","",1,xmin,xmax);
 		TGaxis::SetExponentOffset(-0.07,0,"xy");
@@ -679,7 +683,9 @@ for (int i=0;i<nhistos;i++){
       frame->SetMaximum(std::max(data_histos[i]->GetMaximum()*1.2,sum_histos[i]->GetMaximum()*1.2) );
 		if (LOGY==true) {
 			gPad->SetLogy();	
-      	frame->SetMaximum(std::max(data_histos[i]->GetMaximum()*200,sum_histos[i]->GetMaximum()*200) );
+      //	frame->SetMaximum(std::max(data_histos[i]->GetMaximum()*200,sum_histos[i]->GetMaximum()*200) );
+      	frame->SetMaximum(std::max(data_histos[i]->GetMaximum()*10,sum_histos[i]->GetMaximum()*10) );//for BDT cut
+      	if (set_type==1)frame->SetMaximum(std::max(data_histos[i]->GetMaximum()*20,sum_histos[i]->GetMaximum()*20) );//for BDT cut
 		}
 		TGaxis::SetMaxDigits(4);
       frame->GetXaxis()->SetTitleOffset(0.91);
@@ -697,6 +703,7 @@ for (int i=0;i<nhistos;i++){
 	//	tex2->Draw();
 	pCMSset.Draw("same");
 //		if (tmp_hist_name.find("_bdt")!=std::string::npos)  pBDT.Draw("same");
+		pBDT.Draw("same");
 		leg->Draw("same");
     	stacks[i]->Draw("same");	
 		signal_histos[i]->Draw("same");
@@ -727,8 +734,10 @@ for (int i=0;i<nhistos;i++){
   		gPad->SetGridy();
 
 		TH1F *frame2 = new TH1F("frame2","",1,xmin,xmax);
-		frame2->SetMinimum(-.5);
-      frame2->SetMaximum(.5);
+	//	frame2->SetMinimum(-.5);
+    //  frame2->SetMaximum(.5);
+		frame2->SetMinimum(-1.);//for bdt
+      frame2->SetMaximum(1.);//fot bdt
 	//	if ((hist_names[i].CompareTo("hAdJetHT_bdt")==0)||(hist_names[i].CompareTo("hJet3_pt_bdt")==0)) {
 		if (tmp_hist_name.find("_bdt")!=std::string::npos) {
 			frame2->SetMinimum(-1.);
