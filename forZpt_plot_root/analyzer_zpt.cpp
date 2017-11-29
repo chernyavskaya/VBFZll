@@ -85,8 +85,8 @@ const int nfiles  = 5; //9;  //11;
 
 //TString leg_names[nfiles] = {"Data","W(l#nu) + jets","WW + jets","ZZ + jets","WZ + jets","Single Top", "t#bar{t}", "Z + jets (MDG)","VBF Z #rightarrow ll"};
 //TString leg_names[nfiles] = {"Data","W(l#nu) + jets","WW + jets","ZZ + jets","WZ + jets","Single Top", "t#bar{t}", "Z + jets (AMC)","VBF Z #rightarrow ll"};
-TString leg_names[nfiles] =  {"Data","VV","Top", "Z + jets","EW Zjj"};
-TString leg_names_pas[nfiles] = {"Data","VV","Top", "Z + jets","EW Zjj"};
+TString leg_names[nfiles] =  {"Data","VV","Top quark", "Z + jets","EW Zjj"};
+TString leg_names_pas[nfiles] = {"Data","VV","Top quark", "Z + jets","EW Zjj"};
 //TString leg_names[nfiles] = {"Data","WW + jets","ZZ + jets","WZ + jets","Single Top", "t#bar{t}", "Z + jets (AMC)","VBF Z #rightarrow ll"};
 TString set_names[2] = {"Dimuon","Dielectron"}; 
 //if (set_type==0)leg_names[0] = "Data (DoubleB)";
@@ -159,13 +159,15 @@ TString data_name[2] = {"SingleMuon","SingleElectron"};
 TString set[3]={"_mu","_el"}; 
 
 for (int i=0;i<nfiles;i++){
-/*	if (i==0) {
+	if (i==0) {
 		if (set_type==0)	file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/new_files/histos_EWK_LL_ptZ_mu_SMfromATGC_dataOnly_PoissonErrors.root");
 		if (set_type==1)	file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/new_files/histos_EWK_LL_ptZ_el_SMfromATGC_dataOnly_PoissonErrors.root");
-	} else{*/
-  if (set_type==0) file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/new_files/histos_EWK_LL_ptZ_mu_SMfromATGC_BDTcut_added.root");
-  if (set_type==1) file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/new_files/histos_EWK_LL_ptZ_el_SMfromATGC_BDTcut_added.root");
-//	}
+	} else{
+  if (set_type==0) file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root//histos_EWK_LL_ptZ_mu_SMfromATGC_added.root");
+  if (set_type==1) file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/histos_EWK_LL_ptZ_el_15bins_added.root");
+//  if (set_type==0) file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/new_files/histos_EWK_LL_ptZ_mu_SMfromATGC_BDTcut_added.root");
+  //if (set_type==1) file_names[i] = ("/afs/cern.ch/work/n/nchernya/VBFZll/forZpt_plot_root/new_files/histos_EWK_LL_ptZ_el_SMfromATGC_BDTcut_added.root");
+  }
  //  file_names[i].Prepend("root://t3dcachedb.psi.ch:1094///pnfs/psi.ch/cms/trivcat//store/user/nchernya/VBFZll/plotterOutput/v25/");
 //	else  file_names[i].Prepend("/afs/cern.ch/work/n/nchernya/VBFZll/plotter/output_root/");
 //	file_names[i].Append(set[set_type]);
@@ -186,7 +188,7 @@ TString trigger[2] = {"", ""};
 //TString dir_name= "plots_amc_bdt_axis2_v25_reaod";
 //TString dir_name= "plots_amc_bdt_alldata4qglnorm_v25_reaod_pas_herwig";
 //TString dir_name= "paper/plots_herwig";
-TString dir_name= "plots";
+TString dir_name= "plots_29112017";
 //TString dir_name= "pas_dir/plots_amc_bdt_alldata4qglnorm_v25_reaod_pas";
 ///////TString dir_name= "test_qgl_look";
 //TString dir_name= "plots_mdg_ht_bdt_axis2_v25_reaod";
@@ -201,7 +203,8 @@ Float_t lumi = 35900;
 
 //TLegend *leg = new TLegend(0.77,0.65,0.92,0.9); //without writing about SF   for AN
 //////TLegend *leg = new TLegend(0.73,0.60,0.92,0.85); //without writing about SF   for PAS
-TLegend *leg = new TLegend(0.73,0.50,0.92,0.85); //without writing about SF   for PAS
+TLegend *leg = new TLegend(0.7,0.50,0.92,0.85); //without writing about SF   for PAS
+//TLegend *leg = new TLegend(0.73,0.50,0.92,0.85); //without writing about SF   for final paper but cw, noot cw/l2
 //TLegend *leg = new TLegend(0.7,0.60,0.92,0.85); //without writing about SF   for PAS with linear qgl
 leg->SetFillColor(0);
 leg->SetBorderSize(0);
@@ -240,7 +243,8 @@ for (int i=0;i<nhistos;i++){
 //	output_names[i].Prepend("triggercorr/");
 //	output_names[i].Prepend("Aftertriggercorr2/");
 	output_names[i].Append(set[set_type]);
-	output_names[i].Append("_amc_BDTcut.pdf");
+//	output_names[i].Append("_amc_BDTcut.pdf");
+	output_names[i].Append("_amc.pdf");
 //	output_names[i].Append(set[set_type]+"_v25.png");
 }
 
@@ -422,22 +426,25 @@ out_efficiency.close();
 TH1F *hist_aTGC[3];
 for (int atgc = 0;atgc<3;atgc++){
 	TString file_name_atgc;
-	if (atgc==0) {file_name_atgc = "new_files/histos_aTGC_plot_ptZ";
+//	if (atgc==0) {file_name_atgc = "new_files/histos_aTGC_plot_ptZ";
+	if (atgc==0) {file_name_atgc = "histos_aTGC_plot_ptZ";
 		file_name_atgc.Append(set[set_type]);
-		file_name_atgc.Append("_SMfromATGC_cw0_cx6_cb750_BDTcut.root");
+		file_name_atgc.Append("_SMfromATGC_cw0_cx6_cb750.root");
 	}	
 	if (atgc==1) {
-		file_name_atgc = "new_files/histos_aTGC_plot_ptZ";
+	//	file_name_atgc = "new_files/histos_aTGC_plot_ptZ";
+		file_name_atgc = "histos_aTGC_plot_ptZ";
 		file_name_atgc.Append(set[set_type]);
-		file_name_atgc.Append("_SMfromATGC_cwww0_cw20_cb750_BDTcut.root");
+		file_name_atgc.Append("_SMfromATGC_cwww0_cw20_cb750.root");
 	}
-	if (atgc==2) {		file_name_atgc= "new_files/histos_aTGC_plot_ptZ";
+//	if (atgc==2) {		file_name_atgc= "new_files/histos_aTGC_plot_ptZ";
+	if (atgc==2) {		file_name_atgc= "histos_aTGC_plot_ptZ";
 		file_name_atgc.Append(set[set_type]);
-		file_name_atgc.Append("_SMfromATGC_cw0_cx6_cb750_BDTcut.root");
+		file_name_atgc.Append("_SMfromATGC_cw0_cx6_cb750.root");
 	}
 	TString hist_name_atgc;
 //	int tgc_color[3] = {kViolet+1,kMagenta,kBlue};
-	int tgc_color[3] = {kSpring+10,kMagenta,kBlue};
+	int tgc_color[3] = {kBlue,kMagenta,kSpring};
 	if (atgc==0) hist_name_atgc="aTGC_plot_cx_6_cb_0";
 	if (atgc==1) hist_name_atgc="aTGC_plot_cw_20_cb_0";
 	if (atgc==2) hist_name_atgc="aTGC_plot_cx_0_cb_750";
@@ -575,9 +582,11 @@ leg->AddEntry(histos_for_legened[2],leg_names_pas[2],"F");
 leg->AddEntry(histos_for_legened[3],leg_names_pas[3],"F");
 leg->AddEntry(histos_for_legened[4],leg_names_pas[4],"F");
 leg->AddEntry(signal_histos[0],"EW Zjj","L");
-leg->AddEntry(hist_aTGC[0],"aTGC c_{www} = 6","L");
-leg->AddEntry(hist_aTGC[1],"aTGC c_{w} = 20","L");
-leg->AddEntry(hist_aTGC[2],"aTGC c_{b} = 750","L");
+//leg->AddEntry(hist_aTGC[0],"aTGC #it{c_{www}} = 6","L");
+//leg->AddEntry(hist_aTGC[1],"aTGC #it{c_{w}} = 20","L");
+leg->AddEntry(hist_aTGC[0],"c_{#it{www}}/#Lambda^{2} = 6 TeV^{-2}","L");
+leg->AddEntry(hist_aTGC[1],"c_{#it{w}}/#Lambda^{2} = 20 TeV^{-2}","L");
+//leg->AddEntry(hist_aTGC[2],"aTGC c_{b} = 750","L");
 leg->AddEntry(hBkgUncUp[0],"MC stat. unc.","F");
 
 
@@ -668,11 +677,11 @@ for (int i=0;i<nhistos;i++){
 		bool LOGY=true;
 
 	
-		Double_t xmin = signal_histos[i]->GetBinCenter(0);
-	//	Double_t xmin = 0;
+	//	Double_t xmin = signal_histos[i]->GetBinCenter(0);
+		Double_t xmin = 0;
 	//	Double_t xmax =( signal_histos[i]->GetBinCenter((signal_histos[i]->GetNbinsX())-1) + signal_histos[i]->GetBinWidth((signal_histos[i]->GetNbinsX())-1)/2. );
 		//Double_t xmax = signal_histos[i]->GetBinCenter((signal_histos[i]->GetNbinsX()))+signal_histos[i]->GetBinWidth((signal_histos[i]->GetNbinsX()));
-		Double_t xmax = data_histos[i]->GetBinCenter((data_histos[i]->GetNbinsX()))+data_histos[i]->GetBinWidth((data_histos[i]->GetNbinsX()));
+		Double_t xmax = data_histos[i]->GetBinCenter((data_histos[i]->GetNbinsX()))+data_histos[i]->GetBinWidth((data_histos[i]->GetNbinsX()))/2.;
 		cout<<xmin<<"  "<<xmax<<"  "<<data_histos[i]->GetBinError(data_histos[i]->GetNbinsX())<<endl;
 //		data_histos[i]->SetBinError(data_histos[i]->GetNbinsX() ,TMath::Sqrt(data_histos[i]->GetBinContent(data_histos[i]->GetNbinsX())));
 		string tmp_hist_name = hist_names[i].Data();
@@ -685,7 +694,7 @@ for (int i=0;i<nhistos;i++){
 			gPad->SetLogy();	
       //	frame->SetMaximum(std::max(data_histos[i]->GetMaximum()*200,sum_histos[i]->GetMaximum()*200) );
       	frame->SetMaximum(std::max(data_histos[i]->GetMaximum()*10,sum_histos[i]->GetMaximum()*10) );//for BDT cut
-      	if (set_type==1)frame->SetMaximum(std::max(data_histos[i]->GetMaximum()*20,sum_histos[i]->GetMaximum()*20) );//for BDT cut
+      	if (set_type==1)frame->SetMaximum(std::max(data_histos[i]->GetMaximum()*40,sum_histos[i]->GetMaximum()*40) );//for BDT cut
 		}
 		TGaxis::SetMaxDigits(4);
       frame->GetXaxis()->SetTitleOffset(0.91);
@@ -703,11 +712,11 @@ for (int i=0;i<nhistos;i++){
 	//	tex2->Draw();
 	pCMSset.Draw("same");
 //		if (tmp_hist_name.find("_bdt")!=std::string::npos)  pBDT.Draw("same");
-		pBDT.Draw("same");
+	//	pBDT.Draw("same");
 		leg->Draw("same");
     	stacks[i]->Draw("same");	
 		signal_histos[i]->Draw("same");
-		for (int atgc=0;atgc<3;atgc++)
+		for (int atgc=0;atgc<2;atgc++)
 			hist_aTGC[atgc]->Draw("same")	;	
 
 /////////////////cross check of stupid THStack//////
@@ -731,7 +740,7 @@ for (int i=0;i<nhistos;i++){
   		pad2->SetFillStyle(0);
   		pad2->Draw();
   		pad2->cd(0);
-  		gPad->SetGridy();
+  //		gPad->SetGridy();
 
 		TH1F *frame2 = new TH1F("frame2","",1,xmin,xmax);
 	//	frame2->SetMinimum(-.5);
@@ -755,7 +764,7 @@ for (int i=0;i<nhistos;i++){
   		frame2->GetYaxis()->CenterTitle(kTRUE);
   		frame2->GetXaxis()->SetTitleSize(0.05);
   		frame2->GetXaxis()->SetLabelSize(0.04);
-		frame2->SetXTitle("p_{T Z} (GeV)");
+		frame2->SetXTitle("p_{TZ} (GeV)");
 		frame2->SetYTitle("Data / MC - 1");
 		frame2->Draw();	
 
@@ -830,11 +839,13 @@ for (int i=0;i<nhistos;i++){
    	ks_latex->SetLineWidth(2);
 	//	ks_latex->Draw();
 		TLegend *leg_jes = new TLegend(0.16,0.13,0.3,0.29); //without writing about SF
+//		TLegend *leg_jes = new TLegend(0.16,0.13,0.3,0.26); //without writing about SF
 		leg_jes->SetFillStyle(0);
 		leg_jes->SetBorderSize(0);
 		leg_jes->SetTextFont(42);
 		leg_jes->SetTextSize(0.025);
-		leg_jes->AddEntry(data_histosQCDup[i],"QCD scale up/down","L");
+	//	leg_jes->AddEntry(data_histosQCDup[i],"QCD scale up/down","L");
+		leg_jes->AddEntry(data_histosQCDup[i],"#mu_{F}, #mu_{R} scale up/down","L");
 		leg_jes->AddEntry(data_histosJESup[i],"JES up/down","L");
 		leg_jes->Draw();
 		

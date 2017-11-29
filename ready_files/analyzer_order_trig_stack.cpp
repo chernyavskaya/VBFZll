@@ -87,7 +87,7 @@ cout<<"here"<<endl;
 //TString leg_names[nfiles] = {"Data","W(l#nu) + jets","WW + jets","ZZ + jets","WZ + jets","Single Top", "t#bar{t}", "Z + jets (MDG)","VBF Z #rightarrow ll"};
 //TString leg_names[nfiles] = {"Data","W(l#nu) + jets","WW + jets","ZZ + jets","WZ + jets","Single Top", "t#bar{t}", "Z + jets (AMC)","VBF Z #rightarrow ll"};
 TString leg_names[nfiles] = {"Data","WW + jets","ZZ + jets","WZ + jets","Single Top", "t#bar{t}", "Z + jets","VBF Z #rightarrow ll"};
-TString leg_names_pas[nfiles] = {"Data","VV","Top", "Z + jets","EWK Zjj"};
+TString leg_names_pas[nfiles] = {"Data","VV","Top quark", "Z + jets","EW Zjj"};
 //TString leg_names[nfiles] = {"Data","WW + jets","ZZ + jets","WZ + jets","Single Top", "t#bar{t}", "Z + jets (AMC)","VBF Z #rightarrow ll"};
 TString set_names[2] = {"Dimuon","Dielectron"}; 
 //if (set_type==0)leg_names[0] = "Data (DoubleB)";
@@ -114,11 +114,11 @@ TString file_names_QCDdown[nfiles] = {"SingleMuon","WJetsToLNu","WW","ZZ","WZ","
 TString file_names_JESup[nfiles] = {"SingleMuon","WJetsToLNu","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
 TString file_names_JESdown[nfiles] = {"SingleMuon","WJetsToLNu","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};*/
 
-TString file_names[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ_herwig"};
-TString file_names_QCDup[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ_herwig"};
-TString file_names_QCDdown[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ_herwig"};
-TString file_names_JESup[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ_herwig"};
-TString file_names_JESdown[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ_herwig"};
+TString file_names[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
+TString file_names_QCDup[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
+TString file_names_QCDdown[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
+TString file_names_JESup[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
+TString file_names_JESdown[nfiles] = {"SingleMuon","WW","ZZ","WZ","ST","TT","DYJetstoLL_amc","EWK_LLJJ"};
 
 int bg_begin;
 int qcd_begin=18;
@@ -192,7 +192,8 @@ TString trigger[2] = {"", ""};
 //TString dir_name= "plots_amc_bdt_alldata_v25_reaod";
 //TString dir_name= "plots_amc_bdt_axis2_v25_reaod";
 //TString dir_name= "plots_amc_bdt_alldata4qglnorm_v25_reaod_pas_herwig";
-TString dir_name= "pas_dir_newGapAct_unblinded/plots_amc_bdt_alldata5_v25_reaod_pas_herwig";
+//TString dir_name= "paper/plots_herwig";
+TString dir_name= "paper/cwr_29_11_2017_plots";
 //TString dir_name= "pas_dir/plots_amc_bdt_alldata4qglnorm_v25_reaod_pas";
 ///////TString dir_name= "test_qgl_look";
 //TString dir_name= "plots_mdg_ht_bdt_axis2_v25_reaod";
@@ -616,7 +617,7 @@ leg->AddEntry(histos_for_legened[1],leg_names_pas[1],"F");
 leg->AddEntry(histos_for_legened[5],leg_names_pas[2],"F");
 leg->AddEntry(histos_for_legened[6],leg_names_pas[3],"F");
 leg->AddEntry(histos_for_legened[7],leg_names_pas[4],"F");
-leg->AddEntry(signal_histos[0],"EWK Zjj","L");
+leg->AddEntry(signal_histos[0],"EW Zjj","L");
 leg->AddEntry(hBkgUncUp[0],"MC stat. unc.","F");
 
 
@@ -786,7 +787,7 @@ for (int i=0;i<nhistos;i++){
       frame->Draw();
 		tex->Draw();
 		tex1->Draw();
-		tex2->Draw();
+	//	tex2->Draw();
 	pCMSset.Draw("same");
 		if (tmp_hist_name.find("_bdt")!=std::string::npos)  pBDT.Draw("same");
 	//	tex_k->Draw();
@@ -816,7 +817,7 @@ for (int i=0;i<nhistos;i++){
   		pad2->SetFillStyle(0);
   		pad2->Draw();
   		pad2->cd(0);
-  		gPad->SetGridy();
+  //		gPad->SetGridy();
 
 		TH1F *frame2 = new TH1F("frame2","",1,xmin,xmax);
 		frame2->SetMinimum(-.5);
@@ -850,7 +851,8 @@ for (int i=0;i<nhistos;i++){
 		if (hist_names[i].CompareTo("hMqq")==0 ) 
 	   	frame2->SetXTitle("m_{jj} (GeV)");
 		if (hist_names[i].CompareTo("hqq_pt")==0 ) 
-	   	frame2->SetXTitle("p_{T jj} (GeV)");
+	   	frame2->SetXTitle("p_{Tjj} (GeV)");
+	  // 	frame2->SetXTitle("p_{T jj} (GeV)");
 		if (hist_names[i].CompareTo("hEtaQQ")==0 ) 
 	   	frame2->SetXTitle("|#Delta#eta_{jj}|");
 		if (hist_names[i].CompareTo("hqgl")==0 ) 
@@ -865,6 +867,8 @@ for (int i=0;i<nhistos;i++){
 			frame2->SetXTitle("p_{T} 3^{rd} jet (GeV)");
 		if (hist_names[i].CompareTo("hHTsoftEWK_bdt")==0) 
 			frame2->SetXTitle("H_{T}^{soft} (GeV)");
+		if (hist_names[i].CompareTo("hZll_zstar")==0 ) 
+	   	frame2->SetXTitle("z*");
 		frame2->SetYTitle("Data / MC - 1");
 		frame2->Draw();	
 
@@ -938,7 +942,8 @@ for (int i=0;i<nhistos;i++){
 		leg_jes->SetBorderSize(0);
 		leg_jes->SetTextFont(42);
 		leg_jes->SetTextSize(0.025);
-		leg_jes->AddEntry(data_histosQCDup[i],"QCD scale up/down","L");
+	//	leg_jes->AddEntry(data_histosQCDup[i],"QCD scale up/down","L");
+		leg_jes->AddEntry(data_histosQCDup[i],"#mu_{F}, #mu_{R} scale up/down","L");
 		leg_jes->AddEntry(data_histosJESup[i],"JES up/down","L");
 		leg_jes->Draw();
 		
